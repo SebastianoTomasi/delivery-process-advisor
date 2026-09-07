@@ -1,0 +1,13 @@
+{
+  "name": "delivery-process-advisor",
+  "owner": {
+    "name": "Sebastiano Tomasi"
+  },
+  "plugins": [
+    {
+      "name": "delivery-process-advisor",
+      "source": "./",
+      "description": "Initializes a target project with the delivery process advisor payload."
+    }
+  ]
+}

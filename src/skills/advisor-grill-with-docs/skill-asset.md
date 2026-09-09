@@ -1,37 +1,19 @@
 ---
 name: advisor-grill-with-docs
-description: Conduct an advisor-grill-with-docs session — one question at a time, writing what settles into the project's own documents as it settles. Use when writing, filling in, or accepting a normative document under docs/ (product, architecture, implementation, frontend, security, deployment, operations, development, stack), when declaring or advancing a feature, when asked what work comes next, or when pressure-testing a plan or design whose outcome the project should keep.
+description: Conduct an advisor-grill-with-docs session — one question at a time, writing what settles into the project's own documents as it settles. Use when writing, filling in, or accepting a normative document under docs/ (product, architecture, implementation, frontend, security, deployment, operations, development, stack), when declaring or advancing a feature, when recording or resuming a handoff, when asked what work comes next, or when pressure-testing a plan or design whose outcome the project should keep.
 disable-model-invocation: false
 ---
 
-Run an `advisor-grill-me` session, invoking the `advisor-domain-modeling`
-skill as terms or qualifying decisions settle. Advice alone requires reading,
-not an interrogation or a write.
+Use an `advisor-grill-me` session to resolve open decisions, invoking the
+`advisor-domain-modeling` skill as terms or qualifying decisions settle.
+Advice alone requires reading, not an interrogation or a write. To record an
+already-agreed deferral, follow Capture in [handoffs.md](handoffs.md) directly;
+do not start an interview or reopen the deferred question merely to record it.
 
-When called by `advisor-migrate-docs`, apply the writing, acceptance, and
-propagation procedures below within that skill's scope. Decisions in inputs
-the user identifies as current specifications are already settled; ask only
-unresolved choices needed for their migration. Report unrelated catalog gaps
-as later work instead of starting a general design interview. The migration
-skill owns input replacement and cleanup.
-
-Follow the reading path in `advisor-agents.md`. Read the applicable authority
-boundary and only the project or feature catalog for the current work. Where
-those catalogs are separate files, never load both merely because they share an
-authority. Use `docs/advisor-docs.md` for statuses, dependencies, and readiness;
-do not infer readiness from a folder or a proposed artifact alone.
-
-## Advice
-
-For requested or recommended work, identify the specific decision, its owner,
-and its necessary accepted inputs. Read those passages and their Dependencies,
-and any relevant Review blocks. Separate phase coverage from ready decisions.
-When several actions are ready, recommend one with a reason and name useful
-alternatives; use the usual phase order when there is no stronger reason.
-Explain why still-open choices cannot invalidate a decision proposed ahead of
-that order. If the input is unknown, proposed, under review, or cyclic, explain
-the missing or coupled choice rather than claiming readiness. Do not equate
-absence of a recorded dependency with proof of independence.
+Before recommending work or starting or resuming a session, inspect
+`docs/handoffs/` using [handoffs.md](handoffs.md). Read that reference also when
+recording, classifying, or closing a handoff; it owns the record format and
+procedure. Advice-only requests inspect records without changing them.
 
 ## Writing and accepting
 
@@ -88,6 +70,8 @@ prerequisite, or other accepted rule starts a focused session:
 1. Identify the owning decision and passage, the reason for the change, and the
    proposed replacement. While the replacement is only a proposal, preserve the
    accepted rule; a separate draft names the passage it proposes to replace.
+   A missing reason does not delay independently knowable impact discovery in
+   step 2; obtain it before accepting the replacement.
 2. Trace direct and transitive dependants by reading Dependencies and searching
    artifact references to the changed path, headings, and terms. Inspect likely
    related routing envelopes as well: missing links are possible, so search

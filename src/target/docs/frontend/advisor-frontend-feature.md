@@ -13,7 +13,8 @@ being designed; unresolved Product choices must not be silently assumed.
 Work through the phase in this order:
 
 1. **Decide applicability** — answer `frontend-surface-exists`. A negative
-   answer closes the whole phase through `frontend/absent.md`.
+   answer supports closing the phase through `frontend/absent.md` after the
+   [full catalog check](../features/advisor-features.md#closing-a-phase-with-no-decisions).
 2. **Make the capability reachable** — answer `frontend-entry-points` before
    detailing a journey that the actor might otherwise have no way to start.
 3. **Define the client-visible path** — answer `frontend-interaction-steps` as
@@ -31,9 +32,10 @@ or storage.
 Does this feature have any client-visible surface?
 
 - *Decides:* whether this phase has substance at all.
-- *Why it matters:* this is the question that closes the phase. On a negative
-  answer, write `frontend/absent.md` naming the frontend slugs it dismisses,
-  accepted as written, and continue into the next phase.
+- *Why it matters:* a negative answer supplies the basis for dismissing the
+  surface questions. Verify and record every dismissal through the
+  [phase closure procedure](../features/advisor-features.md#closing-a-phase-with-no-decisions)
+  before accepting `frontend/absent.md`.
 
 **2. `frontend-entry-points`**
 Where does the actor reach this capability from, and how do they know it is

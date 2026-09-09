@@ -18,7 +18,9 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/init.mjs" --target "<root>"
 ```
 
 Then relay the report as the script printed it — which files were written,
-which were appended to, which were skipped. Do not summarize it away.
+which skills were linked, which were appended to, which were skipped. Do not
+summarize it away. If delivery fails, relay its diagnostic and any instructions
+for resolving a permission failure before retrying.
 
 Write, rename, or repair nothing yourself. The script is the only thing that
 touches the target, and a file it reports as skipped is a file the advisor has

@@ -17,7 +17,8 @@ Expose the assumptions, risks, constraints, dependencies, tradeoffs, and hard-to
 ## Success Criteria
 
 * Ask only questions whose answers could change architecture, scope, priority, risk profile, implementation sequence, success criteria, or the go/no-go decision.
-* Ignore trivia, naming, reversible details, obvious defaults, and low-impact implementation minutiae.
+* Ignore trivia, cosmetic naming that does not establish a stable identity,
+  reversible details, obvious defaults, and low-impact implementation minutiae.
 * Maintain a concise running record of agreed direction, assumptions, open risks, and resolved decisions.
 * Explain questions, motivations, and defaults in plain, natural language without losing decision-critical technical detail.
 * Stop when further questions would not materially change the proposal, risk posture, or next action.

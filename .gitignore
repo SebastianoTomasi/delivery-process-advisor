@@ -1,0 +1,19 @@
+/.advisor-audit/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*~
+
+# Logs
+*.log
+
+# Local environment files
+.env
+.env.*
+!.env.example

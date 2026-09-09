@@ -1,0 +1,274 @@
+# Product description
+
+**Status:** accepted
+
+## Scope
+
+This artifact governs the advisor product's goals, actors, capabilities,
+success criteria, and non-goals across guided projects, including this
+repository when it deliberately uses the advisor. The vocabulary is defined
+in [`CONTEXT.md`](../../CONTEXT.md). Architecture owns the persisted document
+model and delivery contracts; Development owns the acceptance scenarios.
+
+## The problem
+
+Taking a software project from an idea to documents precise enough to make
+implementation unambiguous requires a known sequence: define the product, fix
+the language, decide the architecture, and design the realization. The general
+process exists, but it is neither explicit nor available to an AI during
+development.
+
+The consequences are ordinary:
+
+-   one does not know which work makes sense right now, and picks it by  
+    intuition;
+-   one does not follow the best practices of software design;
+-   one designs on top of decisions that were never made, and finds out late;
+-   one corrects a document and the documents that rested on it stay behind, with  
+    nothing signalling it.
+
+The cost is not slowness: it is that the work looks complete while resting on  
+foundations that changed or were never established.
+
+## The user
+
+A single person holding both roles: they develop and they lead the project.  
+They have no analyst preparing documents for them and no project manager  
+telling them what comes next. They need an interlocutor who knows the process,  
+not a tool that imposes it on them.
+
+## What it does
+
+1.  **Places every feature in the process.** It reconstructs from the project’s  
+    files which phase questions are covered and which decisions are ready.
+    Different features, and decisions within one feature, may progress at
+    different rates.
+2.  **Prescribes the next action.** It states the work that makes sense now and
+    why, and suggests a targeted advisor-grill-with-docs session to move it
+    forward. If several decisions are ready it recommends one and explains
+    useful alternatives. It can recommend a later-phase decision when accepted
+    inputs suffice and remaining open choices cannot invalidate it.
+3.  **Explains blockers.** It says what a piece of work lacks in order to make  
+    sense, walking up the prerequisites to the first one that can be resolved  
+    immediately.
+4.  **Recovers deferred questions when relevant.** Handoffs are kept in project
+    files and considered when recommending work or starting or resuming a
+    session. Relevant questions resurface before decisions that depend on them;
+    questions whose destination is still unclear are surfaced for classification.
+    Recovery uses current documents and prior context to distinguish work ready
+    now, work still waiting, and questions already answered or superseded.
+5.  **Propagates corrections.** When an artifact changes, it identifies those  
+    that rested on the changed decision and updates them. Wording-only edits
+    can be applied directly; substantive changes run a focused session that
+    settles new choices and completes propagation. Important decisions preserve
+    their reasons and sources in ADRs. `needs-review` with cause, changed passage,
+    relevant ADR, and remaining work supports interruption, not normal closure.
+6.  **Migrates existing documents.** On request, `advisor-migrate-docs` transfers
+    selected documents into the advisor structure, resolving only choices
+    needed for the migration. It verifies fidelity, coherence, and dependencies,
+    reports missing decisions as later work, and replaces the in-scope originals
+    without retaining source copies. Specifications identified as current carry
+    settled decisions, while artifact acceptance still requires verification.
+
+A phase is complete when accepted, compatible artifacts address every question
+it owns and no unresolved input needed by that coverage remains. Accepted
+markers alone cannot establish coverage, and an unrelated proposal does not
+withdraw existing accepted decisions. The scaffolds that separate the parts of
+the design, and the scope-specific
+catalogs that enumerate those questions and state how to work through them, are
+the product.
+
+## The shape of the process
+
+The process runs vertically, on features, over a foundation kept deliberately
+thin. Its concrete representation, ownership rules, and decision readiness are
+specified in the
+[guided project documentation model](../architecture/documentation-model.md).
+
+**The foundation is Product and Architecture, project-scoped, over the language
+of `CONTEXT.md`.** Nothing else precedes a feature. Shared implementation
+conventions, the default frontend surface, the stack, a security policy — each is
+project-scoped, and each is written when a feature first needs it, governing
+the work that follows rather than blocking what came before. Being
+project-scoped is therefore not the same as being a prerequisite of every
+feature.
+
+**A feature holds its artifacts together**, one folder per owning authority,
+created only with its first artifact. The usual route is Product, Frontend,
+Architecture, Implementation. Frontend sharpens the visible behavior; Architecture
+fixes contracts; Implementation captures significant internal design across
+clients, servers, local applications, CLIs, and jobs. The visible behavior of
+Undo belongs to Frontend; its internal history representation to Implementation.
+
+**Readiness belongs to decisions.** The usual order guides discovery, but does
+not forbid an advisor recommendation ahead of a whole unfinished phase. Accepted
+export content and rules may suffice to design its file contract while the
+launch screen is undecided, if that screen cannot change the contract. The
+advisor explains the accepted basis and checks the remaining choices. It never
+treats a proposed or needs-review input as settled.
+
+**Each question catalog expands its scope into a decision sequence.** The macro
+order suggests the usual route; the detailed progression says which
+questions become answerable first inside that work — for example, a feature's
+Frontend phase moves from surface applicability to entry points, user flow,
+states, and input rules. These are not smaller phases and create no additional
+state. They make the interrogation order visible while completion still means
+that every question owned by the phase has been answered or dismissed.
+
+**Authority and scope are independent.** Security, Deployment, Operations,
+Development, and Stack have no phase of their own. Screening questions expose
+their needs at the point their inputs normally become known. Shared rules live
+at project scope; a rule or procedure for only one feature lives under that
+feature's owning authority. For example, a manual recovery procedure for an
+interrupted CSV import belongs in the feature's Operations folder. The feature
+links to shared rules without copying them. Acceptance addresses the triggered
+need, not every possible question in the authority's catalog.
+
+Security illustrates the distinction: Product owns actors and data obligations,
+Architecture owns trust boundaries and enforcement placement, and Security owns
+control requirements at their actual scope. It introduces no additional phase,
+although an unresolved control can be a necessary input to a particular decision.
+
+## Form
+
+The system consists of **versioned scaffolds, question catalogs, templates,
+skills, and instruction files**, together with the helper that delivers them
+into a project. It works through the project's own repository.
+
+The division is between delivery and judgement:
+
+-   **The delivery helper establishes what it delivers.** It writes the
+    scaffolding and can import an optional template, resolving each asset to its
+    destination and reporting what it wrote and what it skipped. This has to be  
+    exactly right, and it is small enough to be verified directly.
+-   **Skills decide everything else.** They read the project’s artifacts, place  
+    each feature in the process, explain a blocker, prescribe the next action,  
+    conduct the advisor-grill-with-docs session, and complete propagations.
+    This needs reading and judgement.
+
+A skill reads the project's state from folders and artifact envelopes, then
+from relevant dependency links, recovery blocks, and decision passages. It
+checks catalog coverage semantically before claiming a phase is complete.
+There is deliberately no command that returns the phase, the first unaccepted
+prerequisite, or the authority that
+owns it: placing a feature in the process is a reading like any other, and it  
+fails the way a reading fails rather than the way a program does. What that  
+costs, and what would justify reversing it, is recorded in  
+[#4](https://github.com/SebastianoTomasi/delivery-process-advisor/issues/4).
+
+Initialization is the helper alone. It writes the scaffolding whole and
+nothing else, so there is no selection to make and no judgement to exercise;
+a later session may import a useful template under the name it agrees on or
+create an artifact directly. The helper is a plugin, reachable by name from
+any project; the skills are payload and travel with the project they guide.
+Sessions use the catalogs actually present in that project. Delivering the
+skills locally does not guarantee that a later initialization leaves every
+installed file compatible. The delivery contract is specified in
+[Initialization](../architecture/initialization.md).
+
+## Delivery compatibility
+
+Initialization may add files from a newer release beside existing files from
+an older one. It preserves occupied destinations and promises no compatibility
+between releases in the resulting project. It neither verifies release
+uniformity nor upgrades the existing installation. The per-destination behavior
+and its limits are owned by
+[Initialization](../architecture/initialization.md#deliberate-exclusions).
+
+Successful initialization means the delivery operations completed under their
+rules, with occupied destinations reported as skipped. It does not certify
+that pre-existing files or links work or that an agent can follow the entire
+instruction chain. The exact reference check in project instruction files
+remains required by [Delivery rules](../architecture/initialization.md#delivery-rules).
+
+## What it knows
+
+The system knows the **project files**, including independently readable
+handoffs that preserve deferred questions, their context, and when to revisit
+them. A session records an agreed deferral directly in the repository. No
+external tracker or issue-creation skill is required. Handoffs inform the work;
+accepted answers remain in the owning normative artifacts. What is not known
+from the conversation or project evidence is asked rather than invented.
+
+The representation and recovery contract belong to
+[Architecture](../architecture/documentation-model.md#handoffs). The choice of
+repository files and its tradeoffs are recorded in
+[ADR-0027](../adr/0027-handoffs-use-an-initialized-docs-directory.md).
+
+Among the project files are the **sources**: material the user drops in a  
+`sources/` folder for a session to read — know-how, an external  
+specification, a description of a system being replaced. Where the folder  
+sits is what states which work the material is relevant to, and a session  
+reads the folders on the path to what it is doing, judging from each file's
+name and opening lines whether to read it whole. A source carries no accepted
+project decision and cannot settle a rule by itself.
+
+## Rules
+
+-   The system **advises, it does not bind**. The user may proceed otherwise at  
+    any moment, and nothing is recorded when they do. The advice comes back  
+    only because the state of the project still implies it, which is the only  
+    form of insistence the system has.
+-   An `accepted` status binds the system’s reasoning, not the user.
+-   How critical a change is follows from **what** changes — a term, a  
+    capability, a prerequisite, an artifact with open decisions downstream — not  
+    from a judgement made in the moment.
+-   **Initialization writes the scaffolding and nothing else.** The  
+    scaffolding is the exception that proves the rule — it decides nothing, so  
+    writing all of it costs nothing and gives the project its map. A document  
+    that decides something is not created in advance, and a template is not  
+    written before the session that names it.
+-   **A question that does not apply is dismissed in writing.** A phase's
+    artifacts, taken together, address every question it owns; those without
+    substance
+    in this project are answered with a line saying so. A whole phase a feature  
+    has nothing to decide in is closed the same way, by an artifact that says  
+    so. Silence is never read as inapplicability.
+-   **Material informs, it does not decide.** A source binds nothing. What it  
+    holds constrains later work only once an authority's artifact says so in  
+    the project's own words, and a source contradicting an accepted artifact  
+    becomes a question rather than an override — so every rule the project  
+    follows is one an authority owns and a session accepted. Deleting every  
+    source changes no rule the project holds. ADRs preserve the reasons and
+    informative source links for important decisions; current artifacts link to
+    them. A source correction can prompt reconsideration without automatically
+    changing an accepted rule.
+-   **A proposal leaves current decisions in force.** Initial foundation work
+    needs accepted catalog coverage. Later drafts do not reopen that foundation
+    globally. An agreed change reviews and updates affected decisions and their
+    transitive dependants while unrelated work remains usable.
+
+## Success criteria
+
+-   **Accuracy, checkable by reading.** Phase coverage and recommended decisions
+    match the current accepted rules and actual dependencies. The advisor names
+    the passages supporting readiness and explains any anticipation of the usual
+    phase order, so the user can
+    check the conclusion against them instead of trusting it. Nothing  
+    mechanical enforces this, which is the cost recorded in  
+    [#4](https://github.com/SebastianoTomasi/delivery-process-advisor/issues/4).
+-   **Outcome, observable downstream.** Two independent implementers reading
+    only the final accepted documents produce functionally equivalent systems:
+    the same entities, boundaries, and observable behavior. Residual
+    differences in signatures, names, and style remain the concern of the code.
+
+## Non-goals
+
+-   **It does not impose the process.** There are no blocks, mandatory approvals,  
+    or unavoidable steps.
+-   **It is not a project status dashboard.** It produces advice, not reporting.
+-   **It does not integrate external task systems.** Handoff capture and
+    recovery use repository files; tracker synchronization, mail, and meeting
+    integrations are outside the product.
+-   **It does not model customers, engagements, or deliveries.** The domain is  
+    the process by which the project matures, not the commercial relationship  
+    surrounding it.
+-   **It does not invent artifacts in the user’s place.** It writes only to
+    propagate confirmed corrections or to record the decisions, requirements,
+    and intent established with the user in an advisor-grill-with-docs session.
+
+## Provenance
+
+Migrated from the former advisor repository, `docs/product/overview.md`, commit
+`a44529ff21d8999619f81dc934f1d20078aea0a5`. The specifications describe the advisor
+product; installed `advisor-*.md` files govern its use in this repository.

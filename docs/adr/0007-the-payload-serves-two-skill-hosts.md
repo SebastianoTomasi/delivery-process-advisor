@@ -1,5 +1,6 @@
 ---
-status: accepted
+status: superseded
+superseded_by: ADR-0023
 ---
 
 # The payload serves two skill hosts

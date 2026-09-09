@@ -1,0 +1,3 @@
+interface:
+  display_name: "Audit advisor navigation"
+  short_description: "Review advisor instruction paths with separate agents"

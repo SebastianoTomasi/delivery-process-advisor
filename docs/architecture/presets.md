@@ -6,8 +6,8 @@
 
 This proposal describes a shared preset distribution and adoption mechanism
 across guided projects. It does not declare an individual preset feature or
-replace the accepted source and initialization contracts. It exists because the advisor ships only questions today, and a
-project that wants the standard answer to a recurring piece of work — a login
+replace the accepted source and initialization contracts. It exists because
+the advisor ships only questions today, and a project that wants the standard answer to a recurring piece of work — a login
 feature, a backoffice frontend — has to derive it from scratch every time.
 
 Vocabulary is [`CONTEXT.md`](../../CONTEXT.md). The rules a preset obeys once
@@ -26,6 +26,9 @@ document does not settle is collected in [Open decisions](#open-decisions).
 - [Delivery boundary](initialization.md#division-of-labour) and
   [initialization exclusions](initialization.md#deliberate-exclusions) —
   helper discovery and later import assume the existing delivery/judgement split.
+- [Payload content](initialization.md#the-payload) — delivered files carry no
+  release metadata. D6 and mismatch reporting must respect that rule; the
+  evidence available to a future preset import remains unresolved.
 - [Decision readiness](documentation-model.md#scope-and-prerequisites) —
   the proposal's phase-based selection restriction needs the compatibility
   check recorded below; it cannot override accepted readiness rules.
@@ -57,7 +60,7 @@ and every feature after it would rest on them as prerequisites. It would also
 be able to contradict an artifact the project has already accepted — a login
 preset assuming email and password, imported into a project whose accepted
 architecture names a corporate identity provider — which is
-[flow J](../development/interaction-flows.md), triggered by the advisor against
+[flow J](../development/interaction-flows.md#j-the-user-contradicts-an-accepted-artifact), triggered by the advisor against
 itself.
 
 A preset is **not a bigger template**. The form and the know-how are different
@@ -110,17 +113,18 @@ the agent asks it every time rather than remembering.
 
 The split is forced by
 [ADR-0003](../adr/0003-skills-are-payload-the-helper-is-a-plugin.md). The
-skill is payload and ages with the project that holds it; the helper is a
-plugin and is current. A catalog written into skill text would describe the
-presets that existed at the project's release, could not see the ones added
-since, and would never learn it was wrong. A description shipped beside the
+skill is payload and stays at its installed revision until changed; the helper
+is a plugin whose invoked release can differ. The project's files need not
+share one release. A catalog written into skill text would describe the
+presets known when that skill was shipped and could not see ones added since.
+A description shipped beside the
 preset it describes cannot drift from it.
 
 ## The accepted mismatch
 
 A preset is delivered by the helper, after initialization, and can therefore
 be newer than the project receiving it — the same asymmetry as
-[flow M](../development/interaction-flows.md), and with content rather than empty
+[flow M](../development/interaction-flows.md#m-a-template-is-newer-than-its-project), and with content rather than empty
 sections at stake. A preset written against a later release may assume
 questions the project's catalogs do not ask.
 
@@ -153,16 +157,22 @@ against the question list the project actually holds.
   already lands there on import. The rule holds of delivery, not of import,
   and is currently written as though it governed both. Presets widen the gap
   rather than creating it.
-- **D6 — The marker line of a shipped source.** A source carries no release
-  marker because it is the user's own material. A preset is versioned and
-  needs one, so either sources split into user-written and shipped, or the
-  no-marker rule is restated as holding only of the former.
+- **D6 — Release evidence for a shipped source.** The accepted payload contract
+  omits release markers to avoid unnecessary agent context. The former proposal
+  to require a marker in each preset is withdrawn. Whether future import needs
+  release evidence, and what existing information could supply it without
+  adding metadata to the files agents read, remains unresolved.
 - **D7 — Delivering `sources/`.** [Initialization](initialization.md) says
   `sources/` folders are never delivered, because a source is the user's own
   material. Importing a preset creates one. That sentence needs rewriting
   whichever way D1 goes.
 
 ## Unresolved compatibility checks
+
+Following the 2026-09-07 removal of the release-marker guarantee, the mismatch
+scenario must specify what evidence supports a version comparison. A delivery
+report names the invoked release, not the versions of skipped project files.
+The proposed mismatch reporting is not an automatic detection guarantee.
 
 The proposed screening paragraph assumes every substantive answer is
 project-scoped. The accepted model permits feature-specific answers as well.
@@ -172,7 +182,6 @@ not replacements for the accepted model. D1–D7 remain open. “Preset” stays
 provisional here until D2 settles; it is not added as resolved glossary language.
 The original glossary's proposed import usage included templates and presets;
 the preset extension remains part of this proposal.
-
 
 ## Provenance
 

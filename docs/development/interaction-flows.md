@@ -13,12 +13,17 @@ below remain proposals and do not change those current rules.
 
 - [Product capabilities](../product/overview.md#what-it-does) — the scenarios
   exercise the behavior the advisor promises to users.
+- [Handoffs](../architecture/documentation-model.md#handoffs) — deferred-question
+  scenarios use repository records and derive readiness from accepted inputs.
 - [Artifact lifecycle and references](../architecture/documentation-model.md#visible-document-markers-and-decision-references)
   and [coverage](../architecture/documentation-model.md#question-catalogs-and-completeness)
   — acceptance, recovery, and readiness expectations must match these contracts.
 - [Delivery rules](../architecture/initialization.md#delivery-rules) and
   [failure behavior](../architecture/initialization.md#failure-behavior) —
   initialization and adoption scenarios rely on the helper's file guarantees.
+- [Payload content](../architecture/initialization.md#the-payload) — flow M
+  cannot assume per-file release markers; evidence for its version comparison
+  remains part of the unresolved template-import scenario.
 
 ## Purpose
 
@@ -34,7 +39,9 @@ Quoted requests are illustrative. In the scenarios below:
 - **run a session** means the file-backed, one-question-at-a-time exchange
   defined in [`CONTEXT.md`](../../CONTEXT.md);
 - **initialized** means the helper has delivered the fixed scaffolding,
-  instructions, and skills defined by Initialization.
+  instructions, and skills defined by Initialization. Scenarios relying on
+  usable instructions assume those paths are actually readable; the helper's
+  zero exit result alone does not establish that for skipped destinations.
 
 ## A. An idea meets an initialized project
 
@@ -152,21 +159,40 @@ enough ownership detail to choose an authority; the local scaffold supplies the
 precise boundary and resolves close cases; its catalog links expose only the
 selected scope.
 
+Successful initialization does not certify this full reading path, under
+[Delivery outcomes](../architecture/initialization.md#inputs-and-outputs).
+Release-time host verification is owned by
+[Development](repository-workflow.md#release-verification). Any further check
+of the chain inside an existing guided project remains part of the proposal.
+
 **Open question.** [D11](#open-decisions).
 
 ## F. A postponed decision comes back
 
-**Given.** A handoff issue from an earlier phase targets the next phase of a
-feature.
+**Given.** `docs/handoffs/` contains open records for a feature, shared project
+work, and a question whose destination is undecided. One record holds partial
+progress from an earlier session. No external tracker is available.
 
-**When.** That phase begins.
+**When.** The user asks what to do next, or starts or resumes relevant work.
 
 **Expect.**
 
-- The agent collects matching handoffs before asking the phase catalog.
-- Handoffs are mandatory session material and are addressed first.
-- A resolved handoff is closed with a link to its answer.
-- An unresolved handoff stays open and is reported.
+- The agent lists opening fields and reads relevant open handoffs in full,
+  including applicable shared work and undecided records needing classification.
+  A general next-work request considers all open records. An incomplete routing
+  field or outdated destination does not silently hide related work.
+- It distinguishes ready work, questions still waiting on specific inputs, and
+  apparently answered or superseded questions against current documents.
+- Relevant handoffs are addressed before dependent decisions. A prerequisite
+  needed now cannot be deferred merely to accept the current artifact.
+- Prior progress is read before questioning; unresolved matters remain in the
+  same open record, without repeating settled questions.
+- A resolved handoff closes with a link to its accepted answer. A deliberately
+  dropped question closes with the agreed reason. The file stays at its path;
+  there is no parallel handoff index or duplicate normative answer.
+- Initialization creates the empty handoff directory but no sample records.
+  Creating the first handoff writes only that record and creates no feature
+  folder.
 
 ## G. A screening question has substance
 
@@ -305,14 +331,17 @@ coverage.
 
 **Given.** An older project imports a template from a newer helper release.
 
-**When.** The template marker differs from the project's documentation
-standard.
+**When.** Available evidence establishes that the imported template is newer
+than the project's catalogs. Files carry no release markers; which evidence
+future template import provides remains unresolved.
 
 **Expect.**
 
 - The session follows the question catalog delivered with the project.
-- The agent reports the version mismatch and any newer sections the catalog
-  cannot assess.
+- The agent reports a version mismatch only when supported by that evidence,
+  and identifies sections the catalog cannot assess by reading their content.
+  It does not infer a file's version from absent markers or from the release
+  named in a later delivery report that skipped that file.
 - It neither fills unowned sections nor performs a partial upgrade.
 
 **Open question.** [D10](#open-decisions).
@@ -332,17 +361,31 @@ standard.
 
 ## O. A feature has nothing for a phase to decide
 
-**Given.** A feature's next phase has no applicable subject.
+**Given.** A feature's next phase appears to have no decisions to make.
 
-**When.** One screening answer establishes that the phase is absent.
+**When.** The session checks the whole feature catalog against the relevant
+accepted decisions, including every screening question.
 
 **Expect.**
 
 - The agent writes an accepted
-  `docs/features/<feature-slug>/<phase>/absent.md` that states the reason and
-  dismisses that phase's questions.
-- The accepted absence distinguishes a skipped phase from an unopened one.
-- Work proceeds to the next phase without a full session.
+  `docs/features/<feature-slug>/<phase>/absent.md` only when every question can
+  be dismissed with a reason. It includes Scope and names every dismissed slug;
+  dismissals relying on existing coverage link its accepted answer and record
+  that dependency.
+- A negative Frontend surface answer supports the other dismissals but does
+  not bypass their verification. Architecture and Implementation use the same
+  procedure without needing a new applicability question in their catalogs.
+- If an otherwise simple Implementation change needs a new kind of test, the
+  substantive Development screening answer prevents blanket absence. Its
+  guidance belongs in Development, linked by the phase's normal artifact.
+- An unresolved question or necessary input prevents accepting the absence.
+- The agent reads existing evidence and asks only unresolved decision-critical
+  questions; the full catalog check does not become a question-by-question
+  interview when the repository already supplies the answers.
+- Accepted absence records a closed phase, rather than an unopened one. It
+  satisfies [the closure contract](../architecture/documentation-model.md#scope-and-prerequisites)
+  without reopening unrelated phases.
 
 ## P. Internal design for a client-only feature
 
@@ -505,7 +548,7 @@ Settled decisions belong in the contracts or ADRs, not in this list.
 | D6 | J | Does a permitted derogation need an explicit marker distinct from contradiction? |
 | D7 | K | Must renamed or split features record lineage and rewrite every reference? |
 | D10 | M | Should an artifact record the documentation standard against which it was written? |
-| D11 | E | What verifies that the instruction disclosure chain is intact? |
+| D11 | E | Beyond release verification, what checks the instruction chain in an existing project without treating init success as that evidence? |
 
 ## Unresolved compatibility checks
 
@@ -514,7 +557,6 @@ whole-phase coverage. Before accepting those scenarios, distinguish individual
 artifact acceptance from phase completion under the current documentation
 model. This note preserves that unresolved difference without changing the
 proposed examples. The existing D5, D6, D7, D10, and D11 remain open.
-
 
 ## Provenance
 

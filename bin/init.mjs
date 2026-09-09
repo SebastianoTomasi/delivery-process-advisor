@@ -6,12 +6,21 @@
 // implements is docs/architecture/initialization.md; where the two disagree the
 // contract is right and this file is wrong.
 //
-// Nothing here exercises judgement. Every destination comes from the mapping
-// below, the only substitution is the release marker, and the only file whose
-// existing content is read is an instruction file, to see whether its advisor
-// reference is already there.
+// Nothing here exercises judgement about content. Every destination comes from
+// the mapping below, asset bytes are copied unchanged, and the only
+// file whose existing content is read is an instruction file, to see whether
+// its advisor reference is already there. New skill links are always relative.
 
-import { readFileSync, writeFileSync, appendFileSync, mkdirSync, readdirSync, statSync, existsSync } from 'node:fs';
+import {
+  readFileSync,
+  writeFileSync,
+  appendFileSync,
+  mkdirSync,
+  readdirSync,
+  statSync,
+  lstatSync,
+  symlinkSync,
+} from 'node:fs';
 import { join, dirname, resolve, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -19,8 +28,16 @@ const PLUGIN_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PAYLOAD = join(PLUGIN_ROOT, 'src');
 const MANIFEST = join(PLUGIN_ROOT, '.claude-plugin', 'plugin.json');
 
-// The two skill hosts. A skill is copied to both from one asset.
-const SKILL_HOSTS = [join('.claude', 'skills'), join('.agents', 'skills')];
+// The two skill hosts. A skill's files are written once, under the file host,
+// and the link host reaches them through one link per skill. A delivered
+// project holds one copy of a skill, so editing it cannot leave the two hosts
+// disagreeing about what the skill says.
+const SKILL_FILE_HOST = join('.agents', 'skills');
+const SKILL_LINK_HOST = join('.claude', 'skills');
+
+// This structural destination has no source asset. Handoff records are
+// project-owned and the skill remains the single home of their protocol.
+const HANDOFF_DIRECTORY = join('docs', 'handoffs');
 
 // Assets held under neutral names because their destination is
 // instruction-bearing.
@@ -40,7 +57,6 @@ const INSTRUCTION_FILES = [
     directive: 'Before doing any work, read and follow [advisor-agents.md](advisor-agents.md).',
   },
 ];
-const RELEASE_MARKER = '{{release}}';
 
 class DeliveryError extends Error {}
 
@@ -48,13 +64,18 @@ function fail(message) {
   throw new DeliveryError(message);
 }
 
-// With no `--target`, delivery goes to the repository the helper was run from:
+// System errors expose errno and code; programming errors must keep their stack.
+function isFilesystemError(error) {
+  return typeof error?.errno === 'number' && typeof error?.code === 'string';
+}
+
+// With no target value, delivery goes to the repository the helper was run from:
 // the nearest directory at or above the working directory holding a `.git`, and
 // the working directory itself when none does.
 function currentRepositoryRoot() {
   let dir = process.cwd();
   for (;;) {
-    if (existsSync(join(dir, '.git'))) return dir;
+    if (occupied(join(dir, '.git'))) return dir;
     const parent = dirname(dir);
     if (parent === dir) return process.cwd();
     dir = parent;
@@ -79,10 +100,12 @@ function parseArguments(argv) {
 
 function release() {
   let manifest;
+  const content = readFileSync(MANIFEST, 'utf8');
   try {
-    manifest = JSON.parse(readFileSync(MANIFEST, 'utf8'));
+    manifest = JSON.parse(content);
   } catch (cause) {
-    fail(`cannot read the plugin manifest at ${MANIFEST}: ${cause.message}`);
+    if (!(cause instanceof SyntaxError)) throw cause;
+    fail(`cannot parse the plugin manifest at ${MANIFEST}: ${cause.message}`);
   }
   if (!manifest.version) fail('the plugin manifest declares no version');
   return manifest.version;
@@ -102,30 +125,43 @@ function filesUnder(dir) {
   return found;
 }
 
-// The asset-to-destination mapping. Fixed and enumerated: a skill fans out to
-// one destination per host, and nothing here is derived from the target.
+// The delivery mapping is fixed and enumerated: mirrored assets keep their
+// path, one structural directory has no asset, and each skill becomes files
+// under one host plus a link under the other. Nothing is derived from the target.
 function mapping() {
   const entries = [];
 
   // src/target/ is a literal mirror — the mapping is the identity.
   const mirror = join(PAYLOAD, 'target');
-  if (!existsSync(mirror)) fail(`the payload mirror is missing at ${mirror}`);
+  if (!occupied(mirror)) fail(`the payload mirror is missing at ${mirror}`);
   for (const path of filesUnder(mirror)) {
     entries.push({ asset: join(mirror, path), destination: path, mode: 'write' });
   }
 
-  // Skills are directories, copied whole, to every host.
+  // Empty directories cannot be represented by the literal file mirror.
+  entries.push({ destination: HANDOFF_DIRECTORY, mode: 'directory' });
+
+  // Skills are directories, written whole to the file host, then linked from
+  // the link host. A skill's link entry follows its files, so the files are
+  // there by the time the link is made.
   const skills = join(PAYLOAD, 'skills');
-  if (existsSync(skills)) {
+  if (occupied(skills)) {
     for (const skill of readdirSync(skills, { withFileTypes: true })) {
       if (!skill.isDirectory()) continue;
       const source = join(skills, skill.name);
       for (const path of filesUnder(source)) {
         const name = path === SKILL_ENTRY_ASSET ? SKILL_ENTRY_DESTINATION : path;
-        for (const host of SKILL_HOSTS) {
-          entries.push({ asset: join(source, path), destination: join(host, skill.name, name), mode: 'write' });
-        }
+        entries.push({
+          asset: join(source, path),
+          destination: join(SKILL_FILE_HOST, skill.name, name),
+          mode: 'write',
+        });
       }
+      entries.push({
+        destination: join(SKILL_LINK_HOST, skill.name),
+        linked: join(SKILL_FILE_HOST, skill.name),
+        mode: 'link',
+      });
     }
   }
 
@@ -142,84 +178,135 @@ function mapping() {
   return entries;
 }
 
-function read(asset, version) {
-  let content;
+// Inspect the directory entry without following links. Only ENOENT means absent;
+// permission errors and non-directory parents must stop delivery.
+function entryAt(path) {
   try {
-    content = readFileSync(asset, 'utf8');
+    return lstatSync(path);
   } catch (cause) {
-    fail(`cannot read asset ${relative(PLUGIN_ROOT, asset)}: ${cause.message}`);
+    if (isFilesystemError(cause) && cause.code === 'ENOENT') return null;
+    throw cause;
   }
-  return content.split(RELEASE_MARKER).join(version);
+}
+
+function occupied(path) {
+  return entryAt(path) !== null;
 }
 
 // Rules 1 and 2: write if absent, skip if occupied.
-function write(entry, target, version) {
+function write(entry, target) {
   const path = join(target, entry.destination);
-  if (existsSync(path)) return 'skipped';
+  if (occupied(path)) return 'skipped';
   mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, read(entry.asset, version));
+  writeFileSync(path, readFileSync(entry.asset), { flag: 'wx' });
   return 'written';
+}
+
+// Rules 1 and 2 for the one explicit empty directory in the scaffold.
+function directory(entry, target) {
+  const path = join(target, entry.destination);
+  if (occupied(path)) return 'skipped';
+  mkdirSync(path, { recursive: true });
+  return 'written';
+}
+
+// Rules 1 and 2 for the second host. A relative symlink preserves the connection
+// when the whole project moves. Failure has no junction or copy fallback.
+function link(entry, target) {
+  const path = join(target, entry.destination);
+  if (occupied(path)) return 'skipped';
+  const destination = join(target, entry.linked);
+  if (!statSync(destination).isDirectory()) {
+    fail(`cannot link ${path}: ${destination} is not a directory`);
+  }
+  mkdirSync(dirname(path), { recursive: true });
+
+  try {
+    symlinkSync(relative(dirname(path), destination), path, 'dir');
+    return 'linked';
+  } catch (cause) {
+    if (!isFilesystemError(cause)) throw cause;
+    const hint = process.platform === 'win32' && ['EPERM', 'EACCES'].includes(cause.code)
+      ? ' Enable Windows Developer Mode or retry with appropriate administrator permissions.'
+      : '';
+    fail(`cannot create relative symlink ${path} -> ${destination}: ${cause.message}.${hint}`);
+  }
 }
 
 // Rule 3: ensure the file carries its host-specific advisor reference. Created
 // if absent, appended to if present, left alone if the reference is already there.
-function ensure(entry, target, version) {
+function ensure(entry, target) {
   const path = join(target, entry.destination);
-  if (!existsSync(path)) {
+  const existingEntry = entryAt(path);
+  if (existingEntry === null) {
     mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(path, read(entry.asset, version));
+    writeFileSync(path, readFileSync(entry.asset), { flag: 'wx' });
     return 'written';
+  }
+  if (!existingEntry.isFile() && !existingEntry.isSymbolicLink()) {
+    fail(`cannot ensure instruction reference in ${path}: not a regular file or symbolic link`);
   }
   const existing = readFileSync(path, 'utf8');
   if (existing.includes(entry.directive)) return 'skipped';
+  if (existingEntry.isSymbolicLink()) {
+    fail(`cannot ensure instruction reference in ${path}: the linked file lacks the required reference; initialization never appends through a link`);
+  }
   const separator = existing.endsWith('\n') ? '\n' : '\n\n';
   appendFileSync(path, `${separator}${entry.directive}\n`);
   return 'appended';
 }
+
+const DELIVER = { write, directory, ensure, link };
 
 function main() {
   const options = parseArguments(process.argv.slice(2));
   if (options.help) {
     process.stdout.write(
       'usage: init.mjs [--target <target-project-root>]\n' +
-      'with no --target, the current repository root is used\n'
+      'with no target value (including a bare --target), use the nearest ancestor\n' +
+      'with a .git entry, starting at the working directory; otherwise use the working directory\n'
     );
     return 0;
   }
 
   const target = options.target;
-  if (!existsSync(target) || !statSync(target).isDirectory()) {
+  if (!statSync(target).isDirectory()) {
     fail(`the target root is not a directory: ${target}`);
   }
 
   // The implicit target is never silent: it is named before anything is
   // written, so the report says which project received the payload and why.
   if (options.implicit) {
-    process.stdout.write(`no --target given; delivering to the current repository root: ${target}\n\n`);
+    process.stdout.write(`using the default target: ${target}\n\n`);
   }
 
   const version = release();
-  const counts = { written: 0, skipped: 0, appended: 0 };
+  const counts = { written: 0, linked: 0, skipped: 0, appended: 0 };
 
   // Delivery is not atomic. On failure what was written stays written, which is
   // safe because nothing pre-existing is ever overwritten.
   for (const entry of mapping()) {
-    const outcome = entry.mode === 'ensure' ? ensure(entry, target, version) : write(entry, target, version);
+    const outcome = DELIVER[entry.mode](entry, target);
     counts[outcome] += 1;
-    process.stdout.write(`${outcome.padEnd(8)} ${entry.destination.split(sep).join('/')}\n`);
+    const destination = entry.destination.split(sep).join('/');
+    const shown = entry.mode === 'directory' ? `${destination}/` : destination;
+    const suffix = entry.mode === 'link' ? ` -> ${entry.linked.split(sep).join('/')}` : '';
+    process.stdout.write(`${outcome.padEnd(8)} ${shown}${suffix}\n`);
   }
 
   process.stdout.write(
     `\ndelivery-process-advisor@${version} -> ${target}\n` +
-    `${counts.written} written, ${counts.appended} appended, ${counts.skipped} skipped\n`
+    `${counts.written} written, ${counts.linked} linked, ` +
+    `${counts.appended} appended, ${counts.skipped} skipped\n`
   );
+
   return 0;
 }
 
 try {
   process.exit(main());
 } catch (error) {
-  if (!(error instanceof DeliveryError)) throw error;
+  if (!(error instanceof DeliveryError) && !isFilesystemError(error)) throw error;
   process.stderr.write(`initialization failed: ${error.message}\n`);
   process.exit(1);
 }

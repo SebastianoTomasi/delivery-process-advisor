@@ -97,6 +97,14 @@ What one is worth to the work, and when to read it, is in
 
 ## What a document says about itself
 
+`docs/handoffs/` holds project-owned deferred-question records beside the
+normative documentation tree but outside every authority and phase. They have
+no artifact marker or phase coverage. Their `open`/`closed` work state is
+distinct from the artifact statuses below. Initialization creates the empty
+directory but no sample record or local protocol file. Use
+`advisor-grill-with-docs` and its `handoffs.md` reference for format, capture,
+recovery, and closure.
+
 An artifact places one line directly below its title, never in frontmatter:
 
 - `**Status:** proposed` — a draft or alternative, not a current rule.

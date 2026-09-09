@@ -16,6 +16,8 @@ target project is specified by [Initialization](initialization.md).
 
 ## Dependencies
 
+- [Delivery compatibility](../product/overview.md#delivery-compatibility) —
+  coordinated catalog releases do not imply uniformity of installed files.
 - [Product process requirements](../product/overview.md#the-shape-of-the-process)
   — authority, scope, and phase representation must support the promised thin
   foundation and independent decision readiness.
@@ -23,6 +25,8 @@ target project is specified by [Initialization](initialization.md).
   and propagation must preserve advisory choice and one accepted current rule.
 - [Product capabilities](../product/overview.md#what-it-does) — catalogs and
   decision references must support advice, handoffs, and complete propagation.
+- [File-resident handoffs](../product/overview.md#what-it-knows) — capture and
+  recovery must work from project files without an external tracker.
 
 ## Authority ownership
 
@@ -134,6 +138,56 @@ a project changes no rule the project holds. When that stops being true, a
 source has become an authority nobody owns. The rationale is recorded in
 [ADR-0008](../adr/0008-sources-inform-and-never-bind.md).
 
+## Handoffs
+
+A handoff is a project-owned work record, distinct from artifacts, sources,
+and decision records. It carries a deferred question, not an accepted answer,
+and counts toward no phase. Its state is `open` or `closed`, separate from the
+artifact lifecycle. [ADR-0027](../adr/0027-handoffs-use-an-initialized-docs-directory.md)
+records why these records use an initialized directory inside `docs/`.
+
+Each handoff is one Markdown file at
+`docs/handoffs/<descriptive-name>.md`, relative to the project root.
+Initialization creates and reports the empty `docs/handoffs/` directory as a
+fixed structural destination. It delivers no file into it: the operational
+protocol remains in the skill, and the first real handoff is the first
+project-owned content there. A handoff file keeps a stable name so links survive
+closure or a change of destination.
+
+Its opening fields identify state, scope (`project`, `feature:<slug>`, or
+`undecided`), destination (one authority name or `undecided`), and the condition
+for revisiting it. Its body states the question, why it can wait, relevant
+context and links, and any established facts or remaining questions needed to
+resume. Unknown routing or conditions are explicit, not guessed. A deferral
+does not create a feature folder or give a proposed feature an accepted identity.
+
+Before recommending work or starting or resuming a session, the agent lists
+handoffs and reads their opening fields. It reads relevant open records in full,
+including shared project records and undecided routing that may affect the
+work. Missing routing fields prompt classification rather than exclusion. On
+a general next-work request it considers all open handoffs. Related records
+are also followed by subject or reference, since destinations can be outdated.
+
+The agent compares those questions with current artifacts and accepted inputs,
+reports what is ready, still waiting, or apparently answered or superseded,
+and addresses relevant handoffs before decisions that depend on them. These
+judgements are not saved as another set of status labels. A current necessary
+input stays an open decision in its owning artifact; calling it a handoff does
+not make that artifact acceptable.
+
+When a question is answered, the session writes and accepts its authoritative
+answer first, then closes the handoff with a link under `## Resolution`.
+Already-answered questions require checking that the linked answer still
+applies. A deliberately dropped question closes with the agreed reason; any
+change to accepted rules still follows normal propagation. Partial progress
+stays in the open record. Closure alone never proves decision readiness.
+
+The operational format and capture, classification, recovery, and closure
+procedure have one home in the delivered `advisor-grill-with-docs` skill and
+its `handoffs.md` reference. Root instructions route to that procedure before
+the action requiring it. Existing external issues are not automatically
+imported, changed, or closed.
+
 ## Visible document markers and decision references
 
 An artifact puts its lifecycle on the line below its title, never in
@@ -177,18 +231,21 @@ prerequisite artifacts. The decision and its consequences are recorded in
 ## Directory layout
 
 The documentation is a directory tree, and the tree is part of the scaffold
-rather than a convention layered on top of it. A folder without its scaffold
-file places nothing; a scaffold file outside its folder describes nothing.
+rather than a convention layered on top of it. An authority folder without its
+scaffold file places nothing; a scaffold file outside its folder describes
+nothing. Fixed non-authority positions are named explicitly below.
 
 Initialization writes this tree whole, down to and including
-`docs/features/advisor-features.md`. Only the feature folders inside it are
-absent at the start, because a feature is named by the project and its
-authority folders appear only with their first artifacts.
+`docs/features/advisor-features.md` and the empty `docs/handoffs/` directory.
+Only the feature folders inside `features/` are absent at the start, because a
+feature is named by the project and its authority folders appear only with
+their first artifacts.
 
 ```
 advisor-agents.md
 docs/
   advisor-docs.md
+  handoffs/       handoff records, initially empty
   product/
     advisor-product.md
     advisor-product-project.md
@@ -230,15 +287,14 @@ docs/
 
 Four rules govern it.
 
-**One folder per authority, and no folder that is not an authority.** The top
-level of `docs/` is the authority table above, plus `features/`, `adr/`, and
-`sources/`. Anything an authority owns sits in that authority's folder,
-whatever kind of document it is. Nothing acquires a folder because of what kind
-of document it is, and the two exceptions are both things no authority owns:
-`adr/`, because the records are the skill's and a decision that shaped two
-authorities' artifacts would have no folder to sit in otherwise, and
-`sources/`, because material that informs decisions across the project belongs
-to none of them.
+**One folder per authority, plus explicit non-authority positions.** The top
+level of `docs/` is the authority table above, plus `features/`, `handoffs/`,
+`adr/`, and `sources/`. Anything an authority owns sits in that authority's
+folder, whatever kind of document it is. The other positions have deliberately
+different roles: `features/` groups feature-scoped artifacts; `handoffs/` holds
+project work records; `adr/` holds skill-owned decision records; and `sources/`
+holds informative material owned by no authority. None becomes an authority by
+being inside `docs/`.
 
 An authority scaffold defines its directory by a semantic ownership boundary,
 not a closed catalog of document types. It states what the authority governs,
@@ -277,13 +333,18 @@ becoming that project's artifact and takes a project name from the start.
 **Shipped content never sits at a path the release cannot name.** Every
 `advisor-*.md` occupies a fixed, known path. `docs/features/<feature-slug>/` is
 named by the project, so nothing shipped is written inside it, and the feature
-folder is the one folder in the tree with no scaffold file.
+folder has no scaffold file of its own.
 `docs/features/advisor-features.md` describes what a feature folder contains
 and routes each phase to one authority boundary and one feature catalog. Each
 feature question lives once in the feature catalog of Product, Frontend,
 Architecture, or Implementation whose phase asks it; screening questions are
 co-located with the phase where they first become answerable and retain their
 cross-cutting authority owner.
+
+`docs/handoffs/` is also fixed and is created directly by initialization, but
+it contains no shipped file. Its contents are named by sessions, project-owned,
+and governed by the skill's single protocol rather than by a second scaffold
+inside the directory.
 
 **Artifacts are not named by this model,** with one exception. A file's
 authority is the folder it sits in and its kind is its marker line, so its name
@@ -295,11 +356,13 @@ what the name alone cannot. The exception is `absent.md`, the artifact that
 closes a phase a feature has no substance for: its name is fixed so that the
 dismissal is visible in a listing, at the same cost as the folder's existence.
 
-Two positions in a guided project are not part of this tree and are not
-delivered with it. `CONTEXT.md` sits at the project root and `docs/adr/` beside
-the authority folders; each comes into existence when a session first needs it,
+Two skill-owned document positions in a guided project are not delivered with
+the scaffold. `CONTEXT.md` sits at the project root and `docs/adr/` beside the
+authority folders; each comes into existence when a session first needs it,
 neither carries the `advisor-` prefix, and neither has a scaffold or a question
-list, because the skill that maintains them carries their format.
+list, because the skill that maintains them carries their format. The empty
+`docs/handoffs/` position is delivered, but its eventual records remain
+project-owned work records rather than advisor-owned documents.
 
 ### Sources
 
@@ -393,7 +456,8 @@ instruction path and is reached before the action that needs it:
 - exactly one selected project or feature catalog defines progression and
   questions;
 - `advisor-grill-with-docs` defines how artifacts are reused, created, written,
-  and accepted.
+  and accepted, and owns handoff capture and recovery through its `handoffs.md`
+  reference.
 
 The advisor repository's Product, Architecture, and ADR documents explain and
 test these rules but do not instruct an agent in a target. A behavior described
@@ -509,8 +573,21 @@ This replaces
 [ADR-0009](../adr/0009-every-proposed-artifact-keeps-its-phase-open.md) through
 [ADR-0020](../adr/0020-readiness-follows-decisions-not-phase-order.md).
 
-A phase with no substance is closed with `<authority>/absent.md`, accepted with
-Scope and named dismissals explaining why. If applicability changes, review
+A phase with no substance is closed with `<authority>/absent.md` only after
+reading its entire feature catalog and checking every question, including
+screening questions, against the relevant accepted decisions. The artifact
+has Scope and an explicit dismissal for each question's slug explaining why
+no decision is needed; when existing coverage is the reason, link that accepted
+coverage and record the dependency. A negative applicability answer may support
+these dismissals but never replaces the full check. No dedicated applicability
+question is required for a phase to use this procedure.
+
+Any substantive answer belongs in the appropriate normal artifact, with the
+phase linking answers owned elsewhere; it rules out a blanket absence for that
+phase. An unresolved question prevents accepting `absent.md`. Use repository
+evidence before asking the user, and ask only unresolved decision-critical
+questions. This check does not require an interview question for every catalog
+entry. If applicability changes, review
 that artifact and amend or remove its replaced dismissals during propagation;
 accepted absence cannot contradict new accepted decisions. Only the usual four
 feature phases have this closure convention. A demand-driven authority needs
@@ -589,8 +666,10 @@ A handoff records later work, never substitutes for a necessary current input.
 
 Changing an enumeration is a versioned product change. The catalog, its
 boundary scaffold, and the skill that conducts sessions against it advance in
-the same payload release.
-
+the same published payload release. This describes release authoring, not the
+versions installed in an existing target: later initialization can leave mixed
+releases, under the
+[delivery compatibility limits](initialization.md#deliberate-exclusions).
 
 ## Provenance
 

@@ -8,7 +8,8 @@ Use `advisor-migrate-docs` when the user asks to migrate existing documents
 into this structure. It owns the transfer and replacement of the originals,
 using `advisor-grill-with-docs` for writing, acceptance, and decision changes.
 For other actions that write or accept an advisor artifact, declare or advance
-a feature, or decide what advisor work comes next, use `advisor-grill-with-docs`
+a feature, record or resume a handoff, or decide what advisor work comes next,
+use `advisor-grill-with-docs`
 directly. This file selects the workflow and shortest reading path; the skills
 own their procedures.
 
@@ -20,6 +21,11 @@ feature folder yet, follow
 start and progress it. This file does not repeat its procedure.
 
 ## Before proposing work
+
+Before recommending work or starting or resuming an advisor session, recover
+relevant `docs/handoffs/` records through `advisor-grill-with-docs` and its
+`handoffs.md` reference. That procedure also handles undecided destinations;
+handoff files do not count toward artifact or phase coverage.
 
 Do this when the user asks what is worth doing next, and before writing or
 accepting any document under `docs/`. Ordinary code work does not require it.

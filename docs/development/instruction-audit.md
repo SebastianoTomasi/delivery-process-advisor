@@ -110,7 +110,9 @@ the advisor's entry points. The initial catalog covers these request families:
 - resume an existing document or phase;
 - change an accepted decision;
 - ask what work to do next;
-- record or resume a handoff;
+- record, recover, or close a deferred item;
+- create an explicit conversation handoff without making it part of automatic
+  routing;
 - migrate existing documentation;
 - perform ordinary code work, checking for unnecessary instruction loading.
 

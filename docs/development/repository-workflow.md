@@ -23,9 +23,10 @@ self-application contract. This is not a complete branching or test strategy.
 - [Delivery outcomes](../architecture/initialization.md#inputs-and-outputs) —
   successful delivery and actual host reachability require separate evidence;
   skipped destinations are not certified by a zero exit result.
-- [Handoffs](../architecture/documentation-model.md#handoffs) — release checks
-  must cover the fixed empty directory without treating it as an artifact or
-  duplicating the skill-owned protocol.
+- [Deferred items](../architecture/documentation-model.md#deferred-items) and
+  [session handoffs](../architecture/documentation-model.md#session-handoffs) —
+  release checks must cover both fixed empty directories without treating them
+  as artifacts or duplicating the skill-owned protocols.
 - [The root file](../architecture/documentation-model.md#the-root-file) — the
   delivered instructions no longer name the skills, so reaching them depends on
   each host surfacing their declarations, and that is now a release check.
@@ -101,12 +102,13 @@ its reader cannot recover from. These checks apply the contract in
 ## Installer failure verification
 
 On a fresh isolated target, verify that initialization creates and reports
-`docs/handoffs/` as a directory, creates no root `handoffs/` and no sample
-record, and reports the directory as skipped on an idempotent rerun. Exercise
-an occupied file or link at `docs/handoffs/`: it must be preserved and skipped
-because the project owns it, which is now the exception rather than the norm
-and therefore worth exercising at every release. A denied directory creation
-must follow the concise operational-failure contract below.
+`docs/deferred/` and `docs/handoffs/` as directories, creates no root
+`handoffs/` and no sample record, and reports both directories as skipped on an
+idempotent rerun. For each destination, exercise an occupied file or link: it
+must be preserved and skipped because the project owns it, which is now the
+exception rather than the norm and therefore worth exercising at every release.
+A denied directory creation must follow the concise operational-failure
+contract below.
 
 Use isolated targets to exercise a file occupying a required parent directory
 (such as `docs`), an unreadable asset, and a denied filesystem operation. Check

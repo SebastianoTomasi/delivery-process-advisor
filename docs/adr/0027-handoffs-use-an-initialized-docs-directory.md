@@ -1,5 +1,6 @@
 ---
-status: accepted
+status: superseded
+superseded_by: ADR-0030
 ---
 
 # Handoffs use an initialized docs directory
@@ -13,6 +14,9 @@ the operational protocol already owned by the delivered
 `advisor-grill-with-docs` skill.
 
 This decision supersedes [ADR-0025](0025-handoffs-live-in-the-repository.md).
+It is superseded by
+[ADR-0030](0030-deferred-items-and-session-handoffs-are-distinct.md), which
+separates durable deferred work from temporary conversation transfer.
 
 ## Alternatives and consequences
 

@@ -26,8 +26,10 @@ start and progress it. This file does not repeat its procedure.
 ## Before proposing work
 
 Before recommending work or starting or resuming an advisor session, recover
-relevant `docs/handoffs/` records, including those whose destination is still
-undecided. Handoff files do not count toward artifact or phase coverage.
+relevant `docs/deferred/` records through `advisor-defer`, including those whose
+destination is still undecided. Deferred-item files do not count toward artifact
+or phase coverage. Do not scan `docs/handoffs/`; those temporary conversation
+bridges are read only when the user identifies one.
 
 Do this when the user asks what is worth doing next, and before writing or
 accepting any document under `docs/`. Ordinary code work does not require it.

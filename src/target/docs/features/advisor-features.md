@@ -117,7 +117,8 @@ substantive answer, use the owning authority's boundary and demand-driven
 questions. Shared rules belong at project scope and feature-only decisions in
 that feature's authority folder. Link the authoritative answer and explain the
 dependency in the screening artifact. A missing shared document is not evidence
-of coverage. A handoff is for later work, not an unresolved current prerequisite.
+of coverage. A deferred item is for later work, not an unresolved current
+prerequisite.
 
 When accepted applicability changes, review `absent.md` as part of propagation:
 amend its dismissals or remove it when replaced, so an accepted blanket absence

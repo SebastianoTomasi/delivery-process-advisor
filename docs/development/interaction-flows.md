@@ -13,8 +13,10 @@ below remain proposals and do not change those current rules.
 
 - [Product capabilities](../product/overview.md#what-it-does) — the scenarios
   exercise the behavior the advisor promises to users.
-- [Handoffs](../architecture/documentation-model.md#handoffs) — deferred-question
-  scenarios use repository records and derive readiness from accepted inputs.
+- [Deferred items](../architecture/documentation-model.md#deferred-items) and
+  [session handoffs](../architecture/documentation-model.md#session-handoffs) —
+  future-work recovery and explicit conversation transfer use different records
+  and discovery rules.
 - [Artifact lifecycle and references](../architecture/documentation-model.md#visible-document-markers-and-decision-references)
   and [coverage](../architecture/documentation-model.md#question-catalogs-and-completeness)
   — acceptance, recovery, and readiness expectations must match these contracts.
@@ -133,7 +135,7 @@ links. Scenario U covers interruption before that result is reached.
 - Before writing, it follows the feature scaffold to the Product authority
   boundary and the separate Product feature catalog. It does not load the
   Product project catalog.
-- Product is the usual first session; later work becomes a handoff when it
+- Product is the usual first session; later work becomes a deferred item when it
   cannot yet be settled. An independently ready decision can be proposed with
   its accepted basis, without pretending the whole preceding phase is complete.
 - Screening questions are answered or explicitly dismissed.
@@ -177,7 +179,7 @@ of the chain inside an existing guided project remains part of the proposal.
 
 ## F. A postponed decision comes back
 
-**Given.** `docs/handoffs/` contains open records for a feature, shared project
+**Given.** `docs/deferred/` contains open records for a feature, shared project
 work, and a question whose destination is undecided. One record holds partial
 progress from an earlier session. No external tracker is available.
 
@@ -185,21 +187,21 @@ progress from an earlier session. No external tracker is available.
 
 **Expect.**
 
-- The agent lists opening fields and reads relevant open handoffs in full,
+- The agent lists opening fields and reads relevant open deferred items in full,
   including applicable shared work and undecided records needing classification.
   A general next-work request considers all open records. An incomplete routing
   field or outdated destination does not silently hide related work.
 - It distinguishes ready work, questions still waiting on specific inputs, and
   apparently answered or superseded questions against current documents.
-- Relevant handoffs are addressed before dependent decisions. A prerequisite
+- Relevant deferred items are addressed before dependent decisions. A prerequisite
   needed now cannot be deferred merely to accept the current artifact.
 - Prior progress is read before questioning; unresolved matters remain in the
   same open record, without repeating settled questions.
-- A resolved handoff closes with a link to its accepted answer. A deliberately
+- A resolved deferred item closes with a link to its accepted answer. A deliberately
   dropped question closes with the agreed reason. The file stays at its path;
-  there is no parallel handoff index or duplicate normative answer.
-- Initialization creates the empty handoff directory but no sample records.
-  Creating the first handoff writes only that record and creates no feature
+  there is no parallel deferred-item index or duplicate normative answer.
+- Initialization creates the empty deferred-item directory but no sample records.
+  Creating the first deferred item writes only that record and creates no feature
   folder.
 
 ## G. A screening question has substance
@@ -308,7 +310,7 @@ session.
 **Expect.**
 
 - The user assigns each existing decision to its new scope.
-- Links, handoffs, records, and prose references to the old feature are updated
+- Links, deferred items, records, and prose references to the old feature are updated
   or reported unresolved.
 - Status is not copied automatically: every scope-changed artifact is reviewed
   before it is accepted again.
@@ -364,7 +366,7 @@ future template import provides remains unresolved.
 
 **Expect.**
 
-- The agent reconstructs answered questions, open decisions, handoffs, and
+- The agent reconstructs answered questions, open decisions, deferred items, and
   position from project files.
 - It names and resumes at the first unaddressed question.
 - No session state outside the repository is required.
@@ -547,6 +549,28 @@ now includes a client-visible surface.
   amends or removes the replaced absence artifact.
 - It never leaves both accepted blanket absence and contradictory accepted
   surface behavior. It checks affected contracts and implementation decisions.
+
+## X. An explicit conversation handoff
+
+**Given.** The active conversation contains context needed to continue the work
+and `docs/handoffs/` may contain older files that the user has not removed.
+
+**When.** The user explicitly invokes `advisor-handoff`, optionally naming the
+focus of the next conversation.
+
+**Expect.**
+
+- The skill writes a new descriptively named `*-handoff.md` without overwriting
+  an existing file.
+- The handoff states the next objective, current state, settled decisions and
+  constraints, authoritative references, next action, and open questions. It
+  redacts sensitive data and links to persisted information instead of copying
+  it.
+- No handoff is created automatically, and `advisor-agents.md` does not scan the
+  handoff directory during ordinary routing.
+- A fresh conversation reads only the handoff the user identifies. The advisor
+  assigns it no lifecycle state and never archives or deletes it; cleanup
+  remains manual.
 
 ## Open decisions
 

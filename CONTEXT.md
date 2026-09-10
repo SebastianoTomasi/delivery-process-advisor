@@ -25,7 +25,7 @@ A path in a target project that the delivery helper takes one decision about. Ev
 A destination whose content the advisor defines and brings to the invoked release at every delivery: the mirrored scaffolds and catalogs, the root file, and the delivered skill directories. A project’s local edits to one are not preserved.
 
 **Project-owned destination**  
-A destination the advisor may create but whose content belongs to the project: the two instruction files and the handoff directory. Delivery ensures or creates it and never replaces what it holds.
+A destination the advisor may create but whose content belongs to the project: the two instruction files and the deferred-item and handoff directories. Delivery ensures or creates it and never replaces what it holds.
 
 **Artifact**  
 A normative document recording a guided project’s decisions, with one owning authority, a scope, and a lifecycle status. It is the kind of document on whose accepted decisions other work can rely.
@@ -102,12 +102,12 @@ A document preserving a consequential decision, its reasons, and relevant altern
 _Avoid_: rationale, history
 
 **Handoff**  
-A question recognized for later work, with enough context to resume it when relevant. Its destination can still need classification; it is distinct from an unresolved input needed by the current artifact and from a capability with no identified need.
-_Avoid_: issue, ticket, backlog
+A record that preserves the conversation context needed for a fresh agent session to continue the same work. It is intended as a temporary bridge, but has no managed lifecycle: the user removes it when it is no longer useful. It transfers active work between sessions rather than keeping project history or queuing work for an unspecified future.
+_Avoid_: deferred item, checkpoint
 
-**Deferred idea**  
-A capability deliberately not built now and required by no current work. It is distinct from a handoff that preserves a recognized question for later work.
-_Avoid_: nice to have, backlog, idea
+**Deferred item**
+A project-owned record of a question, idea, or other future work that is not needed by the current work, clarified enough to say what should be revisited and to name a possible outcome or a meaningful revisit condition. It is distinct from an unresolved current input and from a Product non-goal; a non-goal creates no deferred item unless there is also something to reconsider later.
+_Avoid_: handoff, backlog, deferred idea
 
 **Feature**  
 A user-observable product capability represented by its feature-scoped artifacts. It begins with the first Product artifact and has an agreed identity rather than being merely an empty directory.

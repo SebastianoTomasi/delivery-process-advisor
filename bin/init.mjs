@@ -37,9 +37,9 @@ const MANIFEST = join(PLUGIN_ROOT, '.claude-plugin', 'plugin.json');
 const SKILL_FILE_HOST = join('.agents', 'skills');
 const SKILL_LINK_HOST = join('.claude', 'skills');
 
-// This structural destination has no source asset. Handoff records are
-// project-owned and the skill remains the single home of their protocol.
-const HANDOFF_DIRECTORY = join('docs', 'handoffs');
+// These structural destinations have no source assets. Their records are
+// project-owned and each skill remains the single home of its protocol.
+const RECORD_DIRECTORIES = [join('docs', 'deferred'), join('docs', 'handoffs')];
 
 // Assets held under neutral names because their destination is
 // instruction-bearing.
@@ -128,7 +128,7 @@ function filesUnder(dir) {
 }
 
 // The delivery mapping is fixed and enumerated: mirrored assets keep their
-// path, one structural directory has no asset, and each skill becomes files
+// path, two structural directories have no assets, and each skill becomes files
 // under one host plus a link under the other. Nothing is derived from the target.
 function mapping() {
   const entries = [];
@@ -141,7 +141,9 @@ function mapping() {
   }
 
   // Empty directories cannot be represented by the literal file mirror.
-  entries.push({ destination: HANDOFF_DIRECTORY, mode: 'directory' });
+  for (const destination of RECORD_DIRECTORIES) {
+    entries.push({ destination, mode: 'directory' });
+  }
 
   // Skills are directories, written whole to the file host, then linked from
   // the link host. A skill's link entry follows its files, so the files are
@@ -246,7 +248,7 @@ function prune(entry, target) {
   return removed;
 }
 
-// Rules 1 and 4: the one project-owned structural destination is created when
+// Rules 1 and 4: each project-owned structural destination is created when
 // absent and preserved once it exists, whatever occupies it.
 function directory(entry, target) {
   const path = join(target, entry.destination);

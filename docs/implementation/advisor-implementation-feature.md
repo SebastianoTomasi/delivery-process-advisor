@@ -92,7 +92,7 @@ already describe?
 - *Default:* dismiss — it ships by the existing procedure.
 - *If it has substance:* write the Deployment decision at project scope if shared,
   or in this feature's `deployment/` folder if specific, and link it here.
-  A handoff is for later work, not a substitute for a decision needed now.
+  A deferred item is for later work, not a substitute for a decision needed now.
 
 **8. `operations-new-runtime-need`** — *screening, owned by Operations*
 Does this feature need monitoring, alerting, backup, or a manual procedure that
@@ -101,7 +101,7 @@ the project's Operations document does not already describe?
 - *Default:* dismiss — existing operational coverage applies.
 - *If it has substance:* write the Operations decision at project scope if shared,
   or in this feature's `operations/` folder if specific, and link it here.
-  A handoff is for later work, not a substitute for a decision needed now.
+  A deferred item is for later work, not a substitute for a decision needed now.
 
 **9. `feature-internal-state`**
 Does this feature need a non-obvious internal state representation or update

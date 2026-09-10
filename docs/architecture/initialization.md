@@ -25,9 +25,10 @@ structural rules are specified in the
 - [Document kinds](documentation-model.md#document-kinds) and
   [directory layout](documentation-model.md#directory-layout) — the mapping
   delivers the fixed advisor content while leaving project-named work to sessions.
-- [Handoffs](documentation-model.md#handoffs) — their empty directory is a fixed
-  structural destination, their protocol is delivered inside the skill, and
-  their records are created only by sessions.
+- [Deferred items](documentation-model.md#deferred-items) and
+  [session handoffs](documentation-model.md#session-handoffs) — their empty
+  directories are fixed structural destinations, their protocols are delivered
+  inside skills, and their records are created only by sessions.
 - [Payload layout](repository-boundaries.md#payload-layout) — fixed mirrors,
   canonical skill files, host links, and neutral instruction assets define the
   destination mapping.
@@ -58,10 +59,11 @@ feature scaffold, which is held once for the project at
 `docs/features/advisor-features.md`. No shipped asset is written inside a
 folder the project names.
 
-The fixed `docs/handoffs/` directory is also part of the destination mapping.
-It has no source asset and receives no placeholder or scaffold file; the helper
-creates the directory itself so the agreed location exists immediately while
-the skill remains the single home of the handoff protocol.
+The fixed `docs/deferred/` and `docs/handoffs/` directories are also part of the
+destination mapping. They have no source assets and receive no placeholder or
+scaffold files; the helper creates the directories itself so the agreed
+locations exist immediately while each skill remains the single home of its
+record protocol.
 
 Templates are the assets whose destination is not fully fixed. A template's
 folder is its owning authority's, but its filename is chosen when it is
@@ -231,11 +233,12 @@ additional inputs: the template and the filename it is written under. There
 is no default feature.
 
 The output is the root file, the scaffolding including the empty
-`docs/handoffs/` directory, the skills in both host directories, a host-specific
+`docs/deferred/` and `docs/handoffs/` directories, the skills in both host
+directories, a host-specific
 reference in each of the project's two instruction files — or those files
 themselves, where the project had none — and a report.
 
-The report is one line per file, handoff-directory, or skill-directory
+The report is one line per file, structural directory, or skill-directory
 destination, saying `written`, `replaced`, `appended`, `skipped`, or `linked`,
 plus one `removed` line for each file a delivered skill directory no longer
 contains, followed by outcome counts.
@@ -258,11 +261,12 @@ check remains the specific exception required by [Delivery rules](#delivery-rule
 
 **Initialization writes the whole scaffolding and only that** — the root file,
 every authority folder with its scaffold and fixed catalogs, `docs/features/`
-with its own scaffold, and the empty `docs/handoffs/` work-record directory.
+with its own scaffold, and the empty `docs/deferred/` and `docs/handoffs/`
+record directories.
 The scaffolding decides nothing, so writing all of it costs the project nothing
 and gives it the map of the work ahead before any of that work is chosen. No
-template or handoff record is written: each needs a project-chosen subject and
-name that initialization cannot know.
+template, deferred item, or handoff is written: each needs a project-chosen
+subject and name that initialization cannot know.
 
 Feature folders are not part of it. When a user begins to describe a new
 feature, the session agrees its readable name and lowercase ASCII kebab-case
@@ -288,8 +292,8 @@ folder comes into existence when someone puts a file in one, and
 `docs/advisor-docs.md` — written at initialization like every other scaffold —
 is what tells a reader the position exists. Delivering them empty would write
 nine folders into every project, most of which would never hold anything. That
-cost differs from the single fixed handoff directory whose immediate presence
-the product deliberately promises. The positions sources may occupy are fixed by the
+cost differs from the two fixed record directories whose immediate presence the
+product deliberately promises. The positions sources may occupy are fixed by the
 [documentation model](documentation-model.md).
 
 `CONTEXT.md` is not part of the payload and neither are the decision
@@ -299,11 +303,13 @@ project's first term is resolved, a record when a decision earns one. A new
 project has taken no decisions and fixed no language, so neither file exists
 at initialization.
 
-Initialization creates the empty `docs/handoffs/` directory and reports it as
-one fixed destination. It delivers the recovery instructions inside the skill,
-but no handoff record or second protocol file. Records are written there only
-by later sessions. Their representation is owned by the
-[documentation model](documentation-model.md#handoffs).
+Initialization creates the empty `docs/deferred/` and `docs/handoffs/`
+directories and reports each as a fixed destination. It delivers the operating
+instructions inside `advisor-defer` and `advisor-handoff`, but no record or
+second protocol file. Records are written there only by later sessions. Their
+representations are owned by the
+[documentation model](documentation-model.md#deferred-items) and its
+[session-handoff contract](documentation-model.md#session-handoffs).
 
 ## Delivery rules
 
@@ -313,8 +319,9 @@ entry itself, without following links: a symbolic link or junction occupies
 its name even when its referent is missing. What occupancy then means depends
 on who owns the destination, and the mapping fixes that before the target is
 ever inspected: the mirrored assets, the root file, and the skill directories
-are the advisor's, while the two instruction files and `docs/handoffs/` are the
-project's. Ordinary files and the explicit handoff directory use the rules
+are the advisor's, while the two instruction files, `docs/deferred/`, and
+`docs/handoffs/` are the project's. Ordinary files and the two explicit record
+directories use the rules
 below; [Skill hosts](#skill-hosts) defines directory-link occupancy and failure
 behavior. The reasons for treating links as occupied are recorded in
 [ADR-0024](../adr/0024-initialization-never-writes-through-an-occupied-link.md),
@@ -322,7 +329,8 @@ and the reasons for replacing rather than preserving what the advisor owns in
 [ADR-0029](../adr/0029-initialization-replaces-advisor-owned-destinations.md).
 
 1. The destination does not exist — write the asset, or create the empty
-   `docs/handoffs/` directory for that structural destination.
+   `docs/deferred/` or `docs/handoffs/` directory for that structural
+   destination.
 2. The destination is the advisor's and a file or a link occupies it — write
    the asset in its place and record it as replaced. A link is replaced as an
    entry and never written through, so whatever it pointed at stays where it
@@ -334,9 +342,9 @@ and the reasons for replacing rather than preserving what the advisor owns in
    file belongs — end delivery with a concise operational diagnostic. The
    advisor removes no directory it does not own whole, and it cannot know what
    this one holds.
-4. The destination is `docs/handoffs/` and something already occupies it —
-   leave it untouched and record it as skipped, whatever kind of entry it is.
-   The project owns the records that go there.
+4. The destination is `docs/deferred/` or `docs/handoffs/` and something already
+   occupies it — leave it untouched and record it as skipped, whatever kind of
+   entry it is. The project owns the records that go there.
 5. The destination is one of the project's own instruction files — ensure it
    carries that host's reference to `advisor-agents.md`. If the file is absent
    it is created holding nothing but the reference; if it is present the
@@ -400,9 +408,10 @@ was empty is never asked.
   representation. This comparison concerns the assets it writes or replaces,
   not the destinations it preserved or existing project instruction files
   receiving a reference.
-- Nothing beyond the scaffolding is written. The empty `docs/handoffs/`
-  directory is part of that scaffolding; no handoff record, document that
-  decides something, or template is created before a session names it.
+- Nothing beyond the scaffolding is written. The empty `docs/deferred/` and
+  `docs/handoffs/` directories are part of that scaffolding; no deferred item,
+  handoff, document that decides something, or template is created before a
+  session names it.
 - A published payload contains its scaffolds, catalogs, and skills as one
   release. After a delivery, every destination it maps holds that release,
   whether the destination was absent or occupied. This still does not imply
@@ -413,10 +422,12 @@ was empty is never asked.
   phase's coverage, decision readiness, dependencies, review recovery notes, and
   artifact status are read from project files and stored in no parallel registry.
   Deriving coverage and readiness requires semantic reading beyond the markers.
-  Handoffs also live in project files, under `docs/handoffs/`, as specified by
-  the [documentation model](documentation-model.md#handoffs). They record
-  pending questions and links to their answers, not a second coverage or
-  readiness registry. Delivery status remains the task system's concern.
+  Deferred items also live in project files, under `docs/deferred/`, as
+  specified by the [documentation model](documentation-model.md#deferred-items).
+  They record future work and links to its answers, not a second coverage or
+  readiness registry. Explicit conversation handoffs live under
+  `docs/handoffs/` and likewise require no state outside the project. Delivery
+  status remains the task system's concern.
 - Delivery is idempotent in effect. A second run against the same version
   changes nothing. For every asset the advisor owns, that now follows from
   rewriting identical bytes rather than from leaving the destination alone, and
@@ -497,8 +508,10 @@ inventory rejected below. Initialization neither detects nor reports that
 remainder. A successful report describes the delivery outcomes and the release
 of what it wrote or replaced, not the absence of anything else.
 
-The same exclusion applies to handoff storage: initialization does not move
-records from the superseded root `handoffs/` path into `docs/handoffs/`.
+The same exclusion applies to record storage: initialization does not move
+records from the superseded root `handoffs/` path, and it does not reinterpret
+or move deferred-question records created by older releases under
+`docs/handoffs/` into `docs/deferred/`.
 
 This is deliberate: initialization keeps its per-destination rules without
 introducing an installation inventory or a release comparison. Bringing the

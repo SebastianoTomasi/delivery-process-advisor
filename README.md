@@ -11,8 +11,9 @@ repository, and the project holds the process it follows.
 ## How it works
 
 The plugin delivers a **payload** into a target project: a documentation
-scaffold under `docs/`, skills, and seed instruction files. From then on the
-skills read the project's own files to place each feature in the process,
+scaffold under `docs/`, empty project-owned `docs/deferred/` and
+`docs/handoffs/` directories, skills, and seed instruction files. From then on
+the skills read the project's own files to place each feature in the process,
 explain what a piece of work is missing, prescribe the next action, and run the
 advisor-grill-with-docs sessions that write the answers down.
 
@@ -59,19 +60,25 @@ Or, from a shell:
 node bin/init.mjs [--target [<target-project-root>]]
 ```
 
-Nothing existing is ever overwritten: a file or link already present is
-reported as skipped. `CLAUDE.md` / `AGENTS.md` only get their host-specific
-advisor reference appended when they are regular files. A linked instruction
-file is never modified through the link: it is skipped if the exact reference
-is already readable, and otherwise delivery fails with a concise diagnostic.
+The report names every destination and whether it was written, replaced,
+linked, appended, skipped, or removed. Advisor-owned scaffolds and skill
+destinations are brought to the invoked release. Project-owned
+`docs/deferred/` and `docs/handoffs/` destinations are created when absent and
+skipped unchanged when occupied. `CLAUDE.md` / `AGENTS.md` only get their
+host-specific advisor reference appended when they are regular files. A linked
+instruction file is never modified through the link: it is skipped if the
+exact reference is already readable, and otherwise delivery fails with a
+concise diagnostic.
 
 Skill files go to `.agents/skills/<skill>/`. The helper creates a relative
 directory symlink from `.claude/skills/<skill>`, so both hosts share those files.
 If the relative link cannot be created, initialization fails with a concise
 diagnostic; it creates no junction or independent copy. On Windows a permission
 failure may require Developer Mode or an appropriately privileged invocation
-before retrying. Existing Claude skill destinations are skipped, including old
-junctions and copies. See the [skill-host contract](docs/architecture/initialization.md#skill-hosts).
+before retrying. Existing Claude skill destinations, including old junctions
+and copies, are replaced by the release's relative links. Files no longer
+shipped inside a canonical advisor-owned skill directory are pruned. See the
+[skill-host contract](docs/architecture/initialization.md#skill-hosts).
 
 A successful run confirms that delivery operations completed; it does not
 certify that skipped files or links work or that an agent can load them.
@@ -127,14 +134,22 @@ advice does not bind you: nothing is recorded when you proceed
 otherwise, and nothing returns later to say the advice was given. It is offered
 again only while the state of the project still implies it.
 
-**When a question can wait.** Initialization creates the empty
-`docs/handoffs/` directory, and a session records each agreed handoff there as
-one Markdown file. It keeps the question, project or feature context,
-destination, and when to revisit it. When you ask what to do next or resume
-relevant work, the advisor reads these records and checks which questions are
-ready, still waiting, or already answered. Unclassified handoffs are surfaced
-too. A resolved record links to the accepted answer in `docs/`; no external
-tracker or issue-creation skill is needed.
+**When work can wait.** Initialization creates the empty `docs/deferred/`
+directory. `advisor-defer` records each durable question, idea, or other future
+concern there as one Markdown file, clarifying only inputs too vague to be
+useful. The item keeps its project or feature context, destination, and revisit
+condition. Before advice and relevant sessions, the advisor checks which items
+are ready, still waiting, or already answered; unclassified items are surfaced
+too. A resolved item links to the accepted answer in `docs/`, so no external
+tracker is required.
+
+**When a conversation must continue elsewhere.** Explicitly invoke
+`advisor-handoff` to create a temporary, descriptively named `*-handoff.md` in
+the initialized `docs/handoffs/` directory. It references persisted artifacts
+and captures the next objective, current state, constraints, next action, and
+open questions for a fresh session. The advisor never discovers, prioritizes,
+archives, or deletes these files: identify the one to read in the new
+conversation and remove it manually when it is no longer useful.
 
 **When a decision changes.** A new proposal leaves existing accepted rules in
 force. An agreed change starts a focused session that follows dependencies,
@@ -164,6 +179,8 @@ while some artifacts remain proposed and phases remain incomplete.
 | `src/target/` | Literal mirror of what a target project receives |
 | `src/skills/` | Skills delivered as files to `.agents/skills/`, linked from `.claude/skills/` |
 | `src/instructions/` | Seed `CLAUDE.md` / `AGENTS.md`, written only if absent |
+| `docs/deferred/` | Durable future-work records owned by this project |
+| `docs/handoffs/` | Temporary conversation-transfer files owned by this project |
 | `CONTEXT.md` | The vocabulary of the guided process |
 | `docs/` | Documentation of the advisor itself |
 | `docs/adr/` | Decision records |
@@ -210,12 +227,12 @@ The scratch target used while developing this repo:
 node bin/init.mjs --target "C:\Users\sebas\Documents\Code\Passion\delivery-process-target-test"
 ```
 
-Delivery only ever writes what is absent, so a throwaway target can be
-re-delivered into as often as you like — but check the report, since a
-`skipped` line means your change to that asset was not applied. If a previous
-run was interrupted while writing one file,
-inspect and remove that partial destination before retrying; initialization
-does not stage or identify incomplete writes.
+Delivery replaces advisor-owned destinations while preserving project-owned
+ones, so a throwaway target can be re-delivered into as often as you like — but
+check the report, since a `skipped` line says only that a project-owned
+destination was left as found. If a previous run was interrupted while writing
+one file, inspect the resulting target before retrying; initialization does not
+stage or identify incomplete writes.
 
 Keep payload source, delivery code, installed advisor instructions, and project
 artifacts distinct. Changes under `src/` change delivered content; `bin/` and

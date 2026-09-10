@@ -98,7 +98,8 @@ accepted Architecture shape does not already permit?
 - *If it has substance:* settle the Architecture boundary and any Security
   control in their owning artifacts, at project scope if shared or feature scope
   if specific. Link the Security answer here and propagate changes to accepted
-  rules. Use a handoff only for work that is not required by the current decision.
+  rules. Use a deferred item only for work that is not required by the current
+  decision.
 - *Why it is asked now:* the feature's boundaries exist only from this phase
   onward, and asking at Implementation delivers the finding after the design is fixed.
 

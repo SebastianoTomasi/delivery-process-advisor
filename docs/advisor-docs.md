@@ -96,7 +96,7 @@ What one is worth to the work, and when to read it, is in
 
 ## What a document says about itself
 
-`docs/handoffs/` holds project-owned deferred-question records beside the
+`docs/deferred/` holds project-owned deferred-item records beside the
 normative documentation tree but outside every authority and phase. They have
 no artifact marker or phase coverage. Their `open`/`closed` work state is
 distinct from the artifact statuses below. Initialization creates the empty

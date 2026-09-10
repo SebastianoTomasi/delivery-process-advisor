@@ -1,19 +1,17 @@
 ---
 name: advisor-grill-with-docs
-description: Conduct an advisor-grill-with-docs session — one question at a time, writing what settles into the project's own documents as it settles. Use when writing, filling in, or accepting a normative document under docs/ (product, architecture, implementation, frontend, security, deployment, operations, development, stack), when declaring or advancing a feature, when recording, recovering, or resuming a handoff under docs/handoffs/, when propagating an agreed change through an accepted rule and its dependants, when asked what advisor work comes next, or when pressure-testing a plan or design whose outcome the project should keep.
+description: Conduct an advisor-grill-with-docs session — one question at a time, writing what settles into the project's own documents as it settles. Use when writing, filling in, or accepting a normative document under docs/ (product, architecture, implementation, frontend, security, deployment, operations, development, stack), when declaring or advancing a feature, when propagating an agreed change through an accepted rule and its dependants, when asked what advisor work comes next, or when pressure-testing a plan or design whose outcome the project should keep.
 disable-model-invocation: false
 ---
 
 Use an `advisor-grill-me` session to resolve open decisions, invoking the
 `advisor-domain-modeling` skill as terms or qualifying decisions settle.
-Advice alone requires reading, not an interrogation or a write. To record an
-already-agreed deferral, follow Capture in [handoffs.md](handoffs.md) directly;
-do not start an interview or reopen the deferred question merely to record it.
-
-Before recommending work or starting or resuming a session, inspect
-`docs/handoffs/` using [handoffs.md](handoffs.md). Read that reference also when
-recording, classifying, or closing a handoff; it owns the record format and
-procedure. Advice-only requests inspect records without changing them.
+Advice alone requires reading, not an interrogation or a write. Invoke
+`advisor-defer` to record an agreed deferral and to recover relevant deferred
+items before recommending work or starting or resuming a session. That skill
+owns clarification, capture, classification, recovery, partial progress, and
+closure under `docs/deferred/`; advice-only requests inspect records without
+changing them.
 
 ## Writing and accepting
 
@@ -32,7 +30,7 @@ For a new feature, follow the "Starting a feature" procedure in
    scope when shared or feature scope when specific. Maintain Dependencies with
    passage links and explanations, not just navigation links. For a substantive
    screening answer, link its authoritative answer and settle any input needed
-   now; use handoffs only for work that can wait.
+   now; use `advisor-defer` only for work that can wait.
 4. Invoke `advisor-domain-modeling` to update resolved terms and qualifying ADRs
    as decisions settle. Important decisions keep their reasons, alternatives,
    and informative source links in the ADR; current artifacts state the rule

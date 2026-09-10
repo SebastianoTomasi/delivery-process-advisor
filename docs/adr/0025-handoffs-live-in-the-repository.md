@@ -15,7 +15,7 @@ alone does not decide when a question is ready.
 
 The current promises belong to [Product](../product/overview.md#what-it-knows);
 the representation belongs to the
-[documentation model](../architecture/documentation-model.md#handoffs).
+[documentation model](../architecture/documentation-model.md#deferred-items).
 
 ## Alternatives and consequences
 

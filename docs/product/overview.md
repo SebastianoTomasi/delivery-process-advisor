@@ -51,19 +51,28 @@ not a tool that imposes it on them.
 3.  **Explains blockers.** It says what a piece of work lacks in order to make  
     sense, walking up the prerequisites to the first one that can be resolved  
     immediately.
-4.  **Recovers deferred questions when relevant.** Handoffs are kept in project
+4.  **Defers and recovers future work.** Deferred items are kept in project
     files and considered when recommending work or starting or resuming a
-    session. Relevant questions resurface before decisions that depend on them;
-    questions whose destination is still unclear are surfaced for classification.
-    Recovery uses current documents and prior context to distinguish work ready
-    now, work still waiting, and questions already answered or superseded.
-5.  **Propagates corrections.** When an artifact changes, it identifies those  
+    session. A clear question, idea, or other future concern can be recorded
+    directly; an unclear one is first sharpened through a short grill. Relevant
+    items resurface before decisions that depend on them, including items whose
+    destination still needs classification. Recovery distinguishes work ready
+    now, work still waiting, and work already answered or superseded. Items
+    retain an open/closed lifecycle and link to authoritative answers. A Product
+    non-goal creates no deferred item unless there is also something to
+    reconsider later.
+5.  **Transfers an active conversation.** On explicit request it compacts the
+    context needed to continue the current work into a handoff for a fresh
+    conversation. The user identifies the handoff to the new session and removes
+    it manually when it is no longer useful; the advisor does not discover,
+    prioritize, archive, or delete handoffs automatically.
+6.  **Propagates corrections.** When an artifact changes, it identifies those
     that rested on the changed decision and updates them. Wording-only edits
     can be applied directly; substantive changes run a focused session that
     settles new choices and completes propagation. Important decisions preserve
     their reasons and sources in ADRs. `needs-review` with cause, changed passage,
     relevant ADR, and remaining work supports interruption, not normal closure.
-6.  **Migrates existing documents.** On request, `advisor-migrate-docs` transfers
+7.  **Migrates existing documents.** On request, `advisor-migrate-docs` transfers
     selected documents into the advisor structure, resolving only choices
     needed for the migration. It verifies fidelity, coherence, and dependencies,
     reports missing decisions as later work, and replaces the in-scope originals
@@ -192,16 +201,17 @@ remains required by [Delivery rules](../architecture/initialization.md#delivery-
 ## What it knows
 
 The system knows the **project files**, including independently readable
-handoffs that preserve deferred questions, their context, and when to revisit
-them. A session records an agreed deferral directly in the repository. No
-external tracker or issue-creation skill is required. Handoffs inform the work;
+deferred items that preserve future work, its context, and when to revisit it.
+A session records an agreed deferral directly in the repository. No external
+tracker or issue-creation skill is required. Deferred items inform the work;
 accepted answers remain in the owning normative artifacts. What is not known
 from the conversation or project evidence is asked rather than invented.
 
-The representation and recovery contract belong to
-[Architecture](../architecture/documentation-model.md#handoffs). The choice of
-repository files and its tradeoffs are recorded in
-[ADR-0027](../adr/0027-handoffs-use-an-initialized-docs-directory.md).
+The representation and recovery contracts for
+[deferred items](../architecture/documentation-model.md#deferred-items) and
+[session handoffs](../architecture/documentation-model.md#session-handoffs)
+belong to Architecture. Their separation and repository locations are recorded
+in [ADR-0030](../adr/0030-deferred-items-and-session-handoffs-are-distinct.md).
 
 Among the project files are the **sources**: material the user drops in a  
 `sources/` folder for a session to read — know-how, an external  
@@ -265,7 +275,7 @@ project decision and cannot settle a rule by itself.
 -   **It does not impose the process.** There are no blocks, mandatory approvals,  
     or unavoidable steps.
 -   **It is not a project status dashboard.** It produces advice, not reporting.
--   **It does not integrate external task systems.** Handoff capture and
+-   **It does not integrate external task systems.** Deferred-item capture and
     recovery use repository files; tracker synchronization, mail, and meeting
     integrations are outside the product.
 -   **It does not model customers, engagements, or deliveries.** The domain is  

@@ -91,23 +91,32 @@ test('fresh delivery preserves all asset bytes, reports its release, and is idem
   for (const [source, target] of deliveredAssets(f)) {
     assert.deepEqual(readFileSync(target), readFileSync(source), target);
   }
+  assert.match(readFileSync(
+    join(f.target, '.agents/skills/advisor-handoff/agents/openai.yaml'), 'utf8'),
+    /allow_implicit_invocation: false/);
   const version = JSON.parse(readFileSync(join(f.plugin, '.claude-plugin/plugin.json'))).version;
   assert.ok(first.stdout.includes(`delivery-process-advisor@${version}`));
   assert.doesNotMatch(first.stdout, /copied/);
-  const handoffDirectory = join(f.target, 'docs/handoffs');
-  assert.ok(lstatSync(handoffDirectory).isDirectory());
-  assert.deepEqual(readdirSync(handoffDirectory), []);
-  assert.match(first.stdout, /written\s+docs\/handoffs\//);
-  assert.equal(existsSync(join(f.target, 'handoffs')), false);
+  const recordDirectories = ['deferred', 'handoffs'].map(name => join(f.target, 'docs', name));
+  for (const directory of recordDirectories) {
+    assert.ok(lstatSync(directory).isDirectory());
+    assert.deepEqual(readdirSync(directory), []);
+    assert.match(first.stdout,
+      new RegExp(`written\\s+docs/${basename(directory)}/`));
+    assert.equal(existsSync(join(f.target, basename(directory))), false);
+  }
   const before = deliveredAssets(f).map(([, path]) => [path, readFileSync(path)]);
   // What the project owns must not be rewritten; what the advisor owns may be,
   // as long as the bytes it writes again are the same.
-  const untouched = [handoffDirectory, join(f.target, 'AGENTS.md'), join(f.target, 'CLAUDE.md')]
+  const untouched = [...recordDirectories, join(f.target, 'AGENTS.md'), join(f.target, 'CLAUDE.md')]
     .map(path => [path, lstatSync(path).mtimeMs]);
   const second = run(f);
   success(second);
   assert.match(second.stdout, /0 written, \d+ replaced, 0 linked, 0 appended, \d+ skipped, 0 removed/);
-  assert.match(second.stdout, /skipped\s+docs\/handoffs\//);
+  for (const directory of recordDirectories) {
+    assert.match(second.stdout,
+      new RegExp(`skipped\\s+docs/${basename(directory)}/`));
+  }
   for (const [path, mtime] of untouched) assert.equal(lstatSync(path).mtimeMs, mtime, path);
   for (const [path, bytes] of before) assert.deepEqual(readFileSync(path), bytes, path);
 });
@@ -142,28 +151,30 @@ test('a dangling asset link is replaced as an entry without creating its referen
   assert.match(result.stdout, /replaced\s+advisor-agents\.md/);
 });
 
-for (const kind of ['file', 'dangling link']) {
-  test(`an occupied handoff directory destination is skipped when it is a ${kind}`, t => {
-    const f = fixture(t);
-    const path = join(f.target, 'docs/handoffs');
-    mkdirSync(dirname(path), { recursive: true });
-    let referent;
-    if (kind === 'file') {
-      writeFileSync(path, 'keep me');
-    } else {
-      referent = join(f.root, 'missing-handoffs');
-      symlinkSync(relative(dirname(path), referent), path, 'dir');
-    }
+for (const directory of ['deferred', 'handoffs']) {
+  for (const kind of ['file', 'dangling link']) {
+    test(`an occupied ${directory} directory destination is skipped when it is a ${kind}`, t => {
+      const f = fixture(t);
+      const path = join(f.target, 'docs', directory);
+      mkdirSync(dirname(path), { recursive: true });
+      let referent;
+      if (kind === 'file') {
+        writeFileSync(path, 'keep me');
+      } else {
+        referent = join(f.root, `missing-${directory}`);
+        symlinkSync(relative(dirname(path), referent), path, 'dir');
+      }
 
-    const result = run(f);
-    success(result);
-    assert.match(result.stdout, /skipped\s+docs\/handoffs\//);
-    if (kind === 'file') assert.equal(readFileSync(path, 'utf8'), 'keep me');
-    else {
-      assert.ok(lstatSync(path).isSymbolicLink());
-      assert.equal(existsSync(referent), false);
-    }
-  });
+      const result = run(f);
+      success(result);
+      assert.match(result.stdout, new RegExp(`skipped\\s+docs/${directory}/`));
+      if (kind === 'file') assert.equal(readFileSync(path, 'utf8'), 'keep me');
+      else {
+        assert.ok(lstatSync(path).isSymbolicLink());
+        assert.equal(existsSync(referent), false);
+      }
+    });
+  }
 }
 
 for (const [host, directive] of [['AGENTS.md', codexDirective], ['CLAUDE.md', '@advisor-agents.md']]) {
@@ -281,11 +292,11 @@ test('project files beside the delivered scaffolding are never touched', t => {
   success(run(f));
   const artifact = join(f.target, 'docs/product/overview.md');
   writeFileSync(artifact, 'a project artifact the payload does not map');
-  const record = join(f.target, 'docs/handoffs/0001-deferred-question.md');
-  writeFileSync(record, 'a handoff record');
+  const record = join(f.target, 'docs/deferred/0001-deferred-question.md');
+  writeFileSync(record, 'a deferred item');
   success(run(f));
   assert.equal(readFileSync(artifact, 'utf8'), 'a project artifact the payload does not map');
-  assert.equal(readFileSync(record, 'utf8'), 'a handoff record');
+  assert.equal(readFileSync(record, 'utf8'), 'a deferred item');
 });
 
 test('missing target values select the nearest .git entry and announce it first', t => {
@@ -351,16 +362,18 @@ test('an unreadable source asset gives operation, path and cause', t => {
   assert.equal(existsSync(join(f.target, 'advisor-agents.md')), false);
 });
 
-test('a denied handoff-directory creation fails concisely after earlier writes', t => {
-  const f = fixture(t);
-  const path = join(f.target, 'docs/handoffs');
-  const result = run(f, { fault: { method: 'mkdirSync', path, code: 'EACCES' } });
-  operationalFailure(result, path);
-  assert.match(result.stderr, /EACCES/);
-  assert.equal(existsSync(path), false);
-  assert.ok(existsSync(join(f.target, 'advisor-agents.md')));
-  assert.equal(existsSync(join(f.target, '.agents')), false);
-});
+for (const directory of ['deferred', 'handoffs']) {
+  test(`a denied ${directory}-directory creation fails concisely after earlier writes`, t => {
+    const f = fixture(t);
+    const path = join(f.target, 'docs', directory);
+    const result = run(f, { fault: { method: 'mkdirSync', path, code: 'EACCES' } });
+    operationalFailure(result, path);
+    assert.match(result.stderr, /EACCES/);
+    assert.equal(existsSync(path), false);
+    assert.ok(existsSync(join(f.target, 'advisor-agents.md')));
+    assert.equal(existsSync(join(f.target, '.agents')), false);
+  });
+}
 
 test('relative-link failure has no junction or copy fallback', t => {
   const f = fixture(t);

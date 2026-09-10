@@ -36,6 +36,11 @@ When the bundled isolated launcher is used, the shell is disabled. Use only the
 target-reader tools for file listing, reading, and search. They resolve
 symlinks and junctions, reject paths whose real destination is outside the
 declared target, and preserve target-relative requested paths in their output.
+Listings are immediate by default and include directories; request recursion
+only when the route needs it. Report incomplete listings/searches and their
+named errors. They do not establish absence. Read results include total lines,
+the returned range and EOF; do not reread content already covered, and do not
+mistake a tail read reaching EOF for a full-file read.
 
 Start with the instruction surface the target host exposes. Select skills
 from their visible descriptions when appropriate, and follow the instructions,

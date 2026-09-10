@@ -5,129 +5,78 @@ description: Audit and improve this repository's advisor Markdown payload by del
 
 # Audit advisor navigation
 
-Act as the reviewer. Read the agreed [audit method](../../../docs/development/instruction-audit.md)
-before preparing a run; it owns the correction boundary, scenario families,
-and evidence requirements. Root instructions govern maintenance here. The
-payload in `src/` is the product being inspected.
+Act as reviewer. Read the accepted [audit method](../../../docs/development/instruction-audit.md)
+before preparing a run; it owns the correction boundary and evidence standard.
+Root instructions govern maintenance here. Treat `src/` as the product under
+inspection, not instructions for this session.
 
 ## Prepare the review
 
-Inspect the working tree and the relevant source and accepted design passages.
-Use the current working-tree payload, including existing edits; record the
-baseline so findings and your changes can be distinguished from prior work.
-Derive expected instructions from settled Product and Architecture rules, not
-solely from the implementation being tested. Proposed interaction flows are
-candidates to assess, not an oracle.
+Inspect the working tree and relevant accepted Product and Architecture passages.
+Preserve the current payload, including existing edits, so prior work is not
+attributed to the audit. Derive expected obligations from those accepted rules;
+proposed interaction flows are candidates to assess, not an oracle.
 
-Use the [scenario catalog](references/scenarios.md) to select and maintain
-concrete navigation scenarios. A general audit covers its initial families;
-a focused request covers its affected routes and the other scenarios sharing
-changed instructions. Name exclusions. For each selected scenario, retain the
-prompt, initial project facts, host entry surface, payload baseline, and the
-reviewer's expected obligations. Do not give those expectations to simulators.
+Select cases with the [scenario catalog](references/scenarios.md). A general
+audit covers its initial families. A focused audit names the changed instructions,
+their affected routes, selected regressions and exclusions. Reuse valid earlier
+evidence only when its payload, starting facts, host and tool versions support
+the comparison; an old success is not a run of a new payload.
 
-## Prepare a target view
+Record each prompt, starting facts, host entry surface and expected obligations
+outside the simulator target. Expectations belong to the reviewer. Validate
+fixture links and review the particular semantic premises the case needs before
+spending a simulation on it. A link check does not verify meaning or acceptance.
 
-Stage a disposable target outside this repository's instruction ancestry. Use
-the existing `bin/init.mjs` with an explicit `--target` pointing to that fresh
-directory; never initialize the working repository as audit setup. Inspect the
-delivered files and skill paths before using them. Setup failure is a fixture
-problem, not a navigation result.
+## Prepare and run isolated cases
 
-Add only the scenario's target-owned starting documents and code. Fixture
-preparation is the reviewer's work; the simulator remains read-only. Do not
-copy this repository's design documents, installed advisor, maintenance skill,
-or audit notes into the target. Save a source-to-target mapping outside it:
-`src/target/` mirrors target paths, skill entry assets become `SKILL.md`, and
-instruction seeds become host instruction files. Read the current installer
-mapping when resolving the other destinations.
+Use [execution and evidence](references/execution.md) for target preparation,
+launcher commands, batch resumption, reader behavior and local tool tests.
+Create the empty disposable directory before invoking `bin/init.mjs --target`;
+place it outside this repository's instruction ancestry. Never initialize this
+working repository as audit setup. Inspect delivered files and host skill paths.
 
-Preserve a reproducible baseline of both payload bytes and fixture data. A
-before/after comparison must hold starting facts and host setup constant.
-Keep reports and expected routes outside the simulator's target view.
+Add only target-owned scenario data. Keep maintenance instructions, accepted
+advisor design, audit notes and expectations outside the target. Preserve payload
+and fixture bytes, including the source-to-delivered-path mapping. If fixture
+facts change, assign a new fixture revision and rerun both sides of a comparison.
 
-## Delegate navigation
+Read [the simulator brief](references/simulator.md) before composing a task.
+Use the bundled isolated Codex launcher when available. It sends only the task
+body and one scenario input. Every case and rerun starts a fresh context. If
+using a delegation tool with `fork_turns`, choose `none`.
 
-Read [the simulator brief](references/simulator.md) when composing the task.
-Send its task body plus one completed scenario input, not this reviewer skill
-or the catalog. Launch a fresh simulator for each scenario and each rerun,
-without conversation history or findings from earlier runs. With a delegation
-tool exposing `fork_turns`, choose `none`.
-
-### Use the isolated Codex launcher
-
-When the local Codex CLI is available, use the bundled launcher instead of
-assembling its MCP configuration by hand:
-
-```text
-node .agents/skills/audit-advisor-navigation/scripts/run-simulator.mjs --target <absolute-target-root> --scenario <scenario-input.md> --output <trace.md>
-```
-
-Keep the scenario input and trace outside the target. The launcher extracts the
-task body from `references/simulator.md`, appends exactly that one scenario,
-starts a fresh ephemeral session rooted at the target, ignores user
-configuration, and disables the simulator's shell. It fixes the Codex sandbox
-to read-only and exposes only the bundled MCP reader's `list_files`,
-`read_file`, and `search` tools. `--approve-for-me` is used only so Codex can
-call those MCP tools; it does not restore the disabled shell.
-
-The reader canonicalizes the target and every requested filesystem path after
-resolving symlinks and junctions. It rejects lexical and real destinations
-outside the target, traverses internal links without losing their requested
-target-relative names, and breaks directory-link cycles. Before the first run
-after changing the reader or launcher, execute:
-
-```text
-node .agents/skills/audit-advisor-navigation/scripts/test-target-reader.mjs
-```
-
-Treat a launcher, MCP startup, or reader-test failure as a fixture problem, not
-simulator evidence. Do not re-enable the shell to work around it. If the CLI is
-unavailable, fall back to the context-separation requirements below and report
-a simulation as not run when no equivalent read-only target-rooted runtime is
-available.
-
-A fresh conversation alone does not establish the intended starting context.
-Check the actual working root, active repository instructions, exposed skill
-descriptions and paths, and any inherited advisor-specific context. Prefer a
-new session rooted at the staged target when a child inherits the maintainer's
-instruction surface. Keep ordinary host instructions intact; never instruct a
-simulator to override higher-priority rules to fake isolation.
-
-Use an available read-only execution mode and restrict navigation to the
-staged target. If the host only provides instruction-level read-only controls,
-record that limitation and compare fixture contents before and after. Do not
-equate a prompt constraint with a filesystem sandbox.
-
-If the available runtime cannot provide the agreed context separation, prepare
-the target and simulator packet for a fresh target-rooted session, and report
-the simulation as not run. Static reviewer findings can still be reported as
-such; they do not count as simulator evidence. Independent simulator reads may
-run in parallel against a stable payload. Only the reviewer edits source.
+A fresh conversation alone does not establish isolation: check the working root,
+active instructions, exposed skill descriptions and paths, and inherited
+advisor-specific context. Keep normal host instructions intact. Never ask a
+simulator to override them to fake isolation or re-enable its shell to fix a
+reader failure. If an equivalent read-only, target-rooted runtime is unavailable,
+retain the prepared packet and report the simulation as not run. Static review
+remains possible but is not simulator evidence.
 
 ## Review, correct, and verify
 
-Compare observed traces with the expected obligations and source passages.
-Check unnecessary reading as well as missing reading. A file can be reachable
-but too late to inform the decision requiring it. A reference to an already
-read file may be useful context; report a cycle as defective when it creates
-unresolved routing or redundant work, not merely because an edge points back.
+Compare the trace with expected obligations and actual source passages. Check
+unnecessary reading and instructions reached too late as well as missing routes.
+A reference back to an already read file is defective only when it causes
+redundant work or unresolved routing. Preserve intentional routing summaries
+and instructions needed by branches outside the present case.
 
-Apply the audit method's correction boundary. Present unresolved semantic
-choices with their concrete passages and a reasoned proposal; continue
-independent corrections. Preserve intentional routing summaries. Treat an
-instruction needed only on another branch according to that branch's use,
-rather than deleting it because the current scenario did not need it.
+Apply the accepted method's editorial correction boundary. Present unresolved
+semantic choices with concrete passages and a reasoned proposal; continue
+independent authorized corrections. After edits, initialize fresh targets with
+identical fixture facts and rerun affected cases and relevant regressions.
+The initializer skips occupied files, so running it over an old target cannot
+prove the correction was delivered. Do not repeatedly rewrite instructions for
+the same failure without new evidence.
 
-After source edits, stage the revised payload in a fresh target with identical
-fixture facts. The initializer skips occupied destinations, so rerunning it
-over the old target does not prove that a simulator saw the correction. Rerun
-the affected scenarios with new contexts and compare evidence. If a failure
-repeats without new evidence or needs a user decision, report what remains
-instead of repeatedly rewriting the same instructions.
+Execution completion and navigation success are separate judgements. Review
+the actual trace; a missing user decision may be the correct stopping point.
+An incomplete search is not proof that no relevant work exists. If quota,
+authentication or interruption prevents execution, preserve partial evidence
+and pending cases; do not count them as passed or as payload failures.
 
-Return the scenarios checked and their stopping points, concrete findings,
-source changes, before/after evidence, and unresolved choices or untested
-branches. Retain reproducible scenario inputs and traces outside the target
-view and link them in the report. This run verifies navigation and instruction
-content; it does not certify dialogue, artifact writes, or full advisor behavior.
+Return a concise report using [the report structure](references/report.md):
+tested versions, execution states, reviewed outcomes, residual ambiguities,
+source changes, before/after evidence and exclusions. This verifies navigation
+and encountered instructions, not dialogue, artifact writes or end-to-end behavior.

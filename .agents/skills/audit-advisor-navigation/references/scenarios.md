@@ -34,6 +34,27 @@ present versus missing prerequisites, an existing versus new feature, sources
 on the reading path, and resumption after an interrupted review. Identify the
 actual branch instruction first; do not generate a Cartesian product of states.
 
+Retain these focused variants when their instruction is affected:
+
+| Variant | Starting distinction | Obligation to review |
+| --- | --- | --- |
+| Handoff without agreed feature identity | An agreed deferred question, no confirmed slug, and insufficient evidence to establish scope or destination. | Inspect identifiable relevant work; retain unknown fields without inventing a feature or interviewing merely to record the deferral. |
+| Change with reason already supplied | The same accepted rule and dependants, but the prompt explicitly supplies its motivation. | Discover impacts and retain that motivation without asking for it again. |
+| Feature with slug already confirmed | The prompt confirms readable name and stable slug; no feature folder yet. | Keep that identity and reach foundation verification and the next unresolved decision without repeating confirmation. |
+
+For a focused change, record a small mapping from changed instruction to the
+cases that use it. Cover the directly changed branch and meaningful neighboring
+branches, such as capture versus resumption versus advice. Explain omitted
+routes. Reuse an existing before trace only if its actual versions and starting
+facts match; do not rerun unrelated families merely to increase a case count.
+
+Run the [local fixture check](execution.md#prepare-a-case) before simulation,
+then read the decision passages supporting the case's critical premises. Verify
+that accepted claims are supported by accepted artifacts, not just handoff prose.
+Record that semantic review with the expected obligations, outside the target.
+Changing fixture facts creates a new case revision; before/after evidence for
+that revision must keep the corrected facts identical on both payloads.
+
 For each runnable case, keep the following in the review record outside the
 target:
 

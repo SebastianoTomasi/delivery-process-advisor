@@ -423,8 +423,14 @@ states that the project follows the advisor, points at `docs/`, and carries the
 rules that have to be applied before the agent can know which scaffold or which
 skill to open: how the project's position is derived, when it is derived, what
 that position is worth, how to read the material on the path to the work, and
-which workflow owns advisor writing. It routes to the skill by name but does
-not repeat its procedure. A rule earns a place on this page only because it
+what a document may record. It does not name the skills. Each skill declares
+its own applicability in its delivered description, and both hosts load those
+declarations before the agent acts, so repeating them here would be a copy in
+every session's context and a second place to drift, recorded in
+[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md). What the
+page carries instead is the rule no route may skip: a document records the
+decisions the user established, and whatever an agent settled in their place is
+proposed rather than accepted. A rule earns a place on this page only because it
 must be applied before the agent can choose which scaffold or skill to open;
 everything else — the questions, the phases, the shape of a document — belongs
 to a catalog, scaffold, or skill instead, so a second copy on this page would
@@ -448,7 +454,10 @@ routing page belongs to `advisor-agents.md`; it does not repeat that rule.
 Every behavior required of the target agent has one operational home on this
 instruction path and is reached before the action that needs it:
 
-- `advisor-agents.md` selects the workflow and minimal reading path;
+- `advisor-agents.md` selects the minimal reading path and fixes what a
+  document may record;
+- each delivered skill description declares when that skill applies, in the
+  metadata both hosts load before the agent acts;
 - `docs/advisor-docs.md` defines routing, placement, and the common artifact
   envelope;
 - the selected authority scaffold defines its detailed boundary and scope

@@ -139,7 +139,8 @@ The division is between delivery and judgement:
 
 -   **The delivery helper establishes what it delivers.** It writes the
     scaffolding and can import an optional template, resolving each asset to its
-    destination and reporting what it wrote and what it skipped. This has to be  
+    destination and reporting what it wrote, what it replaced, and what it  
+    left alone. This has to be  
     exactly right, and it is small enough to be verified directly.
 -   **Skills decide everything else.** They read the project’s artifacts, place  
     each feature in the process, explain a blocker, prescribe the next action,  
@@ -168,15 +169,22 @@ installed file compatible. The delivery contract is specified in
 
 ## Delivery compatibility
 
-Initialization may add files from a newer release beside existing files from
-an older one. It preserves occupied destinations and promises no compatibility
-between releases in the resulting project. It neither verifies release
-uniformity nor upgrades the existing installation. The per-destination behavior
-and its limits are owned by
+Initialization brings everything it delivers to the invoked release, replacing
+what occupies one of its own destinations, and preserves what the project owns.
+It may still leave files from an older release beside them, wherever a later
+payload no longer delivers to that path, and it promises no compatibility with
+what it did not touch. It neither verifies release uniformity nor removes that
+remainder. The per-destination behavior and its limits are owned by
 [Initialization](../architecture/initialization.md#deliberate-exclusions).
 
+A project that edits a delivered scaffold in place loses that edit at the next
+delivery. The delivered files are the advisor's, and a project shapes the
+process through its own documents rather than by rewriting the scaffolding it
+was given.
+
 Successful initialization means the delivery operations completed under their
-rules, with occupied destinations reported as skipped. It does not certify
+rules, replacing occupied advisor-owned destinations and reporting the
+project's own as skipped. It does not certify
 that pre-existing files or links work or that an agent can follow the entire
 instruction chain. The exact reference check in project instruction files
 remains required by [Delivery rules](../architecture/initialization.md#delivery-rules).
@@ -265,7 +273,10 @@ project decision and cannot settle a rule by itself.
     surrounding it.
 -   **It does not invent artifacts in the user’s place.** It writes only to
     propagate confirmed corrections or to record the decisions, requirements,
-    and intent established with the user in an advisor-grill-with-docs session.
+    and intent established with the user. A session is the ordinary way to
+    establish them and the one the advisor recommends; a document written any
+    other way states as accepted only what the user settled, and leaves the
+    rest proposed.
 
 ## Provenance
 

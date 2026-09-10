@@ -26,8 +26,11 @@ On Windows a permission failure should explain that Developer Mode or an
 appropriately privileged invocation may be needed. The helper does not change
 system settings or elevate itself. Files already delivered remain in place,
 under the existing non-atomic recovery contract. Existing destinations,
-including old junctions, copies, and broken links, are still skipped; this
-change governs newly created links and introduces no migration.
+including old junctions, copies, and broken links, were still skipped when this
+was decided; it governed newly created links and introduced no migration.
+[ADR-0029](0029-initialization-replaces-advisor-owned-destinations.md) later
+made delivery replace them, which is what converts an old junction or copy into
+the relative link required here.
 
 ## Sources
 

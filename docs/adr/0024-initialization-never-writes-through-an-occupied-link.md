@@ -31,6 +31,13 @@ the existence of a referent. A dangling link can never be used as a write
 destination. Delivery success through a linked `AGENTS.md` or `CLAUDE.md`
 requires the exact host-specific reference to be readable already.
 
+[ADR-0029](0029-initialization-replaces-advisor-owned-destinations.md) later
+narrowed the preservation half of this decision: an occupied advisor-owned
+destination is replaced rather than skipped, and a link occupying one is
+replaced as a directory entry. The prohibition recorded here is unchanged —
+nothing is written or appended through a link, and occupancy is still read from
+the directory entry itself.
+
 ## Sources
 
 The local audit on 2026-09-07 reproduced the defect in an isolated temporary

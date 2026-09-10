@@ -18,6 +18,15 @@ The versioned advisor content delivered into a target project: scaffolds, questi
 **Delivery helper**  
 The advisor component that resolves destinations, writes delivered assets, and reports the result. It is distinct from the skills that exercise judgement.
 
+**Destination**  
+A path in a target project that the delivery helper takes one decision about. Every destination comes from the fixed payload mapping; a path the mapping does not name is never inspected.
+
+**Advisor-owned destination**  
+A destination whose content the advisor defines and brings to the invoked release at every delivery: the mirrored scaffolds and catalogs, the root file, and the delivered skill directories. A project’s local edits to one are not preserved.
+
+**Project-owned destination**  
+A destination the advisor may create but whose content belongs to the project: the two instruction files and the handoff directory. Delivery ensures or creates it and never replaces what it holds.
+
 **Artifact**  
 A normative document recording a guided project’s decisions, with one owning authority, a scope, and a lifecycle status. It is the kind of document on whose accepted decisions other work can rely.
 _Avoid_: file, note, deliverable

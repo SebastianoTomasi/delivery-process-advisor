@@ -1,6 +1,6 @@
 ---
 name: advisor-domain-modeling
-description: Build and refine a project’s domain model. Use when defining domain terminology or ubiquitous language, resolving domain boundaries, recording a qualifying architectural decision, or maintaining the domain model for another skill.
+description: Build and refine a project's domain model. Use when defining domain terminology or ubiquitous language, resolving domain boundaries, writing or updating the glossary at CONTEXT.md or a decision record under docs/adr/, recording a qualifying architectural decision, or maintaining the domain model for another skill.
 disable-model-invocation: false
 ---
 

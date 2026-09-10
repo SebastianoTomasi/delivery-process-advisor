@@ -99,17 +99,17 @@ test('fresh delivery preserves all asset bytes, reports its release, and is idem
   assert.deepEqual(readdirSync(handoffDirectory), []);
   assert.match(first.stdout, /written\s+docs\/handoffs\//);
   assert.equal(existsSync(join(f.target, 'handoffs')), false);
-  const before = deliveredAssets(f).map(([, path]) => [path, readFileSync(path), lstatSync(path).mtimeMs]);
-  const handoffDirectoryMtime = lstatSync(handoffDirectory).mtimeMs;
+  const before = deliveredAssets(f).map(([, path]) => [path, readFileSync(path)]);
+  // What the project owns must not be rewritten; what the advisor owns may be,
+  // as long as the bytes it writes again are the same.
+  const untouched = [handoffDirectory, join(f.target, 'AGENTS.md'), join(f.target, 'CLAUDE.md')]
+    .map(path => [path, lstatSync(path).mtimeMs]);
   const second = run(f);
   success(second);
-  assert.match(second.stdout, /0 written, 0 linked, 0 appended, \d+ skipped/);
+  assert.match(second.stdout, /0 written, \d+ replaced, 0 linked, 0 appended, \d+ skipped, 0 removed/);
   assert.match(second.stdout, /skipped\s+docs\/handoffs\//);
-  assert.equal(lstatSync(handoffDirectory).mtimeMs, handoffDirectoryMtime);
-  for (const [path, bytes, mtime] of before) {
-    assert.deepEqual(readFileSync(path), bytes);
-    assert.equal(lstatSync(path).mtimeMs, mtime);
-  }
+  for (const [path, mtime] of untouched) assert.equal(lstatSync(path).mtimeMs, mtime, path);
+  for (const [path, bytes] of before) assert.deepEqual(readFileSync(path), bytes, path);
 });
 
 test('all new host links are relative and survive moving the whole target', t => {
@@ -129,15 +129,17 @@ test('all new host links are relative and survive moving the whole target', t =>
   }
 });
 
-test('dangling asset links are skipped without creating their referent', t => {
+test('a dangling asset link is replaced as an entry without creating its referent', t => {
   const f = fixture(t);
   const referent = join(f.root, 'not-created.md');
   const link = join(f.target, 'advisor-agents.md');
   symlinkSync(referent, link, 'file');
-  success(run(f));
-  assert.ok(lstatSync(link).isSymbolicLink());
-  assert.equal(readlinkSync(link), referent);
+  const result = run(f);
+  success(result);
+  assert.equal(lstatSync(link).isSymbolicLink(), false);
+  assert.deepEqual(readFileSync(link), readFileSync(join(f.plugin, 'src/target/advisor-agents.md')));
   assert.equal(existsSync(referent), false);
+  assert.match(result.stdout, /replaced\s+advisor-agents\.md/);
 });
 
 for (const kind of ['file', 'dangling link']) {
@@ -204,24 +206,44 @@ test('an unreadable instruction referent fails without being modified', t => {
   assert.equal(readFileSync(referent, 'utf8'), codexDirective);
 });
 
-test('unusable ordinary destinations are skipped without certifying reachability', t => {
+test('a directory occupying an advisor-owned file destination stops delivery intact', t => {
   const f = fixture(t);
-  mkdirSync(join(f.target, 'advisor-agents.md'));
-  const skill = readdirSync(join(f.plugin, 'src/skills'))[0];
-  const link = join(f.target, '.claude/skills', skill);
-  mkdirSync(dirname(link), { recursive: true });
-  const missing = join(f.root, 'missing-skill');
-  symlinkSync(relative(dirname(link), missing), link, 'dir');
-  success(run(f));
-  assert.ok(lstatSync(join(f.target, 'advisor-agents.md')).isDirectory());
-  assert.ok(lstatSync(link).isSymbolicLink());
-  assert.equal(existsSync(missing), false);
+  const blocked = join(f.target, 'advisor-agents.md');
+  mkdirSync(blocked);
+  writeFileSync(join(blocked, 'kept.md'), 'project content');
+  const result = run(f);
+  operationalFailure(result, blocked);
+  assert.ok(lstatSync(blocked).isDirectory());
+  assert.equal(readFileSync(join(blocked, 'kept.md'), 'utf8'), 'project content');
 });
 
-test('a newer release preserves occupied assets and adds absent ones', t => {
+for (const [kind, occupy] of [
+  ['a dangling link', (link, f) =>
+    symlinkSync(relative(dirname(link), join(f.root, 'missing-skill')), link, 'dir')],
+  ['an independent copy', link => {
+    mkdirSync(link, { recursive: true });
+    writeFileSync(join(link, 'SKILL.md'), 'a copy left by an older release');
+  }],
+]) {
+  test(`${kind} at a Claude skill destination becomes a relative link`, t => {
+    const f = fixture(t);
+    const skill = readdirSync(join(f.plugin, 'src/skills'))[0];
+    const link = join(f.target, '.claude/skills', skill);
+    mkdirSync(dirname(link), { recursive: true });
+    occupy(link, f);
+    const result = run(f);
+    success(result);
+    assert.ok(lstatSync(link).isSymbolicLink());
+    assert.equal(isAbsolute(readlinkSync(link)), false);
+    assert.equal(realpathSync(link), realpathSync(join(f.target, '.agents/skills', skill)));
+    assert.equal(existsSync(join(f.root, 'missing-skill')), false);
+    assert.match(result.stdout, new RegExp(`replaced\\s+\\.claude/skills/${skill}`));
+  });
+}
+
+test('a newer release replaces occupied assets and adds absent ones', t => {
   const f = fixture(t);
   success(run(f));
-  const existing = readFileSync(join(f.target, 'advisor-agents.md'));
   appendFileSync(join(f.plugin, 'src/target/advisor-agents.md'), '\nnew release content\n');
   writeFileSync(join(f.plugin, 'src/target/new-asset.md'), 'new asset');
   const manifestPath = join(f.plugin, '.claude-plugin/plugin.json');
@@ -230,9 +252,40 @@ test('a newer release preserves occupied assets and adds absent ones', t => {
   writeFileSync(manifestPath, JSON.stringify(manifest));
   const result = run(f);
   success(result);
-  assert.deepEqual(readFileSync(join(f.target, 'advisor-agents.md')), existing);
+  assert.deepEqual(readFileSync(join(f.target, 'advisor-agents.md')),
+    readFileSync(join(f.plugin, 'src/target/advisor-agents.md')));
   assert.equal(readFileSync(join(f.target, 'new-asset.md'), 'utf8'), 'new asset');
   assert.match(result.stdout, /delivery-process-advisor@99\.0\.0/);
+  assert.match(result.stdout, /replaced\s+advisor-agents\.md/);
+});
+
+test('a delivered skill directory loses the files the invoked release dropped', t => {
+  const f = fixture(t);
+  success(run(f));
+  const skill = readdirSync(join(f.plugin, 'src/skills'))[0];
+  const installed = join(f.target, '.agents/skills', skill);
+  const stale = join(installed, 'obsolete-reference.md');
+  writeFileSync(stale, 'an instruction the host would still load');
+  writeFileSync(join(installed, 'SKILL.md'), 'a hand edit');
+  const result = run(f);
+  success(result);
+  assert.equal(existsSync(stale), false);
+  assert.match(result.stdout,
+    new RegExp(`removed\\s+\\.agents/skills/${skill}/obsolete-reference\\.md`));
+  assert.deepEqual(readFileSync(join(installed, 'SKILL.md')),
+    readFileSync(join(f.plugin, 'src/skills', skill, 'skill-asset.md')));
+});
+
+test('project files beside the delivered scaffolding are never touched', t => {
+  const f = fixture(t);
+  success(run(f));
+  const artifact = join(f.target, 'docs/product/overview.md');
+  writeFileSync(artifact, 'a project artifact the payload does not map');
+  const record = join(f.target, 'docs/handoffs/0001-deferred-question.md');
+  writeFileSync(record, 'a handoff record');
+  success(run(f));
+  assert.equal(readFileSync(artifact, 'utf8'), 'a project artifact the payload does not map');
+  assert.equal(readFileSync(record, 'utf8'), 'a handoff record');
 });
 
 test('missing target values select the nearest .git entry and announce it first', t => {

@@ -30,10 +30,14 @@ instructions by examining what an agent using them in a target project would
 read and understand while carrying out a user request.
 
 The examination follows instruction paths from the user prompt and the target's
-`AGENTS.md`, through `advisor-agents.md`, to the relevant scaffolds, skills,
-catalogs, and supporting Markdown files. Different user requests expose
+`AGENTS.md`, through `advisor-agents.md`, to the relevant scaffolds, catalogs,
+and supporting Markdown files, and from the skill declarations the host loads
+before the request into the skills themselves. Different user requests expose
 different branches. The starting example is a request for a new feature and
-the route to an `advisor-grill-with-docs` session.
+the route to an `advisor-grill-with-docs` session. Since
+[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md) no delivered
+file names a skill: a declaration that fails to claim its own case is a
+navigation defect that following the file path cannot reveal.
 
 The audit should expose instructions placed where they are not useful or not
 reached when needed, unnecessary duplication, missing instructions, and unclear

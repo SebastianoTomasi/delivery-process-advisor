@@ -21,6 +21,9 @@ below remain proposals and do not change those current rules.
 - [Delivery rules](../architecture/initialization.md#delivery-rules) and
   [failure behavior](../architecture/initialization.md#failure-behavior) —
   initialization and adoption scenarios rely on the helper's file guarantees.
+- [The root file](../architecture/documentation-model.md#the-root-file) — the
+  reading path in flow E ends at the artifacts, because the skill is reached
+  from its own declaration rather than from a delivered file.
 - [Payload content](../architecture/initialization.md#the-payload) — flow M
   cannot assume per-file release markers; evidence for its version comparison
   remains part of the unresolved template-import scenario.
@@ -41,7 +44,8 @@ Quoted requests are illustrative. In the scenarios below:
 - **initialized** means the helper has delivered the fixed scaffolding,
   instructions, and skills defined by Initialization. Scenarios relying on
   usable instructions assume those paths are actually readable; the helper's
-  zero exit result alone does not establish that for skipped destinations.
+  zero exit result alone does not establish that for the destinations it
+  preserved.
 
 ## A. An idea meets an initialized project
 
@@ -152,9 +156,13 @@ links. Scenario U covers interruption before that result is reached.
 5. the current phase's authority scaffold, which supplies its precise boundary;
 6. that authority's feature catalog, which supplies only the current phase's
    progression and questions;
-7. the relevant skill, accepted prerequisites, related artifacts, and sources.
+7. accepted prerequisites, related artifacts, and sources.
 
-Each hop is disclosed by the previous file. The routing page repeats only
+The relevant skill is not a hop on that path. Its declaration reaches the agent
+from the host before the request, under
+[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), and no file
+on the path names it. Each hop above is disclosed by the previous file. The
+routing page repeats only
 enough ownership detail to choose an authority; the local scaffold supplies the
 precise boundary and resolves close cases; its catalog links expose only the
 selected scope.
@@ -224,8 +232,9 @@ existing documents.
 
 **Expect.**
 
-- Initialization leaves occupied and unrelated paths untouched and reports
-  skipped destinations.
+- Initialization brings its own destinations to the invoked release and leaves
+  the project's documents and unrelated paths untouched, reporting what it
+  replaced and what it skipped.
 - The request selects `advisor-migrate-docs`. The agent reads the selected
   inputs in full, splits or merges their contents by authority and scope, and
   reuses suitable existing artifacts. Existing ADR locations, numbering, and
@@ -341,7 +350,8 @@ future template import provides remains unresolved.
 - The agent reports a version mismatch only when supported by that evidence,
   and identifies sections the catalog cannot assess by reading their content.
   It does not infer a file's version from absent markers or from the release
-  named in a later delivery report that skipped that file.
+  named in a later delivery report that preserved that file. A report does
+  identify the release of a destination it wrote or replaced.
 - It neither fills unowned sections nor performs a partial upgrade.
 
 **Open question.** [D10](#open-decisions).

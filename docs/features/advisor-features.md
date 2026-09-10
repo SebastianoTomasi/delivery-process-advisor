@@ -48,11 +48,22 @@ its first artifact. Its presence shows documentation in that authority, not
 completion of a phase or of any previous phase. Authorities outside the four
 feature phases may also hold feature artifacts; they introduce no new phases.
 
-A phase this feature has nothing to decide in is closed rather than skipped. On
-a negative answer to the phase's own applicability question, the session writes
-`<authority>/absent.md`, accepted as written, naming the questions it dismisses
-and why. The folder then exists, the phase is done, and the inapplicability is
-written rather than inferred from a folder that is not there.
+### Closing a phase with no decisions
+
+Before closing a phase with `<authority>/absent.md`, read its entire feature
+catalog and check every question against the relevant accepted decisions,
+including screening questions owned by other authorities. Write Scope and an
+explicit dismissal for each question's slug, explaining why no decision is
+needed. If existing coverage supports a dismissal, link its accepted answer
+and record the dependency. Accept the absence only when every dismissal is
+supported and no necessary input remains unresolved.
+
+A negative applicability answer may support these dismissals but never replaces
+the full check. A phase needs no dedicated applicability question to use this
+procedure. If any question has substance, use a normal artifact and link answers
+owned elsewhere; do not declare the whole phase absent. Read available evidence
+before asking the user and ask only unresolved decision-critical questions,
+not one interview question for each catalog entry.
 
 ## Phase order and reading route
 

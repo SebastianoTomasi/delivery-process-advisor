@@ -26,6 +26,9 @@ target project is specified separately in
   is selected by that contract; self-application does not establish a second rule.
 - [Skill hosts](initialization.md#skill-hosts) — payload layout must keep
   canonical skill files and the second host's link outside the literal mirror.
+- [Delivery rules](initialization.md#delivery-rules) — the installed copy here
+  is regenerable because delivery replaces the destinations the advisor owns;
+  self-application depends on that and adds no separate mechanism.
 
 ## Documentation and product source
 
@@ -168,10 +171,20 @@ instructions govern this project. Its migrated artifacts describe the advisor
 product and are evaluated under the installed process, including real artifact
 acceptance and semantic phase coverage.
 
-Source versions under `src/` remain product payload. A change to the advisor's
-own design artifacts does not itself update that payload, and editing payload
-source does not itself upgrade the installed process here. The two copies have
-different roles and are not edited as one change. Installed skills in the host
+Source versions under `src/` remain product payload, and a change to the
+advisor's own design artifacts does not itself change that payload. The other
+direction is now fixed: the installed copy here is derived from the payload and
+is never edited by hand. A commit that changes payload source regenerates it in
+the same commit, by running the delivery helper against this repository, so the
+two cannot drift apart unnoticed.
+
+They did once. The payload advanced alone while the installed copy stayed a
+release behind across seven files and one skill missing a reference file it
+linked to, and nothing detected it. That is the evidence
+[ADR-0029](../adr/0029-initialization-replaces-advisor-owned-destinations.md)
+was decided from, and the reason an edit made directly to an installed file is
+a defect to correct by regenerating rather than a second copy to keep in step.
+Installed skills in the host
 directories are deliberate self-application; their links target canonical
 delivered files under `.agents/skills/`, not `src/skills/`.
 

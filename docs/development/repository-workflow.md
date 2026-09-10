@@ -26,6 +26,15 @@ self-application contract. This is not a complete branching or test strategy.
 - [Handoffs](../architecture/documentation-model.md#handoffs) — release checks
   must cover the fixed empty directory without treating it as an artifact or
   duplicating the skill-owned protocol.
+- [The root file](../architecture/documentation-model.md#the-root-file) — the
+  delivered instructions no longer name the skills, so reaching them depends on
+  each host surfacing their declarations, and that is now a release check.
+- [Delivery rules](../architecture/initialization.md#delivery-rules) — delivery
+  replaces the destinations the advisor owns, so release checks must establish
+  convergence rather than preservation.
+- [Self-application](../architecture/repository-boundaries.md#self-application)
+  — the installed copy in this repository is derived, so a payload change is
+  unfinished until the same commit regenerates it.
 
 ## Product source and active instructions
 
@@ -40,6 +49,14 @@ work here. Installed skills belong to that deliberate self-application;
 they do not turn the source tree into an instruction directory. Keep changes
 to product source and changes to the installed process distinct.
 
+Never edit an installed advisor file here. The copy under the host directories,
+at the documentation root, and in the delivered scaffolds is derived from
+`src/`: the way to change it is to change the payload and run the delivery
+helper against this repository in the same commit. Expect that run to rewrite
+the instructions governing the session performing it — the root file, the
+scaffolds, and the skills change underneath the agent that invoked them — so
+treat what was read before the run as no longer authoritative once it finishes.
+
 Material explicitly withheld from agent access requires user authorization
 before reading. Its presence alone supplies neither access authorization nor
 an accepted design input. Non-normative material cannot override project rules.
@@ -51,6 +68,15 @@ each release. A wrong path can deliver every file, load none of the skills,
 and still report success. The `.agents/skills/` destination therefore cannot
 be treated as verified merely because delivery succeeded.
 
+Verify as well that each host actually surfaces the delivered skill
+declarations to the model before it acts. Instruction routing rests on that
+behavior since
+[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), and no
+delivered file names the skills any more: a host that reads the skill files
+only on request, or ignores their metadata, leaves the skills installed and
+unreachable while every path check still passes. Check it per host, from the
+host's own documentation and from an observed session, at each release.
+
 Check that each host can reach the delivered skill through a newly created
 relative directory symlink. Inspect the filesystem to verify that a `linked`
 outcome exposes the canonical files through a relative target. Move an isolated
@@ -60,11 +86,17 @@ must fail with a concise diagnostic and create neither a junction nor a copy.
 For a Windows permission failure, check that the diagnostic explains the setup
 needed before retrying.
 
-An occupied Claude skill destination is skipped, including legacy junctions,
-copies, and broken links; a rerun alone is not evidence that it was converted
-to a relative symlink or repaired. These checks apply the contract in
-[Skill hosts](../architecture/initialization.md#skill-hosts) and
-[ADR-0026](../adr/0026-skill-host-links-must-be-relative.md).
+An occupied Claude skill destination is now replaced, so verify the conversion
+itself rather than the absence of one: starting from a legacy junction, from an
+independent copy, and from a dangling link, a rerun must leave a relative
+symlink exposing the canonical files. Verify as well that a file the invoked
+release does not contain is gone from a delivered skill directory afterwards,
+and that every destination whose content was destroyed is reported `replaced`
+rather than `written` — a run that reports the two alike hides the only outcome
+its reader cannot recover from. These checks apply the contract in
+[Skill hosts](../architecture/initialization.md#skill-hosts),
+[ADR-0026](../adr/0026-skill-host-links-must-be-relative.md), and
+[ADR-0029](../adr/0029-initialization-replaces-advisor-owned-destinations.md).
 
 ## Installer failure verification
 
@@ -72,8 +104,9 @@ On a fresh isolated target, verify that initialization creates and reports
 `docs/handoffs/` as a directory, creates no root `handoffs/` and no sample
 record, and reports the directory as skipped on an idempotent rerun. Exercise
 an occupied file or link at `docs/handoffs/`: it must be preserved and skipped
-under the ordinary occupancy rule rather than replaced. A denied directory
-creation must follow the concise operational-failure contract below.
+because the project owns it, which is now the exception rather than the norm
+and therefore worth exercising at every release. A denied directory creation
+must follow the concise operational-failure contract below.
 
 Use isolated targets to exercise a file occupying a required parent directory
 (such as `docs`), an unreadable asset, and a denied filesystem operation. Check
@@ -88,12 +121,16 @@ stack trace is retained and delivery stops with a non-zero result. Do not
 treat a passing filesystem-error check as evidence that programming defects
 remain diagnosable.
 
-Verify the success boundary with otherwise valid isolated targets containing
-either a directory at `advisor-agents.md` or a dangling link at a Claude skill
-destination. Those destinations must be skipped unchanged and must not alone
-cause a non-zero result. This evidence establishes occupancy behavior, not
-agent access. Keep the required instruction-file reference checks separate:
-an unreadable linked `AGENTS.md` or `CLAUDE.md` still fails delivery.
+Verify the boundary between replacement and failure with otherwise valid
+isolated targets. A dangling link at a Claude skill destination must be
+replaced and must not alone cause a non-zero result. A directory at
+`advisor-agents.md` must end delivery with a concise operational diagnostic and
+leave that directory exactly as it was: what is being checked is that the
+helper refused, not that it tidied up. A file or a link at that same path must
+be replaced instead. This evidence establishes destination behavior, not agent
+access. Keep the required instruction-file reference checks separate: an
+unreadable linked `AGENTS.md` or `CLAUDE.md` still fails delivery, and neither
+instruction file is ever replaced.
 
 ## Provenance
 

@@ -1,6 +1,6 @@
 ---
 name: advisor-grill-with-docs
-description: Conduct an advisor-grill-with-docs session — one question at a time, writing what settles into the project's own documents as it settles. Use when writing, filling in, or accepting a normative document under docs/ (product, architecture, implementation, frontend, security, deployment, operations, development, stack), when declaring or advancing a feature, when recording or resuming a handoff, when asked what work comes next, or when pressure-testing a plan or design whose outcome the project should keep.
+description: Conduct an advisor-grill-with-docs session — one question at a time, writing what settles into the project's own documents as it settles. Use when writing, filling in, or accepting a normative document under docs/ (product, architecture, implementation, frontend, security, deployment, operations, development, stack), when declaring or advancing a feature, when recording, recovering, or resuming a handoff under docs/handoffs/, when propagating an agreed change through an accepted rule and its dependants, when asked what advisor work comes next, or when pressure-testing a plan or design whose outcome the project should keep.
 disable-model-invocation: false
 ---
 

@@ -20,6 +20,8 @@ import {
   statSync,
   lstatSync,
   symlinkSync,
+  rmSync,
+  unlinkSync,
 } from 'node:fs';
 import { join, dirname, resolve, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -149,14 +151,22 @@ function mapping() {
     for (const skill of readdirSync(skills, { withFileTypes: true })) {
       if (!skill.isDirectory()) continue;
       const source = join(skills, skill.name);
+      const delivered = [];
       for (const path of filesUnder(source)) {
         const name = path === SKILL_ENTRY_ASSET ? SKILL_ENTRY_DESTINATION : path;
+        delivered.push(name);
         entries.push({
           asset: join(source, path),
           destination: join(SKILL_FILE_HOST, skill.name, name),
           mode: 'write',
         });
       }
+      // The release's files are in place before anything else there is removed.
+      entries.push({
+        destination: join(SKILL_FILE_HOST, skill.name),
+        keep: delivered,
+        mode: 'prune',
+      });
       entries.push({
         destination: join(SKILL_LINK_HOST, skill.name),
         linked: join(SKILL_FILE_HOST, skill.name),
@@ -193,16 +203,51 @@ function occupied(path) {
   return entryAt(path) !== null;
 }
 
-// Rules 1 and 2: write if absent, skip if occupied.
+// Rules 1 to 3: write if absent, replace what the advisor owns, refuse a
+// directory. A link occupying the name is replaced as an entry and never
+// written through, so its referent is left where it is.
 function write(entry, target) {
   const path = join(target, entry.destination);
-  if (occupied(path)) return 'skipped';
-  mkdirSync(dirname(path), { recursive: true });
+  const existing = entryAt(path);
+  if (existing === null) {
+    mkdirSync(dirname(path), { recursive: true });
+    writeFileSync(path, readFileSync(entry.asset), { flag: 'wx' });
+    return 'written';
+  }
+  if (existing.isDirectory()) {
+    fail(`cannot deliver ${path}: a directory occupies this advisor-owned file destination`);
+  }
+  removeEntry(path, existing);
   writeFileSync(path, readFileSync(entry.asset), { flag: 'wx' });
-  return 'written';
+  return 'replaced';
 }
 
-// Rules 1 and 2 for the one explicit empty directory in the scaffold.
+// Remove the directory entry itself and never what it points at. `rmSync` with
+// `force` is wrong here: a dangling link resolves to nothing, so it would be
+// left in place and the write that follows would go through the link.
+function removeEntry(path, existing) {
+  if (existing.isDirectory()) rmSync(path, { recursive: true, force: true });
+  else unlinkSync(path);
+}
+
+// Rule 2 for a delivered skill directory, which the advisor owns whole: a file
+// the invoked release does not contain is not dead weight but an instruction
+// the host still loads. Nothing outside such a directory is ever swept.
+function prune(entry, target) {
+  const root = join(target, entry.destination);
+  const current = entryAt(root);
+  if (current === null || !current.isDirectory()) return [];
+  const removed = [];
+  for (const path of filesUnder(root)) {
+    if (entry.keep.includes(path)) continue;
+    rmSync(join(root, path), { force: true });
+    removed.push(join(entry.destination, path));
+  }
+  return removed;
+}
+
+// Rules 1 and 4: the one project-owned structural destination is created when
+// absent and preserved once it exists, whatever occupies it.
 function directory(entry, target) {
   const path = join(target, entry.destination);
   if (occupied(path)) return 'skipped';
@@ -212,18 +257,22 @@ function directory(entry, target) {
 
 // Rules 1 and 2 for the second host. A relative symlink preserves the connection
 // when the whole project moves. Failure has no junction or copy fallback.
+// The advisor owns this entry, so an older link, junction, or independent copy
+// is removed and replaced rather than kept forever.
 function link(entry, target) {
   const path = join(target, entry.destination);
-  if (occupied(path)) return 'skipped';
   const destination = join(target, entry.linked);
   if (!statSync(destination).isDirectory()) {
     fail(`cannot link ${path}: ${destination} is not a directory`);
   }
+  const existing = entryAt(path);
+  const outcome = existing === null ? 'linked' : 'replaced';
+  if (existing !== null) removeEntry(path, existing);
   mkdirSync(dirname(path), { recursive: true });
 
   try {
     symlinkSync(relative(dirname(path), destination), path, 'dir');
-    return 'linked';
+    return outcome;
   } catch (cause) {
     if (!isFilesystemError(cause)) throw cause;
     const hint = process.platform === 'win32' && ['EPERM', 'EACCES'].includes(cause.code)
@@ -233,7 +282,7 @@ function link(entry, target) {
   }
 }
 
-// Rule 3: ensure the file carries its host-specific advisor reference. Created
+// Rule 5: ensure the file carries its host-specific advisor reference. Created
 // if absent, appended to if present, left alone if the reference is already there.
 function ensure(entry, target) {
   const path = join(target, entry.destination);
@@ -281,11 +330,19 @@ function main() {
   }
 
   const version = release();
-  const counts = { written: 0, linked: 0, skipped: 0, appended: 0 };
+  const counts = { written: 0, replaced: 0, linked: 0, skipped: 0, appended: 0, removed: 0 };
 
   // Delivery is not atomic. On failure what was written stays written, which is
-  // safe because nothing pre-existing is ever overwritten.
+  // safe because a rerun writes the advisor's own destinations again from the
+  // invoked release and still never touches what the project owns.
   for (const entry of mapping()) {
+    if (entry.mode === 'prune') {
+      for (const stale of prune(entry, target)) {
+        counts.removed += 1;
+        process.stdout.write(`${'removed'.padEnd(8)} ${stale.split(sep).join('/')}\n`);
+      }
+      continue;
+    }
     const outcome = DELIVER[entry.mode](entry, target);
     counts[outcome] += 1;
     const destination = entry.destination.split(sep).join('/');
@@ -296,8 +353,8 @@ function main() {
 
   process.stdout.write(
     `\ndelivery-process-advisor@${version} -> ${target}\n` +
-    `${counts.written} written, ${counts.linked} linked, ` +
-    `${counts.appended} appended, ${counts.skipped} skipped\n`
+    `${counts.written} written, ${counts.replaced} replaced, ${counts.linked} linked, ` +
+    `${counts.appended} appended, ${counts.skipped} skipped, ${counts.removed} removed\n`
   );
 
   return 0;

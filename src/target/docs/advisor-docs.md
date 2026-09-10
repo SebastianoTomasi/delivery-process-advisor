@@ -61,8 +61,7 @@ in a listing.
 
 Two positions are not the advisor’s and carry no `advisor-` prefix, no  
 scaffold and no question list: `CONTEXT.md` at the project root, and  
-`docs/adr/` for decision records. Both are written by the  
-`advisor-domain-modeling` skill.
+`docs/adr/` for decision records.
 
 ## Where material that is not a document sits
 
@@ -101,9 +100,7 @@ What one is worth to the work, and when to read it, is in
 normative documentation tree but outside every authority and phase. They have
 no artifact marker or phase coverage. Their `open`/`closed` work state is
 distinct from the artifact statuses below. Initialization creates the empty
-directory but no sample record or local protocol file. Use
-`advisor-grill-with-docs` and its `handoffs.md` reference for format, capture,
-recovery, and closure.
+directory but no sample record or local protocol file.
 
 An artifact places one line directly below its title, never in frontmatter:
 
@@ -117,7 +114,7 @@ Every artifact opens with `## Scope`, a short paragraph stating what it governs
 and which nearby concern it leaves elsewhere. Filename, title, status, and
 Scope are its routing envelope; the rest follows its subject, with the common
 sections below when applicable. Advisor scaffolds and catalogs have no artifact
-status. The glossary and ADRs keep the domain-modeling skill's own format.
+status. The glossary and ADRs keep their own format.
 
 ### Dependencies and provenance
 
@@ -169,9 +166,8 @@ replace a rule identifies the affected accepted passage in Scope and leaves
 that rule in force until the change is agreed. Do not silently rewrite an
 accepted rule while discussing its replacement.
 
-When a change is agreed, use the propagation procedure in
-`advisor-grill-with-docs`: update the current owning rule, review its affected
-dependants, and finish with coherent documents. Integrate the proposal into the
+When a change is agreed, propagate it: update the current owning rule, review
+its affected dependants, and finish with coherent documents. Integrate the proposal into the
 one authoritative rule and remove any now-redundant draft. A change that removes
 accepted coverage or leaves an affected dependency under review makes that work
 unfinished; unrelated decisions remain usable.

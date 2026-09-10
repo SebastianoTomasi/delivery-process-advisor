@@ -1,6 +1,7 @@
 ---
 name: advisor-migrate-docs
-description: Migrate one or more user-selected documents into an initialized delivery-process-advisor project. Reorganize their content into advisor documents, resolve necessary decisions with the user, and replace the in-scope originals without retaining source copies. Use when adopting or restructuring existing documentation.
+description: Migrate one or more user-selected documents into an initialized delivery-process-advisor project. Reorganize their content into advisor documents, resolve necessary decisions with the user, and replace the in-scope originals without retaining source copies. Use when adopting, migrating, or restructuring existing documentation, including pre-existing project documents that carry no advisor marker; the request to migrate is itself the adoption, and no second adoption request is needed. This skill owns the migration case and invokes advisor-grill-with-docs for writing, acceptance, and decision changes.
+disable-model-invocation: false
 ---
 
 # Migrate documents into the advisor

@@ -4,13 +4,17 @@ This project follows the delivery process advisor. Its normative documentation
 lives under `docs/`, and the questions it answers are enumerated in the
 question catalogs there.
 
-Use `advisor-migrate-docs` when the user asks to migrate existing documents
-into this structure. It owns the transfer and replacement of the originals,
-using `advisor-grill-with-docs` for writing, acceptance, and decision changes.
-For other actions that write or accept an advisor artifact, declare or advance
-a feature, or decide what advisor work comes next, use `advisor-grill-with-docs`
-directly. This file selects the workflow and shortest reading path; the skills
-own their procedures.
+The skills the advisor delivers declare when they apply and own their
+procedures, and each host loads those declarations before the agent acts, so
+this file does not name them. It selects the shortest reading path, and its
+rules hold whichever route the work takes.
+
+A document under `docs/` records what the user established, never what an agent
+settled in their place. What settles is settled with the user, one question at
+a time, and written where it belongs. A session is the ordinary way to reach
+that and the one to recommend; a document written any other way is held to the
+same rule, and whatever it states beyond what the user settled is proposed
+rather than accepted. What acceptance requires is in `docs/advisor-docs.md`.
 
 ## When the user describes a new feature
 
@@ -20,6 +24,10 @@ feature folder yet, follow
 start and progress it. This file does not repeat its procedure.
 
 ## Before proposing work
+
+Before recommending work or starting or resuming an advisor session, recover
+relevant `docs/handoffs/` records, including those whose destination is still
+undecided. Handoff files do not count toward artifact or phase coverage.
 
 Do this when the user asks what is worth doing next, and before writing or
 accepting any document under `docs/`. Ordinary code work does not require it.
@@ -35,10 +43,10 @@ scope is shipped; a feature folder only shows where documentation exists.
 
 A project document with no artifact marker counts toward no phase. Recognize
 advisor scaffolds and catalogs by their fixed names, and the glossary and ADRs
-by their skill-owned roles; they remain readable instructions or context without
-being artifacts. For pre-existing unmarked project documentation, name relevant
+by their fixed positions at `CONTEXT.md` and `docs/adr/`; they remain readable
+instructions or context without being artifacts. For pre-existing unmarked project documentation, name relevant
 material and leave its adoption to the user. A request to migrate that material
-selects `advisor-migrate-docs`; do not require a second adoption request.
+is itself that adoption; do not require a second request.
 
 Name the files you read whenever you report a position, so a misreading is
 visible to the user and not only to you.
@@ -54,17 +62,16 @@ reading path that can support the advisor action:
   coverage before claiming a phase is complete; disclose what remains unverified.
 - To place a document, use `docs/advisor-docs.md` to select one authority, then
   read that authority's `advisor-<authority>.md` boundary file.
-- To migrate documents, read the selected inputs in full and follow
-  `advisor-migrate-docs`; use the bounded reading path for surrounding project
-  documentation. Migration does not adopt every document encountered.
+- To migrate documents, read the selected inputs in full, and use the bounded
+  reading path for surrounding project documentation. Migration does not adopt
+  every document encountered.
 - To work on a document, read that boundary, only the project or feature catalog
   for the current work, accepted prerequisites, directly related artifacts, and
   relevant material on its source path.
 - To accept a phase, read its catalog and every artifact in that phase's folder,
   following linked answers and inputs as needed for semantic coverage.
-- To propagate a change, use `advisor-grill-with-docs` to find and review direct
-  and transitive dependants. Load each affected authority and catalog only when
-  that work reaches it.
+- To propagate a change, find and review direct and transitive dependants. Load
+  each affected authority and catalog only when that work reaches it.
 
 When selecting among artifacts, inspect the filename and a bounded opening read
 containing the title, marker, and `Scope` section. Read the body only when that

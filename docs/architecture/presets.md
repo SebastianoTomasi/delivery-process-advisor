@@ -171,8 +171,12 @@ against the question list the project actually holds.
 
 Following the 2026-09-07 removal of the release-marker guarantee, the mismatch
 scenario must specify what evidence supports a version comparison. A delivery
-report names the invoked release, not the versions of skipped project files.
-The proposed mismatch reporting is not an automatic detection guarantee.
+report names the invoked release, and since
+[ADR-0029](../adr/0029-initialization-replaces-advisor-owned-destinations.md)
+that release is also what every destination the report wrote or replaced now
+holds; what it still says nothing about is a file it preserved or one an
+earlier release left behind. The proposed mismatch reporting is not an
+automatic detection guarantee.
 
 The proposed screening paragraph assumes every substantive answer is
 project-scoped. The accepted model permits feature-specific answers as well.

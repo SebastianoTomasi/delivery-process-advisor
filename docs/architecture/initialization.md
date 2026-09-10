@@ -19,8 +19,9 @@ structural rules are specified in the
 - [Product form](../product/overview.md#form) and [rules](../product/overview.md#rules)
   — delivery must establish the process without creating project decisions.
 - [Delivery compatibility](../product/overview.md#delivery-compatibility) —
-  initialization preserves occupied destinations without promising release
-  uniformity, compatibility, or operability of skipped destinations.
+  initialization brings the destinations it owns to the invoked release and
+  preserves the ones the project owns, without promising that nothing else
+  from an older release remains beside them.
 - [Document kinds](documentation-model.md#document-kinds) and
   [directory layout](documentation-model.md#directory-layout) — the mapping
   delivers the fixed advisor content while leaving project-named work to sessions.
@@ -43,7 +44,8 @@ carry no release marker: files an agent opens should contain the information
 needed for its work, without repeated release metadata consuming its context.
 The release is recorded in the plugin manifest and the delivery report, not
 in each delivered file. A file alone therefore does not identify its release
-of origin, and the report does not certify the version of skipped destinations.
+of origin. The report certifies the release of what it wrote or replaced, and
+says nothing about the version of a destination it preserved.
 
 There is no templating language, conditional content, or value derived from
 the target. Newly delivered asset bytes match their source in `src/` directly;
@@ -136,9 +138,13 @@ that Developer Mode or an appropriately privileged invocation may be needed
 before retrying. The helper neither changes system settings nor elevates itself.
 Previously delivered files remain in place under [Failure behavior](#failure-behavior).
 
-If anything already occupies the Claude skill destination, including a
-dangling link, that destination is skipped as a whole. Existing copies are not
-converted to links, and broken links are not repaired by initialization.
+An occupied Claude skill destination is replaced rather than skipped: the
+existing directory entry is removed and a new relative symlink is created in
+its place. A link, a dangling link, an absolute junction, and an independent
+copy are all entries the advisor owns at that path, so an installation left by
+an earlier release converges on the current representation instead of keeping
+its own forever. The helper still never writes through the existing entry to
+reach what it points at; it replaces the entry itself.
 
 Host-path verification at each release belongs to
 [Development](../development/repository-workflow.md#release-verification).
@@ -230,18 +236,24 @@ reference in each of the project's two instruction files — or those files
 themselves, where the project had none — and a report.
 
 The report is one line per file, handoff-directory, or skill-directory
-destination, saying `written`, `appended`, `skipped`, or `linked`, followed by
-outcome counts.
-`linked` means a relative directory symlink was created. Skill-directory lines
-include the canonical path they expose; a skipped destination's representation
-is not certified. It is plain text rather than a structured result, because the
-reader needs to know which destinations were written, linked, or left alone. The
-operation ends with a zero result on success and a non-zero one on any error.
+destination, saying `written`, `replaced`, `appended`, `skipped`, or `linked`,
+plus one `removed` line for each file a delivered skill directory no longer
+contains, followed by outcome counts.
+`linked` means a relative directory symlink was created. `replaced` means the
+destination was occupied and now holds the invoked release; it is kept distinct
+from `written` because it is the one outcome that destroys what the run found
+there, and a delivery that reported it as an ordinary write would hide exactly
+the fact its reader needs. Skill-directory lines include the canonical path they
+expose; a preserved destination's representation is not certified. It is plain
+text rather than a structured result, because the reader needs to know which
+destinations were written, replaced, linked, or left alone. The operation ends
+with a zero result on success and a non-zero one on any error.
 
 Success means all delivery operations completed according to their rules,
-including reporting occupied destinations as skipped. It does not certify
-the contents, completeness, or reachability of skipped destinations, or that
-either host can load the installed process. The instruction-file reference
+including replacing occupied advisor-owned destinations and reporting
+project-owned ones as skipped. It does not certify the contents, completeness,
+or reachability of the destinations it preserved, or that either host can load
+the installed process. The instruction-file reference
 check remains the specific exception required by [Delivery rules](#delivery-rules).
 
 **Initialization writes the whole scaffolding and only that** — the root file,
@@ -265,8 +277,10 @@ project documentation exists, not completion or decision readiness.
 The implementation authority is delivered at `docs/implementation/`, with its
 boundary and separate project and feature catalogs. It covers all runtimes.
 This is the layout for a fresh delivery; initialization does not rename a
-target's existing `docs/backend/` artifacts or upgrade its occupied routers.
-Migration and upgrade remain outside this contract.
+target's existing `docs/backend/` artifacts or adopt routers it does not own.
+Migration remains outside this contract. Upgrading the destinations the advisor
+does own is inside it, under [Delivery rules](#delivery-rules); upgrading
+anything else is not.
 
 `sources/` folders are not part of it either, and no later release can add
 them. There is nothing to deliver: a source is the user's own material, so a
@@ -296,16 +310,34 @@ by later sessions. Their representation is owned by the
 One delivery decision is taken per file or directory destination, and none
 about the repository as a whole. Occupancy is determined from the directory
 entry itself, without following links: a symbolic link or junction occupies
-its name even when its referent is missing. Ordinary files and the explicit
-handoff directory use the rules below; [Skill hosts](#skill-hosts) defines
-directory-link occupancy and failure behavior. The reasons for treating links
-as occupied are recorded in
-[ADR-0024](../adr/0024-initialization-never-writes-through-an-occupied-link.md).
+its name even when its referent is missing. What occupancy then means depends
+on who owns the destination, and the mapping fixes that before the target is
+ever inspected: the mirrored assets, the root file, and the skill directories
+are the advisor's, while the two instruction files and `docs/handoffs/` are the
+project's. Ordinary files and the explicit handoff directory use the rules
+below; [Skill hosts](#skill-hosts) defines directory-link occupancy and failure
+behavior. The reasons for treating links as occupied are recorded in
+[ADR-0024](../adr/0024-initialization-never-writes-through-an-occupied-link.md),
+and the reasons for replacing rather than preserving what the advisor owns in
+[ADR-0029](../adr/0029-initialization-replaces-advisor-owned-destinations.md).
 
 1. The destination does not exist — write the asset, or create the empty
    `docs/handoffs/` directory for that structural destination.
-2. The destination exists — leave it untouched and record it as skipped.
-3. The destination is one of the project's own instruction files — ensure it
+2. The destination is the advisor's and a file or a link occupies it — write
+   the asset in its place and record it as replaced. A link is replaced as an
+   entry and never written through, so whatever it pointed at stays where it
+   is. Inside a delivered skill directory, a file the invoked release does not
+   contain is removed as part of the same decision: the advisor owns that
+   directory whole, and a file left there is not dead weight but an instruction
+   the host still loads.
+3. The destination is the advisor's and a directory occupies a path where a
+   file belongs — end delivery with a concise operational diagnostic. The
+   advisor removes no directory it does not own whole, and it cannot know what
+   this one holds.
+4. The destination is `docs/handoffs/` and something already occupies it —
+   leave it untouched and record it as skipped, whatever kind of entry it is.
+   The project owns the records that go there.
+5. The destination is one of the project's own instruction files — ensure it
    carries that host's reference to `advisor-agents.md`. If the file is absent
    it is created holding nothing but the reference; if it is present the
    reference is appended, leaving existing content unchanged; if that exact
@@ -315,14 +347,15 @@ as occupied are recorded in
    already present is reported as skipped, while a missing reference or an
    unreadable or dangling link ends delivery with a concise diagnostic.
 
-Rule 3 is an ensure rather than a write, and it is the only rule that is.
+Rule 5 is an ensure rather than a write, and it is the only rule that is.
 The instruction chain starts at that reference, so both host instruction files
 must contain it even when they already exist. This establishes the entry
-directive, not the integrity of the rest of the chain. A directory occupying
-`advisor-agents.md`, an unusable existing scaffold, or a broken link occupying
-a Claude skill destination is still skipped under the ordinary occupancy
-rules. Such a skipped destination does not itself make delivery fail; a later
-required operation that encounters an error still does.
+directive, not the integrity of the rest of the chain. An unusable existing
+scaffold and a broken link occupying a Claude skill destination are now
+replaced under rule 2, which is what makes a second delivery converge; a
+directory occupying `advisor-agents.md` ends delivery under rule 3 instead of
+passing unnoticed. A destination the helper preserves does not itself make
+delivery fail; a later required operation that encounters an error still does.
 
 The rule applies once per host, to `CLAUDE.md` and to `AGENTS.md`. Both are
 ensured in every project, because neither host reads the other's file. Each is
@@ -343,37 +376,39 @@ without duplicating it on every delivery. Rewording the Codex directive is not
 treated as equivalent, because a mere mention of `advisor-agents.md` does not
 reliably instruct the agent to open and follow it.
 
-`advisor-agents.md` is itself an ordinary fixed destination and follows rule 2.
-If it is occupied it is left untouched and reported, never delivered under
-another name. Renaming on collision would make a second delivery write a new
-file and append a second reference, which the idempotence invariant forbids;
-it would also be the one place where the payload mirror's identity mapping does
-not hold. Making it idempotent instead would require recording which files the
-advisor wrote, which is deferred in
-[#3](https://github.com/SebastianoTomasi/delivery-process-advisor/issues/3).
+`advisor-agents.md` is itself an ordinary advisor-owned destination and follows
+rule 2: a file or link occupying it is replaced, and a directory there ends
+delivery under rule 3. It is never delivered under another name. Renaming on
+collision would make a second delivery write a new file and append a second
+reference, which the idempotence invariant forbids; it would also be the one
+place where the payload mirror's identity mapping does not hold.
 
 A partial delivery is a normal outcome and not a failure. Whether the target
 was empty is never asked.
 
 ## Invariants
 
-- A file the advisor did not write is never modified, with the single exception
-  of appending the host-specific reference to the project's own instruction
-  files.
+- A file at a destination the advisor does not own is never modified, with the
+  single exception of appending the host-specific reference to the project's
+  own instruction files. At a destination it does own, an existing file is
+  replaced whether or not the advisor wrote it.
 - Newly delivered asset text is byte-identical to the asset in `src/`, and
   identical between projects receiving the same
   release. The second host's relative symlink representation is governed
   by Skill hosts; this does not add transformations to asset text. Verification
   compares delivered bytes directly with `src/` and separately checks the host
-  representation. This comparison concerns newly written assets, not skipped
-  destinations or existing project instruction files receiving a reference.
+  representation. This comparison concerns the assets it writes or replaces,
+  not the destinations it preserved or existing project instruction files
+  receiving a reference.
 - Nothing beyond the scaffolding is written. The empty `docs/handoffs/`
   directory is part of that scaffolding; no handoff record, document that
   decides something, or template is created before a session names it.
 - A published payload contains its scaffolds, catalogs, and skills as one
-  release. This does not imply that an existing target holds a single release:
-  occupied destinations are skipped and absent ones receive the invoked
-  release. The helper remains a plugin outside the delivered payload.
+  release. After a delivery, every destination it maps holds that release,
+  whether the destination was absent or occupied. This still does not imply
+  that the target holds a single release: a file an earlier release delivered
+  outside a skill directory, and that this one no longer maps, stays where it
+  is. The helper remains a plugin outside the delivered payload.
 - No state the advisor reasons from is kept outside the project's files. A
   phase's coverage, decision readiness, dependencies, review recovery notes, and
   artifact status are read from project files and stored in no parallel registry.
@@ -383,20 +418,22 @@ was empty is never asked.
   pending questions and links to their answers, not a second coverage or
   readiness registry. Delivery status remains the task system's concern.
 - Delivery is idempotent in effect. A second run against the same version
-  changes nothing. For every asset that is written, that follows from the
-  destination being occupied and skipped. A Claude skill-directory destination
-  is also skipped once occupied, whether it is a link, junction, or copy. For
-  the instruction files, which are
-  appended to rather than written, it does not: it holds because the exact
+  changes nothing. For every asset the advisor owns, that now follows from
+  rewriting identical bytes rather than from leaving the destination alone, and
+  a Claude skill-directory destination reaches the same relative symlink
+  whether it was absent, a link, a junction, or a copy. For the instruction
+  files, which are
+  appended to rather than written, it holds because the exact
   host-specific reference is looked for before it is added.
 - Successful delivery establishes each host's exact entry directive and
   completes the per-destination rules. It makes no whole-installation
-  reachability guarantee for pre-existing files and links that were skipped.
+  reachability guarantee for the pre-existing files and links it preserved.
 
 ## Failure behavior
 
 An unreadable asset, an unresolvable destination, a failed write or relative
-skill-link creation, or an instruction-file link that cannot safely satisfy
+skill-link creation, a directory occupying an advisor-owned file destination,
+or an instruction-file link that cannot safely satisfy
 its required reference ends the operation at that point with a non-zero
 result. Expected operational errors, including filesystem failures involving
 files, paths, or permissions, produce a concise diagnostic identifying the
@@ -410,30 +447,31 @@ reclassified as ordinary filesystem problems or reduced to a generic failure
 message. This distinction changes presentation, not recovery or continuation:
 neither class permits delivery to continue after the failed operation.
 
-There is no fallback to merging, migration, partial reuse, overwriting, or
-writing through a link. Failed skill-link creation also has no junction or
+There is no fallback to merging, migration, partial reuse, or writing through
+a link. Replacing an advisor-owned destination is a delivery rule and not a
+fallback: it happens because the destination is the advisor's, never because
+an operation failed. Failed skill-link creation also has no junction or
 copy fallback, as specified in [Skill hosts](#skill-hosts).
 
 Delivery is not atomic. Assets are written one at a time and what was written
 before the failure stays written, so an interrupted delivery leaves the target
-part-initialized. That is tolerable because of what the delivery rules already
-guarantee: nothing pre-existing is overwritten, and the only file whose content
-is altered gains one appended line.
+part-initialized. That is tolerable because of what the delivery rules still
+guarantee: what the project owns is untouched, the only file whose content is
+altered gains one appended line, and what the advisor owns holds bytes a later
+run writes again identically.
 
-Re-running the helper recovers only when the interruption happened between
-destinations: every destination already completed is skipped, and the rest is
-delivered. There is deliberately no staging or completeness marker for one
-file. An interruption inside a file write can
-leave an occupied partial destination that a later run skips; the report can
-therefore say that the delivery rules completed without certifying that such a
-destination is complete. Recovery then requires the user to inspect and remove
-that partial destination before running initialization again.
+Re-running the helper recovers the destinations the advisor owns without any
+manual step: each is written again from the invoked release, so a partial file
+left by an interrupted write is replaced rather than mistaken for a complete
+one. There is deliberately no staging or completeness marker for one file, and
+those destinations need none. What a rerun does not repair is a project-owned
+destination, which it preserves as it found it, and the condition that stopped
+the previous run.
 
 Staging destinations or the whole delivery would make interruption recovery
 stronger, at the cost of temporary state, publication rules, and cleanup paths.
-The helper deliberately keeps direct writes and explicit manual recovery
-instead. Atomicity can be reconsidered later without changing the ordinary
-write-if-absent behavior.
+The helper deliberately keeps direct writes instead. Atomicity can be
+reconsidered later without changing the ordinary per-destination behavior.
 
 ## Deliberate exclusions
 
@@ -441,29 +479,36 @@ Reading a project's existing documentation and placing it into the ontology
 is not performed by initialization. After delivery, the user can request
 `advisor-migrate-docs` to migrate selected documents. That skill makes placement
 decisions, resolves necessary choices, verifies the new documents, and replaces
-the in-scope originals. It is separate from the helper's write-if-absent
-contract. See [the adoption flow](../development/interaction-flows.md#h-adopting-a-project-that-already-has-documents).
+the in-scope originals. It is separate from the helper's per-destination
+contract: the helper decides nothing about a project's own documents, and the
+destinations it does decide about are never any of them. See [the adoption flow](../development/interaction-flows.md#h-adopting-a-project-that-already-has-documents).
 
 Material supplied only as background may still be used through `sources/` and
 ordinary advisor-grill-with-docs sessions. Neither initialization nor the mere
 presence of old documentation implies adoption or accepted advisor decisions.
 
-Upgrading a project to a later payload version is not performed. A later
-delivery leaves occupied destinations untouched and adds any absent assets
-from the invoked release. It may therefore produce an installation containing
-files from different releases, including skills and catalogs that are not
-compatible. Initialization neither detects nor rejects that mixture and makes
-no compatibility guarantee for it. A successful report describes the delivery
-outcomes, not release uniformity.
+Clearing what a later payload version no longer delivers is not performed. A
+later delivery brings every destination it maps to the invoked release, so the
+root file, scaffolds, catalogs, and skills are that release and no other. What
+it cannot do is remove a file an earlier release delivered outside a skill
+directory and this one no longer maps: `docs/` holds the project's own
+artifacts beside the advisor's, and separating them would need the installation
+inventory rejected below. Initialization neither detects nor reports that
+remainder. A successful report describes the delivery outcomes and the release
+of what it wrote or replaced, not the absence of anything else.
 
 The same exclusion applies to handoff storage: initialization does not move
 records from the superseded root `handoffs/` path into `docs/handoffs/`.
 
 This is deliberate: initialization keeps its per-destination rules without
-introducing an installation inventory, release comparison, or upgrade
-mechanism. Preserving existing content and filling absent destinations takes
-precedence over uniformity. Upgrade work remains deferred in
-[#3](https://github.com/SebastianoTomasi/delivery-process-advisor/issues/3).
+introducing an installation inventory or a release comparison. Bringing the
+advisor's own destinations to the invoked release, while preserving everything
+the project owns, takes precedence over removing what neither rule reaches.
+Detecting a mixed installation and clearing that remainder remain deferred in
+[#3](https://github.com/SebastianoTomasi/delivery-process-advisor/issues/3);
+upgrading occupied advisor-owned destinations no longer belongs to it, and its
+reasons are in
+[ADR-0029](../adr/0029-initialization-replaces-advisor-owned-destinations.md).
 
 Holding each feature phase's questions once in its authority's feature catalog
 gives all features the same current file to consult, rather than a separate

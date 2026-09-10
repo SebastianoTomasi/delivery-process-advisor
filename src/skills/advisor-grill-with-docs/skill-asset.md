@@ -1,27 +1,50 @@
 ---
 name: advisor-grill-with-docs
-description: Conduct an advisor-grill-with-docs session — one question at a time, writing what settles into the project's own documents as it settles. Use when writing, filling in, or accepting a normative document under docs/ (product, architecture, implementation, frontend, security, deployment, operations, development, stack), when declaring or advancing a feature, when propagating an agreed change through an accepted rule and its dependants, when asked what advisor work comes next, or when pressure-testing a plan or design whose outcome the project should keep.
+description: Conduct an advisor-grill-with-docs session — one question at a time, writing what settles into the project's own documents as it settles. Use when writing, filling in, or accepting a normative document under docs/ (product, architecture, implementation, frontend, security, deployment, operations, development, stack), when declaring or advancing a feature, when propagating an agreed change through an accepted rule and its dependants, or when pressure-testing a plan or design whose outcome the project should keep.
 disable-model-invocation: false
 ---
 
 Use an `advisor-grill-me` session to resolve open decisions, invoking the
 `advisor-domain-modeling` skill as terms or qualifying decisions settle.
-Advice alone requires reading, not an interrogation or a write. Invoke
-`advisor-defer` to record an agreed deferral and to recover relevant deferred
-items before recommending work or starting or resuming a session. That skill
-owns clarification, capture, classification, recovery, partial progress, and
-closure under `docs/deferred/`; advice-only requests inspect records without
-changing them.
+Invoke `advisor-defer` to record agreed future work and to recover relevant
+items before starting or resuming a session. That skill owns clarification,
+capture, classification, recovery, partial progress, and closure under
+`docs/deferred/`.
+
+## Preparation
+
+Before starting or resuming a session, recover relevant deferred items through
+`advisor-defer`, including undecided destinations. Read `docs/advisor-docs.md`
+for document rules and use the shared reading guidance in `advisor-agents.md`
+to find the relevant artifacts and sources. Read the owning authority's boundary
+and only the catalog for the current scope or triggered need. Use its decisions,
+dependencies, and recommended order with the answers already settled to select
+the next useful question. Complete those relevant reads before the first session
+question. Migration owns full reads of its selected inputs and invokes this
+workflow for decisions.
+
+## Starting a feature
+
+Read `docs/features/advisor-features.md` for feature identity, placement, and
+phase routes. When the user describes a new capability, first agree its readable
+name and propose a slug under those rules; obtain confirmation before the first
+write unless already supplied. If that identity exists, resume the feature.
+Then check the relevant accepted foundation inputs before writing the first
+proposed Product artifact at the feature's Product path. That write creates the
+feature; create other authority folders only with their first artifacts. Apply
+the common readiness rules when necessary inputs remain unresolved: explain the
+missing decision and offer to settle it first. If the user proceeds without it,
+keep the resulting work proposed and name the unresolved assumption.
 
 ## Writing and accepting
 
-For a new feature, follow the "Starting a feature" procedure in
-`docs/features/advisor-features.md` before the first write.
+For new features, use Starting a feature above before the first write.
 
-1. Place the content per the "Starting a document" rule in
-   `docs/advisor-docs.md`: reuse an artifact whose `Scope` owns it, or create
-   the minimum new one. This choice is autonomous and may be revised when later
-   answers require it.
+1. Apply the placement and artifact-boundary rules in `docs/advisor-docs.md`.
+   Inspect existing routing envelopes and reuse the artifact whose Scope owns
+   the content; otherwise create the minimum new artifact with a descriptive
+   name, proposed status, and Scope. Choose a structure suited to its subject.
+   This choice is autonomous and may be revised as answers settle.
 2. Ask one decision-critical question at a time and write each answer as it
    settles into the artifact where it naturally belongs. Questions measure
    coverage; they do not become the document layout.
@@ -59,6 +82,18 @@ If the user chooses work without its necessary inputs, keep the result proposed
 and name the unresolved assumptions. A draft that does not change a current
 decision leaves that decision and unrelated feature work usable.
 
+## Closing a feature phase with no decisions
+
+Before writing `absent.md`, read the entire feature catalog and check every
+question, including screening questions, against the relevant accepted
+decisions. Apply the absence contract in `docs/features/advisor-features.md`:
+write Scope and a justified dismissal for every slug, linking accepted answers
+and dependencies when they support dismissal. A substantive answer requires
+a normal artifact rather than blanket absence. Read available evidence before
+asking only unresolved decision-critical questions; no interview question is
+required for each catalog entry. Accept through the writing and acceptance
+procedure above only when all dismissals and necessary inputs are sound.
+
 ## Propagating an accepted decision change
 
 A wording-only correction can be applied directly after checking that it changes
@@ -75,6 +110,8 @@ prerequisite, or other accepted rule starts a focused session:
    related routing envelopes as well: missing links are possible, so search
    results are candidates for semantic review, not a complete dependency graph.
    Include shared rules, affected features, screening answers, and dismissals.
+   Read each affected authority boundary and relevant catalog as the work reaches
+   it, using the root file's selective reading guidance.
    Do not reopen unrelated phases merely because the change is upstream.
 3. Explain consequences and ask only new choices that the user has not settled,
    one at a time. Apply consequences already determined by the answers without

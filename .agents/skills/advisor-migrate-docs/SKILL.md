@@ -34,9 +34,9 @@ the originals in `sources/`, archives, or replacement stubs.
    Use it to check loss and duplication across all inputs. Keep this in the
    session, not a permanent migration or coverage registry.
 
-For a new feature, follow `docs/features/advisor-features.md`: confirm its
-identity and slug and write its first Product artifact from the supplied
-capability information. Ask for missing information only when needed to place
+For a new feature, use the Starting a feature procedure in
+`advisor-grill-with-docs`, applying the identity and placement rules in
+`docs/features/advisor-features.md` to the supplied capability information. Ask for missing information only when needed to place
 the content. Do not invent Product decisions or complete the foundation just
 to file later-phase material; record unresolved inputs in proposed work.
 

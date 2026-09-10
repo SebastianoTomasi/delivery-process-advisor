@@ -14,7 +14,7 @@ Work through the phase in this order:
 
 1. **Decide applicability** — answer `frontend-surface-exists`. A negative
    answer supports closing the phase through `frontend/absent.md` after the
-   [full catalog check](../features/advisor-features.md#closing-a-phase-with-no-decisions).
+   [absence contract](../features/advisor-features.md#a-phase-with-no-decisions).
 2. **Make the capability reachable** — answer `frontend-entry-points` before
    detailing a journey that the actor might otherwise have no way to start.
 3. **Define the client-visible path** — answer `frontend-interaction-steps` as
@@ -34,7 +34,7 @@ Does this feature have any client-visible surface?
 - *Decides:* whether this phase has substance at all.
 - *Why it matters:* a negative answer supplies the basis for dismissing the
   surface questions. Verify and record every dismissal through the
-  [phase closure procedure](../features/advisor-features.md#closing-a-phase-with-no-decisions)
+  [phase absence contract](../features/advisor-features.md#a-phase-with-no-decisions)
   before accepting `frontend/absent.md`.
 
 **2. `frontend-entry-points`**

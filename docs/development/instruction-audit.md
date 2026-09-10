@@ -21,7 +21,9 @@ skill.
   delivered instruction files and skills.
 - [Instruction ownership](../architecture/documentation-model.md#the-root-file)
   — placement and duplication findings must respect each file's operational
-  role and the deliberately repeated summaries needed for routing.
+  role and the deliberately repeated summaries needed for interpretation and
+  routing. Shared reading guidance belongs to the root; detailed workflow
+  reporting belongs to the skill conducting that work.
 
 ## Objective
 
@@ -33,11 +35,18 @@ The examination follows instruction paths from the user prompt and the target's
 `AGENTS.md`, through `advisor-agents.md`, to the relevant scaffolds, catalogs,
 and supporting Markdown files, and from the skill declarations the host loads
 before the request into the skills themselves. Different user requests expose
-different branches. The starting example is a request for a new feature and
-the route to an `advisor-grill-with-docs` session. Since
-[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md) no delivered
-file names a skill: a declaration that fails to claim its own case is a
+different branches. The starting examples are a request for a new feature,
+which routes to an `advisor-grill-with-docs` session, and a request to choose
+next work, which routes to the read-only `advisor-next-work` skill. Under
+[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), workflow
+applicability belongs to skill descriptions. The root names only the
+cross-cutting deferred-recovery trigger, and scaffolds do not route requests by
+workflow name; a declaration that fails to claim its own case is therefore a
 navigation defect that following the file path cannot reveal.
+
+The full navigation trace is evidence required by this audit method. Ordinary
+advisor work follows the root's narrower obligation to cite supporting passages
+and disclose material reading gaps; it need not report every file opened.
 
 The audit should expose instructions placed where they are not useful or not
 reached when needed, unnecessary duplication, missing instructions, and unclear
@@ -109,7 +118,8 @@ the advisor's entry points. The initial catalog covers these request families:
 - start a new feature;
 - resume an existing document or phase;
 - change an accepted decision;
-- ask what work to do next;
+- ask what work to do next in both an early product with no verified primary
+  journey and an established product with working behavior;
 - record, recover, or close a deferred item;
 - create an explicit conversation handoff without making it part of automatic
   routing;

@@ -48,7 +48,7 @@ Material that informs a session but is not owned by the project as a rule. It ha
 _Avoid_: background, attachment, context file
 
 **Reading path**  
-The smallest disclosed set of documents and relevant passages needed for an advisor action. It includes semantic evidence needed for the action, rather than merely a folder or marker inventory.
+The smallest set of documents and relevant passages needed for an advisor action. It includes the semantic evidence needed for the action, rather than merely a folder or marker inventory; it is distinct from the citations and material reading gaps reported to the user.
 
 **Instruction path**  
 The delivered chain through which an agent reaches the rules and procedures needed for an action. Design descriptions of the advisor product are distinct from this operational instruction chain.
@@ -130,7 +130,7 @@ A grouping of related questions in the Product or Architecture foundation, or a 
 _Avoid_: stage, step, milestone
 
 **Next action**  
-The recommended piece of work whose necessary accepted inputs suffice. Several actions can be ready at once, and readiness is distinct from the usual phase order.
+The recommended bounded piece of decision or implementation work whose necessary accepted inputs suffice. Several actions can be ready at once, and readiness is distinct from the usual phase order; early implementation favors the smallest end-to-end slice that makes the product work.
 _Avoid_: task, next step
 
 **Screening question**  

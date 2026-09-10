@@ -24,8 +24,11 @@ below remain proposals and do not change those current rules.
   [failure behavior](../architecture/initialization.md#failure-behavior) —
   initialization and adoption scenarios rely on the helper's file guarantees.
 - [The root file](../architecture/documentation-model.md#the-root-file) — the
-  reading path in flow E ends at the artifacts, because the skill is reached
-  from its own declaration rather than from a delivered file.
+  root supplies shared interpretation, navigation, and reading guidance; the
+  skill is reached from its own declaration and owns workflow-specific steps
+  and reports. Flow E distinguishes those responsibilities.
+- [Code and documentation](../product/overview.md#rules) — ordinary code work
+  distinguishes implemented behavior from documented intent, as in flow Y.
 - [Payload content](../architecture/initialization.md#the-payload) — flow M
   cannot assume per-file release markers; evidence for its version comparison
   remains part of the unresolved template-import scenario.
@@ -58,7 +61,7 @@ Quoted requests are illustrative. In the scenarios below:
 
 **Expect.**
 
-- The agent derives Product foundation as the next phase and names what it read.
+- The agent derives Product foundation as the next phase and cites its basis.
 - It opens a proposed Product artifact and runs a Product session.
 - Answers and resolved terms are written as they settle; unresolved answers
   remain explicit open decisions.
@@ -135,6 +138,8 @@ links. Scenario U covers interruption before that result is reached.
 - Before writing, it follows the feature scaffold to the Product authority
   boundary and the separate Product feature catalog. It does not load the
   Product project catalog.
+- The skill owns the starting procedure; the feature scaffold supplies identity,
+  placement, and phase rules. The root does not repeat the procedure or its trigger.
 - Product is the usual first session; later work becomes a deferred item when it
   cannot yet be settled. An independently ready decision can be proposed with
   its accepted basis, without pretending the whole preceding phase is complete.
@@ -157,7 +162,7 @@ links. Scenario U covers interruption before that result is reached.
 4. `docs/features/advisor-features.md`;
 5. the current phase's authority scaffold, which supplies its precise boundary;
 6. that authority's feature catalog, which supplies only the current phase's
-   progression and questions;
+   questions, dependencies, and recommended decision order;
 7. accepted prerequisites, related artifacts, and sources.
 
 The relevant skill is not a hop on that path. Its declaration reaches the agent
@@ -168,6 +173,18 @@ routing page repeats only
 enough ownership detail to choose an authority; the local scaffold supplies the
 precise boundary and resolves close cases; its catalog links expose only the
 selected scope.
+
+The root provides shared reading guidance, while the selected workflow specifies
+the preparation and checks required for this action. It completes the relevant
+source reads before the first question and uses the catalog with settled answers
+to choose the next useful question. Its detailed coverage report is not a general
+requirement to list every file read during any task.
+
+When an artifact is already known and the action only needs to read it, the agent
+may open it directly using the root's authority summary. Placement and session
+work still read the common rules, boundary, and relevant catalog as required.
+Questions about local documentation conventions can be answered from those files;
+the root's upstream pointer concerns broader advisor design and rationale.
 
 Successful initialization does not certify this full reading path, under
 [Delivery outcomes](../architecture/initialization.md#inputs-and-outputs).
@@ -269,19 +286,34 @@ preventing acceptance of Product decisions that do not depend on it.
 
 ## I. "What should I do now?"
 
-**Given.** Several features are at different phases.
+**Given.** Several features are at different phases. The repository may have no
+verified primary journey yet, or it may already contain a working product.
 
 **When.** The user asks for the current position and next work.
 
 **Expect.**
 
-- The agent derives every feature's position from current files.
-- It reports phase coverage, ready decisions, and their owner per feature,
-  with supporting passages and any coverage not yet verified. Several decisions
-  within a feature can be ready; none is excluded solely by phase order.
-- It recommends one action and states the basis for the recommendation.
-
-**Open question.** [D5](#open-decisions).
+- The request selects the read-only `advisor-next-work` skill, which recovers
+  deferred items through `advisor-defer` and changes no project file.
+- For a general request it inventories every feature and project authority from
+  routing envelopes. For a scoped request it limits the assessment to that scope,
+  shared prerequisites, relevant evidence, and relevant or unclassified deferred
+  items.
+- It reports ready decisions separately from phase coverage, with supporting
+  passages and anything not verified. It inspects relevant code and tests and
+  runs a safe focused check when practical before claiming the primary journey
+  works.
+- If the primary journey is not verified, it recommends either the nearest
+  decision blocking useful implementation or the smallest ready end-to-end slice
+  that satisfies the established behavior and constraints. Whole-phase completion
+  is not required when the slice's necessary inputs are accepted.
+- Once the primary journey works, explicit user goals, broken or incomplete
+  observable behavior, and ready deferred work outrank minor improvements.
+  Material security, safety, or operational risk may take priority at either
+  stage.
+- It recommends one action, states its evidence and uncertainty, names materially
+  useful ready alternatives, and stops. The user's selection is routed as a new
+  request; no interview or implementation starts automatically.
 
 ## J. The user contradicts an accepted artifact
 
@@ -466,8 +498,8 @@ guarantees. Architecture's export-file contract is not yet written.
 
 **Expect.**
 
-- The advisor can recommend the file contract now, naming accepted passages and
-  explaining why the open screen choice cannot invalidate it.
+- `advisor-next-work` can recommend the file contract now, naming accepted
+  passages and explaining why the open screen choice cannot invalidate it.
 - The resulting artifact records those Dependencies. Frontend remains incomplete;
   one accepted contract does not complete all Architecture questions either.
 - If the screen choice could instead change synchronous download to deferred
@@ -572,13 +604,35 @@ focus of the next conversation.
   assigns it no lifecycle state and never archives or deletes it; cleanup
   remains manual.
 
+## Y. Documentation during ordinary code work
+
+**Given.** An existing export implementation produces JSON. Documentation may
+be absent, may specify a new CSV capability, or may contradict the implementation.
+
+**When.** The user requests a code change.
+
+**Expect.**
+
+- Code establishes the implemented behavior. Missing documentation alone creates
+  no requirement to change or document that behavior.
+- For a documented capability that is not implemented, the agent uses the
+  relevant accepted decisions to guide the requested implementation. Acceptance
+  establishes settled intent, not evidence that the capability already exists.
+- An explicit discrepancy whose intended resolution is not established is
+  surfaced to the user. The agent preserves the implementation while clarifying
+  the intended change and assumes neither a bug nor outdated documentation.
+- Reading applicable documentation alone triggers neither a session nor a phase
+  assessment. An already-settled request does not need a second approval.
+- Documentation-derived conclusions cite supporting passages and disclose unread
+  material that could affect them; ordinary work produces no full reading
+  inventory or unrelated coverage report.
+
 ## Open decisions
 
 Settled decisions belong in the contracts or ADRs, not in this list.
 
 | ID | Flow | Unsettled question |
 | --- | --- | --- |
-| D5 | I | What criterion ranks next actions across features? |
 | D6 | J | Does a permitted derogation need an explicit marker distinct from contradiction? |
 | D7 | K | Must renamed or split features record lineage and rewrite every reference? |
 | D10 | M | Should an artifact record the documentation standard against which it was written? |
@@ -590,7 +644,7 @@ The original proposals in A and D describe artifact acceptance in terms of
 whole-phase coverage. Before accepting those scenarios, distinguish individual
 artifact acceptance from phase completion under the current documentation
 model. This note preserves that unresolved difference without changing the
-proposed examples. The existing D5, D6, D7, D10, and D11 remain open.
+proposed examples. The existing D6, D7, D10, and D11 remain open.
 
 ## Provenance
 

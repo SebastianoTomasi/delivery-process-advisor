@@ -22,7 +22,8 @@ target project is specified by [Initialization](initialization.md).
   — authority, scope, and phase representation must support the promised thin
   foundation and independent decision readiness.
 - [Product rules](../product/overview.md#rules) — artifact lifecycle, sources,
-  and propagation must preserve advisory choice and one accepted current rule.
+  and propagation must preserve advisory choice and one accepted current rule;
+  document acceptance establishes settled intent, not implemented behavior.
 - [Product capabilities](../product/overview.md#what-it-does) — catalogs and
   decision references must support advice, deferred work, session continuity,
   and complete propagation.
@@ -89,8 +90,8 @@ Origin determines what a document can mean:
 - An **artifact** is written for the target project and records its decisions.
   It alone declares a lifecycle status and can be a prerequisite.
 - A **scaffold** is fixed content imported from an advisor release. It states
-  where project documents belong and routes the reader to further advisor
-  content. It carries no lifecycle status and never blocks work.
+  documentation rules and ownership boundaries, and routes the reader to further
+  advisor content. It carries no lifecycle status and never blocks work.
 - A **question catalog** is fixed content imported from the same advisor
   release. It enumerates the questions and recommended decision sequence for
   one scope or feature phase. Product, Frontend, Architecture, and
@@ -195,9 +196,10 @@ accepted rules still follows normal propagation. Partial progress stays in the
 open record. Closure alone never proves decision readiness.
 
 The operational format and capture, classification, recovery, and closure
-procedure have one home in the delivered `advisor-defer` skill. Root
-instructions route to that procedure before the action requiring it. Existing
-external issues are not automatically imported, changed, or closed.
+procedure have one home in the delivered `advisor-defer` skill.
+`advisor-next-work` and session workflows invoke it before the action requiring
+recovery. Existing external issues are not automatically imported, changed, or
+closed.
 
 ## Session handoffs
 
@@ -242,6 +244,9 @@ establish prerequisites, and no second dependency register is maintained.
 
 `proposed` is a draft, not a current rule. `accepted` means the artifact's own
 decisions are settled and its necessary decision inputs accepted and compatible.
+Acceptance does not establish that a decision is implemented. Ordinary code work
+uses the [Product rule for code and documentation](../product/overview.md#rules);
+implementation gaps and conflicts do not silently change artifact status.
 `needs-review` means compatibility with a changed decision has yet to be checked;
 it is not a reliable input in the meantime. A previously accepted dependant may
 return to accepted unchanged after checking the new rule.
@@ -436,6 +441,11 @@ keeps the tree honest: a `sources/` folder that exists is one with something in
 it. `docs/advisor-docs.md` carries the convention and is where a reader learns
 the position is available at all.
 
+Shared reading guidance in the root file locates relevant sources and guides
+selection by filename and opening lines. The skill owns when to perform that
+reading; session preparation completes the relevant reads before its first
+question. The source's informative role and placement remain documentation rules.
+
 A session judges what to open from each file's name and its opening lines,
 whatever those hold — a title, a description, a summary — and reads whole only
 what applies. Nothing is required of a source's format, because a source is the
@@ -450,70 +460,127 @@ without it.
 `advisor-agents.md` sits beside the project's own `README.md` and instruction
 files rather than replacing them.
 
-Everything delivered into a target is written for an agent, and nothing
-delivered explains the advisor to a person. A guided project holds the process
-it follows, not the case for it: what the advisor is, why `docs/` has this
-shape, and what the advice is worth are the advisor's own documentation, read
-in the advisor's repository by whoever wants them. Shipping a second account of
-it into every target would be a copy that drifts, pinned to the release that
-delivered it, and read by nobody who was not already looking at `docs/`.
+`advisor-agents.md` is the entry point for shared document interpretation,
+navigation, and selective reading. Its introduction explains the relationship
+between the advisor files, catalogs, and skills. Its sections are:
 
-`advisor-agents.md` is the entry point for an agent working in the project. It
-states that the project follows the advisor, points at `docs/`, and carries the
-rules that have to be applied before the agent can know which scaffold or which
-skill to open: how the project's position is derived, when it is derived, what
-that position is worth, how to read the material on the path to the work, and
-what a document may record. It does not name the skills. Each skill declares
-its own applicability in its delivered description, and both hosts load those
-declarations before the agent acts, so repeating them here would be a copy in
-every session's context and a second place to drift, recorded in
-[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md). What the
-page carries instead is the rule no route may skip: a document records the
-decisions the user established, and whatever an agent settled in their place is
-proposed rather than accepted. A rule earns a place on this page only because it
-must be applied before the agent can choose which scaffold or skill to open;
-everything else — the questions, the phases, the shape of a document — belongs
-to a catalog, scaffold, or skill instead, so a second copy on this page would
-only drift from them. The questions, authority-specific boundaries, document
-contract, and workflow steps remain in their catalogs, scaffolds, routing page,
-and skills. The project's own instruction file is never rewritten; it gains one
-host-specific reference to this one. Codex is told explicitly to read and
-follow it, while Claude Code uses its supported file-import syntax.
+- **Using project documentation:** the brief authority summary and the
+  [Product relationship between code and documentation](../product/overview.md#rules).
+- **Before advice or an advisor session:** the cross-cutting trigger to recover
+  deferred work through its owning skill.
+- **Where things are:** the map to common rules, authority boundaries, catalogs,
+  feature artifacts, vocabulary, decision records, deferred work, and handoffs.
+- **Reading guidance:** selecting relevant material, following decision
+  dependencies, finding sources, and citing supporting evidence.
 
-`docs/advisor-docs.md` addresses the third reader, the one already inside
-`docs/` needing to place a document: which authority owns what, where a feature
-goes, what the marker lines mean, where material that is not a document of the
-process may sit, the usual phase order, decision readiness, and where detailed
-progression is defined, and the optional import that can bring a template in.
-Its authority table intentionally repeats ownership at routing depth: it must
-contain enough detail to choose which authority scaffold to open without
-reading all of them. The chosen scaffold then gives the more precise inclusion,
-exclusion, and scope boundary that settles close cases. When to consult the
-routing page belongs to `advisor-agents.md`; it does not repeat that rule.
+An agent may open a known relevant artifact directly. When locating or placing
+documentation, it uses the common rules to select the authority and reads its
+boundary. It considers relevant project and feature scopes, selects artifacts
+by their opening envelopes, and follows pertinent Dependencies, Review blocks,
+and decision passages. It reads a catalog only when the action needs those
+decisions or coverage questions. The root does not require a documentation-tree
+inventory, a phase assessment, or a session merely to use project documentation
+during ordinary code work.
 
-Every behavior required of the target agent has one operational home on this
-instruction path and is reached before the action that needs it:
+The root's short interpretation summary is deliberately repeated at entry
+depth: accepted means settled, not proven implemented; proposals and artifacts
+needing review do not establish accepted inputs; sources inform decisions.
+It also states that only user-established decisions can be accepted and that
+advice adds no permission step or deviation record. Full definitions remain in
+`docs/advisor-docs.md`. This lets direct reads start informed without forcing a
+read of the whole common contract or copying its detailed acceptance rules.
 
-- `advisor-agents.md` selects the minimal reading path and fixes what a
-  document may record;
-- each delivered skill description declares when that skill applies, in the
-  metadata both hosts load before the agent acts;
-- `docs/advisor-docs.md` defines routing, placement, and the common artifact
-  envelope;
-- the selected authority scaffold defines its detailed boundary and scope
-  split;
-- exactly one selected project or feature catalog defines progression and
-  questions;
-- `advisor-grill-with-docs` defines how artifacts are reused, created, written,
-  and accepted, invoking `advisor-defer` when work is deliberately postponed;
+Root-level reporting cites documents and passages supporting conclusions and
+discloses unread material that could affect them. It does not require a full
+reading inventory or a report on coverage that the task did not assess. Skills
+own detailed reports such as question-to-answer mappings and phase coverage.
+
+The delivered files remain instructions for agents. Agents may explain the
+project's conventions from those local files. Broader advisor design and
+rationale belong in the advisor's repository, which the root points to rather
+than shipping a second account into every target.
+
+Skill descriptions declare when they apply, surfaced by the host under
+[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md). The root does
+not generally repeat them. It names `advisor-defer` only for the cross-cutting
+requirement to recover relevant deferred work before advice or a session; the
+skill owns the procedure. The project's own instruction file gains a host-specific
+reference to the root; Codex is told to read and follow it, while Claude Code
+uses its supported import syntax.
+
+Every instruction has a home reached before the action needing it. The division
+recorded in [ADR-0031](../adr/0031-shared-guidance-and-workflows-have-distinct-homes.md)
+is:
+
+- `advisor-agents.md` owns shared interpretation, reading, navigation, and the
+  cross-cutting deferred-recovery trigger described above.
+- `docs/advisor-docs.md` owns the common documentation contract: authority
+  routing, placement, source authority, artifact envelopes and statuses,
+  dependencies, provenance, acceptance conditions, and decision readiness.
+  Its authority table summarizes enough to select a local boundary.
+- Authority scaffolds own their precise inclusion, exclusion, and scope rules.
+- Catalogs own subject-specific decisions, dependencies, and recommended order.
+  The next-work skill uses them to assess candidate decisions; session skills
+  use them to choose the next useful question within selected work. Catalog
+  order is neither a global priority rule nor a session procedure.
+- `docs/features/advisor-features.md` owns feature identity, folder structure,
+  phase routes, and absence and completion conditions. The session workflow
+  performs feature creation and the checks that establish those conditions.
+- `advisor-next-work` owns read-only assessment of the current position and
+  implemented state, selection of one recommended action and useful alternatives,
+  and the evidence and uncertainty reported with that advice.
+- `advisor-grill-with-docs` owns session preparation, feature creation, writing,
+  acceptance, phase checks, propagation, and their detailed reports. It uses
+  the shared reading guidance and completes relevant source reads before its
+  first question.
+- `advisor-migrate-docs` owns full reads and transfer of selected inputs, invoking
+  the writing workflow for the decisions it needs.
 - `advisor-defer` owns deferred-item clarification, capture, classification,
-  recovery, and closure;
-- explicitly invoked `advisor-handoff` owns compact conversation-transfer
-  files, without automatic discovery or lifecycle management.
+  recovery, and closure; `advisor-next-work` and session preparation invoke its
+  recovery.
+- Explicitly invoked `advisor-handoff` owns compact conversation-transfer files,
+  without automatic discovery or lifecycle management. The root limits reads
+  of handoffs to those the user identifies.
+
+Documentation rules state what must hold. Skills define how to carry out and
+check the work. Brief summaries support interpretation and routing, while a
+repeatable procedure has one home in its owning skill.
 
 The advisor repository's Product, Architecture, and ADR documents explain and
 test these rules but do not instruct an agent in a target. A behavior described
 only there is missing from the delivered product.
+
+## Next-work advice
+
+`advisor-next-work` applies when the user asks for the current position or what
+product, decision, design, implementation, or other delivery work is worth doing
+next. It does not replace ordinary routing when the user has already chosen a
+concrete task. The assessment is advice only: it changes no project file, starts
+no interview, and performs none of the work it recommends. The user's choice is
+a new request routed to the applicable workflow.
+
+Before assessing candidates, it invokes `advisor-defer` to recover relevant
+future work. An unscoped request inventories all authority and feature artifact
+envelopes before selecting bodies. A scoped request reads that scope, shared
+prerequisites, evidence affecting readiness, and relevant or unclassified
+deferred records. Both routes use the root's selective reading guidance and the
+common documentation rules; neither infers coverage or readiness from folders
+or markers.
+
+The workflow considers both settled intent and implemented state. It inspects
+relevant code and existing tests and runs safe, focused verification when
+practical. It reports what remains unverified. A material contradiction between
+code and documentation becomes a prerequisite to clarify under the common rule;
+the advice workflow neither resolves the conflict nor changes either side.
+
+Candidate work may be a decision, the smallest ready end-to-end implementation
+slice, a repair, a ready deferred goal, or a later improvement. Readiness for an
+implementation slice requires only the accepted decisions that could invalidate
+it, not whole-phase completion. Ranking applies the Product rule that a working
+primary journey precedes optional polish. The workflow recommends one action,
+names materially useful ready alternatives, explains blockers through the
+nearest actionable prerequisite, and uses usual phase order only to break
+otherwise equivalent choices.
 
 ## Scope and prerequisites
 

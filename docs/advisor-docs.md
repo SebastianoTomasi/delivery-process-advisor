@@ -1,9 +1,29 @@
-# Placing a document
+# Documentation rules and navigation
 
-This page answers one question: where does a document go, and what does it have  
-to say about itself. When to consult it, and what the position it yields is  
-worth, is in [`advisor-agents.md`](../advisor-agents.md), which this page does  
-not repeat.
+This page defines the common documentation contract and routes subjects to
+their owning authority. Shared reading guidance is in
+[`advisor-agents.md`](../advisor-agents.md); skills own the workflows that apply
+these rules.
+
+## Decisions and authority
+
+An artifact records decisions established with the user. A session is the
+ordinary way to establish them and the one to recommend; a document written
+another way is held to the same acceptance rules. Anything the agent settles
+in the user's place remains proposed. Acceptance records a settled decision,
+not evidence that it has been implemented.
+
+Code establishes what is implemented. Existing behavior absent from the docs
+creates no obligation to change or document it. Accepted documentation guides
+the work it specifies that has not yet been implemented. When code and docs
+explicitly contradict one another, the discrepancy needs clarification with
+the user; it proves neither a bug nor outdated documentation. Preserve the
+implementation while the intended change is clarified.
+
+The advisor's position is advice. Accepted decisions guide the agent's
+reasoning, while the user remains free to change direction. Proceeding against
+advice creates no extra permission step, deviation record, flag, or reminder.
+Work assuming unresolved decision inputs remains proposed and names them.
 
 ## Which authority owns what
 
@@ -91,8 +111,13 @@ A source is the user’s file, not the advisor’s. It carries no `advisor-`
 prefix, no marker line, no scaffold and no question list, and none is  
 delivered: a `sources/` folder exists because someone put a file in it. Holding  
 no marker line, a source is part of no phase and counts toward no position.  
-What one is worth to the work, and when to read it, is in  
-[`advisor-agents.md`](../advisor-agents.md).
+A source informs decisions but establishes no project rule. Its content
+constrains work only when the owning artifact states the adopted decision in
+the project's own words. A contradiction with an accepted artifact is a
+question for the user, not an override. Preserve informative source links using
+the provenance rule below; updating a source alone changes no accepted rule.
+Source discovery follows [the shared reading guidance](../advisor-agents.md#reading-guidance);
+the workflow determines when that reading is needed.
 
 ## What a document says about itself
 
@@ -114,7 +139,10 @@ Every artifact opens with `## Scope`, a short paragraph stating what it governs
 and which nearby concern it leaves elsewhere. Filename, title, status, and
 Scope are its routing envelope; the rest follows its subject, with the common
 sections below when applicable. Advisor scaffolds and catalogs have no artifact
-status. The glossary and ADRs keep their own format.
+status. The glossary and ADRs keep their own format. Unmarked project documents
+count toward no phase. Reading them does not adopt them as advisor artifacts;
+the user chooses adoption, and a request to migrate selected material is itself
+that choice.
 
 ### Dependencies and provenance
 
@@ -185,30 +213,29 @@ This is the normal route, not a total prerequisite chain. Frontend usually
 precedes Architecture because it sharpens the behavior the system must support.
 Each catalog gives the usual inputs and sequence within its phase; these steps
 create no extra folders, markers, or completion states.
+Catalogs own subject-specific decisions, their dependencies, and recommended
+order. Skills use those inputs and the decisions already settled to conduct the
+work; the catalogs do not define the session procedure.
 
-Before recommending a particular decision, identify its necessary accepted
-inputs and read the relevant passages and Dependencies. A later-phase decision
-is ready when those inputs suffice and the remaining open choices cannot
-invalidate it. State both the accepted basis and why the open choices are
-independent. If that cannot be established, name the missing decision and advise
-settling it first. A proposed or needs-review input does not establish readiness.
-Circular dependencies require a joint session to settle the coupled choices;
-neither draft proves the other's readiness.
-Once the coupled set is settled and internally compatible with accepted external
-inputs, the skill can accept it together. An interrupted acceptance retains its
-recovery notes until the whole set has been verified.
+A decision is ready when its necessary inputs are accepted and compatible,
+and remaining open choices cannot invalidate it. A later-phase decision can
+be ready before an earlier phase is complete. Proposed or needs-review inputs
+do not establish readiness. Circular dependencies require the coupled choices
+to be settled together; neither draft proves the other's readiness. Internal
+consistency and accepted external inputs permit joint acceptance of the
+settled set. Interrupted acceptance retains recovery notes until the whole set
+has been verified.
 
 For example, accepted export content and rules can support its Architecture
 file contract while the launch screen remains open, provided the interaction
 choices cannot change the file's contents, delivery, or failure guarantees.
 Do not declare the whole Architecture phase complete from this one decision.
 
-Phase completion requires a semantic check: accepted, mutually compatible
-artifacts cover every question or explicitly dismiss it, and no unresolved
-decision needed by that coverage remains. Inspect all artifacts in that phase
-to distinguish extra proposals from missing coverage or changed rules, following
-the skill's acceptance procedure. All markers being accepted is insufficient;
-an unrelated proposed extension is not a reason to remove accepted coverage.
+A phase is complete when accepted, mutually compatible artifacts cover every
+question or explicitly dismiss it, and no unresolved decision needed by that
+coverage remains. All markers being accepted is insufficient; an unrelated
+proposed extension does not remove accepted coverage. The workflow's semantic
+acceptance check establishes whether these conditions hold.
 
 Security, Deployment, Operations, Development, and Stack have no phase of their
 own. Their screening questions occur in the phase catalogs where the necessary
@@ -218,13 +245,10 @@ if specific. The screening answer links to that artifact and states the
 dependency; a new folder adds no phase. Their single demand-driven catalogs
 serve either scope and are read only for the triggered need.
 
-## Starting a document
+## Artifact boundaries and structure
 
-The session chooses a name that says what the document is about and a structure  
-suited to that kind of document. The questions measure phase coverage;  
-they do not prescribe the document’s sections.
-
-The session inspects the routing envelopes of existing artifacts first. It  
-reuses one whose `Scope` already owns the new content; otherwise it creates the  
-minimum additional artifact with a descriptive name, `proposed` status, and its  
-own `Scope`. This choice is autonomous and may be revised until acceptance.
+An artifact has a descriptive name and a structure suited to its subject. The
+questions measure coverage; they do not prescribe the document's sections.
+Content already owned by an artifact's Scope belongs there. Additional artifacts
+exist only when distinct scopes require them; their placement and boundaries
+may be revised as decisions settle.

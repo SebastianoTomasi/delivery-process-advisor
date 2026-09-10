@@ -1,6 +1,7 @@
 ---
 name: audit-advisor-navigation
 description: Audit and improve this repository's advisor Markdown payload by delegating navigation-only scenarios to fresh simulator agents. Use for reviewing instruction paths, misplaced or duplicated rules, missing links, and unclear directions in src. This is advisor maintenance, not a guided target project's delivery workflow.
+disable-model-invocation: true
 ---
 
 # Audit advisor navigation

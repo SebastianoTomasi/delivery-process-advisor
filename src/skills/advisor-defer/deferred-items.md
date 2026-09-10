@@ -81,9 +81,10 @@ Before recommending work or starting or resuming an advisor session:
 4. Present unclassified items for routing when it matters to the work. During
    an authorized session, update a destination inferable from the authority
    boundaries; ask only if the choice changes the intended scope. Advice alone
-   reports the recommendation. Consider relevant deferred items before
+   returns the assessment without changing the record; the calling next-work
+   workflow owns the recommendation. Consider relevant deferred items before
    dependent decisions and re-evaluate waiting ones as their inputs settle.
-   The usual one-question-at-a-time session and advisory choice still apply.
+   The session workflow remains one question at a time.
 
 ## Resume and close
 

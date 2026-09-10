@@ -3,8 +3,9 @@
 // Delivery process advisor — initialization.
 //
 // Writes the payload in `src/` into a target project. The contract this
-// implements is docs/architecture/initialization.md; where the two disagree the
-// contract is right and this file is wrong.
+// implements is docs/architecture/initialization.md. Code establishes current
+// behavior; a conflict with that contract needs clarification of the intended
+// change before either is treated as wrong.
 //
 // Nothing here exercises judgement about content. Every destination comes from
 // the mapping below, asset bytes are copied unchanged, and the only

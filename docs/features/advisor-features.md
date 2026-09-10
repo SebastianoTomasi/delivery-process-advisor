@@ -1,31 +1,29 @@
 # Features
 
 This page is the routing scaffold for feature work. It is held once for the
-whole project and defines how a feature begins, how its phase is derived, and
+whole project and defines feature identity, structure, completion rules, and
 which authority boundary and phase catalog to open. It contains no phase
 question catalog: each feature phase has its own file in that authority's
 directory, so working on one phase does not load the other phases or the
 project-scoped catalog of the same authority.
 
-## Starting a feature
+## Feature identity
 
 A feature is a user-observable capability of the product, declared by writing
 its first feature-scoped Product artifact. It rests on the accepted foundation
 — the project-scoped Product description and Architecture shape — and nothing
 else.
 
-When the user begins to describe a capability that has no feature folder,
-agree a project-meaningful feature name. Propose a lowercase ASCII kebab-case
-slug matching `[a-z0-9]+(?:-[a-z0-9]+)*` and wait for the user to confirm it
-before the first write. Keep the readable name in artifact titles and prose;
-the slug is the feature's stable path identity.
+A feature has a project-meaningful readable name and a user-confirmed stable
+path slug: lowercase ASCII kebab-case matching `[a-z0-9]+(?:-[a-z0-9]+)*`.
+The readable name belongs in artifact titles and prose. An existing slug
+identifies the existing feature; a different capability needs a different
+explicitly agreed slug, never an automatically added numeric suffix.
 
-If `docs/features/<feature-slug>/` already exists, resume that feature. Never
-invent a numeric suffix to avoid a collision: a genuinely different capability
-needs a different explicitly agreed slug. Write the first proposed Product
-artifact under `docs/features/<feature-slug>/product/`. That single write
-creates the feature and opens its Product phase. Do not create an empty feature
-folder or any later authority folder in advance.
+The first proposed Product artifact under
+`docs/features/<feature-slug>/product/` declares the feature and opens its
+Product phase. Empty feature folders and later authority folders do not exist
+in advance of their first artifacts.
 
 ## What a feature folder holds
 
@@ -48,22 +46,19 @@ its first artifact. Its presence shows documentation in that authority, not
 completion of a phase or of any previous phase. Authorities outside the four
 feature phases may also hold feature artifacts; they introduce no new phases.
 
-### Closing a phase with no decisions
+### A phase with no decisions
 
-Before closing a phase with `<authority>/absent.md`, read its entire feature
-catalog and check every question against the relevant accepted decisions,
-including screening questions owned by other authorities. Write Scope and an
-explicit dismissal for each question's slug, explaining why no decision is
-needed. If existing coverage supports a dismissal, link its accepted answer
-and record the dependency. Accept the absence only when every dismissal is
-supported and no necessary input remains unresolved.
+`<authority>/absent.md` represents a feature phase with no decisions to make.
+It has Scope and an explicit dismissal naming each catalog question's slug,
+including screening questions, with the reason no decision is needed. A
+dismissal relying on existing coverage links its accepted answer and records
+the dependency. Every dismissal must be supported and no necessary input may
+remain unresolved before acceptance.
 
-A negative applicability answer may support these dismissals but never replaces
-the full check. A phase needs no dedicated applicability question to use this
-procedure. If any question has substance, use a normal artifact and link answers
-owned elsewhere; do not declare the whole phase absent. Read available evidence
-before asking the user and ask only unresolved decision-critical questions,
-not one interview question for each catalog entry.
+A negative applicability answer alone is insufficient, and a dedicated
+applicability question is not required. Any substantive answer belongs in a
+normal artifact, with links to answers owned elsewhere, and rules out blanket
+absence for the phase. The session's acceptance workflow checks these conditions.
 
 ## Phase order and reading route
 
@@ -85,12 +80,9 @@ and complete question list.
    [Implementation boundary](../implementation/advisor-implementation.md) +
    [Implementation feature catalog](../implementation/advisor-implementation-feature.md)
 
-Use this order as the usual route. Derive coverage and ready decisions using
-`docs/advisor-docs.md`, then read the chosen authority boundary and its feature
-catalog with the relevant accepted inputs and sources. Several phases can have
-work underway, and several decisions can be ready. Recommend one action with
-its basis, while naming useful ready alternatives. Read another catalog only
-when assessing or working on that other scope; do not load them all by default.
+This is the usual route, not a total prerequisite chain. Coverage and decision
+readiness follow [the common rules](../advisor-docs.md#usual-phase-order-and-decision-readiness).
+Read another catalog only when the action needs that other scope or phase.
 
 An absent phase folder means no artifact for that phase has been written, not
 that every later decision is premature. Accepted coverage remains valid when a
@@ -104,8 +96,8 @@ or state of their own.
 
 A phase is complete when accepted, compatible artifacts together address every
 question in its catalog and no unresolved input needed by that coverage remains.
-Read all artifacts in the folder to distinguish unrelated proposals from missing
-coverage or affected rules; statuses alone do not establish completion.
+Statuses alone do not establish completion; unrelated proposals do not remove
+existing accepted coverage.
 A question with no substance in the feature is answered by one explicit
 dismissal naming its slug. Silence is not an answer.
 

@@ -1,250 +1,388 @@
-# Delivery process advisor
+# Delivery Process Advisor
 
-A Claude Code / agent plugin that guides a software project's decisions and
-normative documents through a known process: define the product, fix the
-language, decide the architecture, design the realization — one feature at a
-time, over a deliberately thin foundation.
+> Turn “what should we do next?” into grounded advice—and keep settled answers
+> beside the code.
 
-It advises, it never blocks. The work runs in the target project's own
-repository, and the project holds the process it follows.
+Delivery Process Advisor gives Claude Code and Codex a project-local process for
+turning an idea into software that is clear enough to build. It reads the
+decisions already recorded in the repository, finds the next useful piece of work,
+and helps you work from product intent through architecture and implementation.
 
-## How it works
+It asks one decision-critical question at a time. What you agree becomes the
+project's documentation; what you do not agree remains open. The advisor
+recommends a path, but never blocks you from choosing another one.
 
-The plugin delivers a **payload** into a target project: a documentation
-scaffold under `docs/`, empty project-owned `docs/deferred/` and
-`docs/handoffs/` directories, skills, and seed instruction files. From then on
-the skills read the project's own files to place each feature in the process,
-explain what a piece of work is missing, prescribe the next action, and run the
-advisor-grill-with-docs sessions that write the answers down.
+## The short version
 
-The split is deliberate: the installer decides nothing and is small enough to
-verify by reading; everything requiring judgement lives in the skills.
+Use it when your project has questions like these:
 
-## Install
+- What do I need to decide before I start coding?
+- Is this feature ready for architecture or implementation work?
+- Which document owns this rule?
+- If this decision changes, what else must change with it?
+- How do I keep a useful idea for later without losing its context?
 
-From a shell — registers this repository as a marketplace, then installs the
-plugin from it:
+A typical conversation looks like this:
 
+```text
+You: I want to add CSV export. What should we decide next?
+
+Advisor: The intended users and exported data are settled. The file contract is
+the next useful decision because it unlocks the smallest working export path.
+I recommend defining it next; choosing the launch screen is also ready but does
+not unblock delivery.
+
+You: Let's define the file contract.
+
+Advisor: Who must be able to consume the exported file?
+
+You: People using Excel, plus our own import tool.
+
+Advisor: That gives us two compatibility requirements...
 ```
+
+The recommendation is read-only. Once you choose the work, the real exchange
+happens with the evidence in your repository. As answers settle, the advisor
+writes them into the document that owns them and links dependent decisions
+instead of copying the same rule into several places.
+
+Until the product's primary journey works, recommendations favor the smallest
+end-to-end implementation that satisfies the settled behavior and constraints.
+Once it works, explicit goals, defects, and ready deferred work come before
+optional polish.
+
+### What you can ask it to do
+
+```text
+Help me define this project before we choose a stack.
+```
+
+```text
+Let's design offline sync. Ask me what still needs deciding and record the answers.
+```
+
+```text
+What advisor work makes sense next, and what is blocking the alternatives?
+```
+
+```text
+Defer multi-user permissions until we begin the collaboration feature.
+```
+
+```text
+Migrate SPEC.md into the advisor documents.
+```
+
+The advisor is designed for a person who is both leading and building a
+software project, without a separate analyst or project manager preparing the
+decisions first. It structures the design conversation; it does not choose the
+product for you or replace the coding agent that implements it.
+
+## Quick start
+
+The advisor runs in both Claude Code and Codex after initialization. The current
+installation entry point is a Claude Code plugin.
+
+### 1. Install the plugin
+
+From a shell, register this repository as a marketplace and install the plugin:
+
+```sh
 claude plugin marketplace add SebastianoTomasi/delivery-process-advisor
 claude plugin install delivery-process-advisor@delivery-process-advisor
 ```
 
-From a local checkout, pass the path instead: `claude plugin marketplace add .`
+From a local checkout, pass the path instead:
+
+```sh
+claude plugin marketplace add .
+```
 
 The same two steps are available as `/plugin marketplace add ...` and
-`/plugin install ...` inside a Claude Code **terminal** session; the IDE
-extension has no `/plugin`, so use the shell form there.
+`/plugin install ...` inside a Claude Code terminal session. The IDE extension
+has no `/plugin`, so use the shell form there.
 
-Installing gets you the helper, not the process: the payload rides along in
-the installed copy and reaches nothing until you run `init` against a target.
+Installing the plugin only makes the initialization helper available. It does
+not change a project yet.
 
-## Use it
+### 2. Initialize a project
 
-From a Claude Code session, deliver the payload into a project root:
+From a Claude Code session, deliver the advisor into a project root:
 
-```
+```text
 /delivery-process-advisor:init <target-project-root>
 ```
 
-Omit the root — either together with `--target` or by omitting the option — and
-the helper selects the nearest directory containing `.git` at or above the
-working directory. If none exists, it selects the working directory itself.
-The installer names the default target in its report before writing anything;
-an explicit `--target` value takes precedence. See the
-[target-selection contract](docs/architecture/initialization.md#target-selection).
+You can omit the root. The helper then selects the nearest directory containing
+`.git` at or above the working directory. If it finds none, it uses the working
+directory. It prints the selected target before writing anything.
 
-Or, from a shell:
+From a shell in this checkout, run the same helper directly:
 
-```
+```sh
 node bin/init.mjs [--target [<target-project-root>]]
 ```
 
-The report names every destination and whether it was written, replaced,
-linked, appended, skipped, or removed. Advisor-owned scaffolds and skill
-destinations are brought to the invoked release. Project-owned
-`docs/deferred/` and `docs/handoffs/` destinations are created when absent and
-skipped unchanged when occupied. `CLAUDE.md` / `AGENTS.md` only get their
-host-specific advisor reference appended when they are regular files. A linked
-instruction file is never modified through the link: it is skipped if the
-exact reference is already readable, and otherwise delivery fails with a
-concise diagnostic.
+An explicit `--target` value always wins. The exact behavior is documented in
+the [target-selection contract](docs/architecture/initialization.md#target-selection).
 
-Skill files go to `.agents/skills/<skill>/`. The helper creates a relative
-directory symlink from `.claude/skills/<skill>`, so both hosts share those files.
-If the relative link cannot be created, initialization fails with a concise
-diagnostic; it creates no junction or independent copy. On Windows a permission
-failure may require Developer Mode or an appropriately privileged invocation
-before retrying. Existing Claude skill destinations, including old junctions
-and copies, are replaced by the release's relative links. Files no longer
-shipped inside a canonical advisor-owned skill directory are pruned. See the
-[skill-host contract](docs/architecture/initialization.md#skill-hosts).
+### 3. Start a conversation
 
-A successful run confirms that delivery operations completed; it does not
-certify that skipped files or links work or that an agent can load them.
+Open Claude Code or Codex in the initialized repository and ask:
 
-## In a guided project
+```text
+What should we work out next?
+```
 
-This README is the only account of the process written for a person. Everything
-delivered into a target project is written for the agent working there, so a
-project that received the payload holds the process and not the case for it —
-read that here, and read `docs/` there.
+The agent will follow the repository's advisor instructions, inspect only the
+relevant project documents, explain its evidence, and suggest a focused next
+step. You can also start directly with a project idea, a feature, an existing
+document to migrate, or a proposal you want pressure-tested.
 
-**Why `docs/` has that shape.** Every rule has one owning authority and one
-authoritative document, and the folders under `docs/` are those authorities:
-shared Product decisions sit in `docs/product/`, shared Architecture decisions
-in `docs/architecture/`, and so on. Any authority can also hold decisions for
-one feature in `docs/features/<feature-slug>/<authority>/`. Documents link across
-authorities instead of repeating each other, so a rule has exactly one place
-where it can be wrong. A
-file whose name begins with `advisor-` belongs to the process rather than to
-the project: it asks questions and decides nothing.
+## What initialization adds
 
-**What is written, and when.** Nothing is written in advance. The folders exist
-from the first day so the map of the work ahead is visible, but a document that
-decides something is created only by the session that decides it. The work runs
-vertically, on features, over a deliberately thin foundation — a project-scoped
-Product description and Architecture shape. Once those are accepted a feature
-can begin, and different features may sit at different points at the same time.
-A feature holds its documents in `docs/features/<feature-slug>/`, one folder
-per authority, created only when there is an artifact to put there. Folder
-presence does not prove phase completion.
-The slug is confirmed lowercase ASCII kebab-case; the readable name remains in
-the documents.
-Implementation covers significant internal design for clients, servers, local
-applications, CLIs, and jobs. Shared implementation conventions, the default
-frontend surface, the stack, a security policy — each is written when a feature
-first needs it, and its absence is a
-need that has not arisen rather than a decision against it.
+Initialization puts the process where the work happens: inside the target
+repository.
 
-**Reading a document's state.** The line directly below a document's title says
-what kind of document it is and whether other work can rest on it; the markers
-are listed in the project's own `docs/advisor-docs.md`. A question with no
-substance in that project is answered with one explicit line saying so, naming
-the question — silence is never read as inapplicability.
+| Destination | Purpose |
+| --- | --- |
+| `advisor-agents.md` | Routes an agent through the advisor process |
+| `docs/` | Scaffolds and question catalogs for each decision authority |
+| `docs/deferred/` | Project-owned records of durable future work |
+| `docs/handoffs/` | Project-owned temporary conversation handoffs |
+| `.agents/skills/` | The canonical project-local advisor skills |
+| `.claude/skills/` | Relative links to those same skills for Claude Code |
+| `AGENTS.md` / `CLAUDE.md` | Seed files or appended references that activate the advisor |
 
-**How to obtain advice.** Ask the agent working in the repository what to do
-next. It starts with document markers and scopes, then reads the decision
-dependencies and passages needed to explain what is ready and why. Product →
-Frontend → Architecture → Implementation is the usual feature route; a decision
-can be ready before the preceding phase is complete when its accepted inputs
-suffice and the remaining choices cannot invalidate it. The agent names its
-evidence and distinguishes ready decisions from whole-phase completion. The
-advice does not bind you: nothing is recorded when you proceed
-otherwise, and nothing returns later to say the advice was given. It is offered
-again only while the state of the project still implies it.
+The report names every destination and says whether it was written, replaced,
+linked, appended, skipped, or removed. Advisor-owned scaffolds and skills are
+brought to the invoked release. Project-owned deferred items, handoffs, and
+instruction content are preserved according to the
+[initialization contract](docs/architecture/initialization.md).
 
-**When work can wait.** Initialization creates the empty `docs/deferred/`
-directory. `advisor-defer` records each durable question, idea, or other future
-concern there as one Markdown file, clarifying only inputs too vague to be
-useful. The item keeps its project or feature context, destination, and revisit
-condition. Before advice and relevant sessions, the advisor checks which items
-are ready, still waiting, or already answered; unclassified items are surfaced
-too. A resolved item links to the accepted answer in `docs/`, so no external
-tracker is required.
+On Windows, creating the relative skill links may require Developer Mode or an
+appropriately privileged invocation. If link creation is denied,
+initialization stops with a diagnostic instead of silently creating a different
+kind of copy.
 
-**When a conversation must continue elsewhere.** Explicitly invoke
-`advisor-handoff` to create a temporary, descriptively named `*-handoff.md` in
-the initialized `docs/handoffs/` directory. It references persisted artifacts
-and captures the next objective, current state, constraints, next action, and
-open questions for a fresh session. The advisor never discovers, prioritizes,
-archives, or deletes these files: identify the one to read in the new
-conversation and remove it manually when it is no longer useful.
+A successful run means the delivery operations completed. It does not certify
+that pre-existing skipped files or links work, or that every host can load the
+installed skills.
 
-**When a decision changes.** A new proposal leaves existing accepted rules in
-force. An agreed change starts a focused session that follows dependencies,
-settles new choices, and updates the affected documents until they are coherent.
-Important decisions keep reasons and informative source links in ADRs; current
-rules link to those records. If the session is interrupted, `needs-review`
-records the cause, changed decision, relevant ADR, and remaining work so another
-session can finish it.
+---
 
-**When you already have documents.** Ask the agent to use `advisor-migrate-docs`
-with the documents you want to migrate. It reorganizes their content into the
-advisor structure, asks only questions needed for the transfer, and reports
-missing design decisions as later work. Identify current specifications so
-their explicit decisions can be carried forward. After checking the replacements
-and repairing references, it removes or rewrites the in-scope originals in the
-target project; it keeps no source copies or archives. Migration can finish
-while some artifacts remain proposed and phases remain incomplete.
+## The deeper model
 
-## Layout
+The rest of this README explains why the repository has this shape and what the
+advisor is doing beneath the simple conversation.
 
-| Path | What it is |
+### Decisions have owners
+
+The `docs/` tree is divided by **authority**: the kind of decision a document
+is allowed to own.
+
+| Authority | Examples of what it owns |
+| --- | --- |
+| Product | Users, problems, outcomes, capabilities, and scope |
+| Frontend | User-visible behavior, flows, states, and input rules |
+| Architecture | System boundaries, components, contracts, and data movement |
+| Implementation | Significant internal design across clients, servers, CLIs, jobs, and local apps |
+| Security | Control requirements and security-specific rules |
+| Deployment | Release and environment decisions |
+| Operations | Runtime procedures, recovery, and operational responsibilities |
+| Development | Contributor and engineering workflow |
+| Stack | Shared technology choices and constraints |
+
+A rule has one authoritative home. Other documents link to it and explain why
+they depend on it. This makes a changed decision traceable and avoids several
+copies drifting apart.
+
+Files whose names begin with `advisor-` belong to the process: they route the
+agent and enumerate questions. They do not contain your project's decisions.
+Those are written only as you settle them.
+
+### The process grows vertically
+
+The advisor starts with a deliberately thin project foundation:
+
+1. define the product;
+2. establish the shared language in `CONTEXT.md`;
+3. decide the architectural shape needed to begin feature work.
+
+It then moves feature by feature through the usual route:
+
+```text
+Product → Frontend → Architecture → Implementation
+```
+
+This is guidance, not a gate. A particular decision can be ready early when its
+accepted inputs are sufficient and the remaining open choices cannot invalidate
+it. Conversely, a folder or an `accepted` marker does not prove that an entire
+phase is complete. The advisor checks the relevant question catalog and the
+meaning of the documents before making that claim.
+
+Feature decisions live together under:
+
+```text
+docs/features/<feature-slug>/<authority>/
+```
+
+Shared rules stay at project scope. For example, a shared authentication policy
+does not get copied into every feature, while a recovery procedure needed only
+by one import feature can remain with that feature.
+
+### Documents are working project state
+
+The line below an advisor document's title identifies its state. The complete
+marker rules live in the initialized project's `docs/advisor-docs.md`.
+
+- `proposed` means the document contains unsettled work.
+- `accepted` means other decisions may rely on its settled content.
+- `needs-review` means a known change or interruption left specified work to
+  reconcile.
+
+An inapplicable catalog question is dismissed explicitly by name. Silence is
+not treated as an answer. This lets the advisor distinguish “we decided this
+does not apply” from “we forgot to discuss it.”
+
+### The skills divide the work
+
+The installed skills provide a small set of deliberate interaction modes:
+
+- `advisor-next-work` assesses the current documentation and implementation and
+  recommends one next action without starting it.
+- `advisor-grill-with-docs` asks one question at a time and writes each settled
+  answer into the project documents.
+- `advisor-grill-me` pressure-tests a proposal without changing project files.
+- `advisor-domain-modeling` keeps shared terminology and important architectural
+  decisions coherent.
+- `advisor-defer` records and later recovers work that can safely wait.
+- `advisor-handoff` creates an explicit temporary bridge to a fresh conversation.
+- `advisor-migrate-docs` moves selected existing documents into the advisor
+  structure without keeping duplicate source copies.
+
+You do not need to memorize these names for ordinary use. Describe the outcome
+you want and the agent can select the applicable skill. The handoff skill is the
+exception: it runs only when explicitly requested, because handoffs are
+temporary and their lifecycle remains yours.
+
+### Deferred work, handoffs, and changed decisions
+
+These solve three different problems:
+
+- **Deferred work** is a durable idea, question, or concern for later. It keeps
+  its context and revisit condition under `docs/deferred/`, and resurfaces when
+  it becomes relevant.
+- **A handoff** moves an active conversation into a fresh session. It records
+  the next objective and current state under `docs/handoffs/`; you identify it
+  to the next session and remove it when it is no longer useful.
+- **A changed decision** updates its one owning rule and then follows dependency
+  links through every affected document. An interrupted propagation uses
+  `needs-review` to say what remains inconsistent.
+
+Important decisions can keep their reasons and source links in ADRs. Sources
+inform the work, but they become binding only when the project records the rule
+in its own authoritative document.
+
+### Delivery and ownership
+
+The helper is intentionally mechanical; all judgment lives in the skills.
+
+- `src/target/` is the literal advisor scaffold delivered into a project.
+- `src/skills/` contains the delivered skills.
+- `bin/init.mjs` maps those assets to their destinations and reports each
+  operation.
+
+Advisor-owned destinations are updated to the invoked release. Project-owned
+destinations are created when absent and otherwise left alone. Existing
+`AGENTS.md` and `CLAUDE.md` files receive only the host-specific advisor
+reference when needed. Initialization never writes through an occupied
+instruction-file link.
+
+Skill files are written once under `.agents/skills/`. Relative directory links
+under `.claude/skills/` let both hosts use the same copy and continue to work if
+the project directory moves. Old independent Claude skill copies, junctions,
+and links at advisor-owned destinations are replaced by the release's relative
+links. Files no longer shipped inside a canonical advisor skill directory are
+pruned. See the [skill-host contract](docs/architecture/initialization.md#skill-hosts)
+for the exact rules.
+
+### This repository uses itself
+
+This repository is both the source of the advisor and a project guided by it.
+The roles remain separate:
+
+| Path | Role |
 | --- | --- |
 | `.claude-plugin/` | Plugin manifest and marketplace entry |
-| `bin/init.mjs` | The installer — the only thing that touches a target |
-| `commands/init.md` | The `/init` slash command wrapping it |
-| `test/` | Installer regression tests and child-process fault injection |
-| `src/target/` | Literal mirror of what a target project receives |
-| `src/skills/` | Skills delivered as files to `.agents/skills/`, linked from `.claude/skills/` |
-| `src/instructions/` | Seed `CLAUDE.md` / `AGENTS.md`, written only if absent |
-| `docs/deferred/` | Durable future-work records owned by this project |
-| `docs/handoffs/` | Temporary conversation-transfer files owned by this project |
-| `CONTEXT.md` | The vocabulary of the guided process |
-| `docs/` | Documentation of the advisor itself |
-| `docs/adr/` | Decision records |
+| `bin/init.mjs` | Delivery helper—the only code that changes a target |
+| `commands/init.md` | Claude Code `/init` command wrapper |
+| `src/target/` | Literal mirror of the target-project scaffold |
+| `src/skills/` | Source skills delivered to target projects |
+| `src/instructions/` | Seed `CLAUDE.md` and `AGENTS.md` files |
+| `test/` | Installer regression tests and fault injection |
+| `docs/` | This product's own accepted and proposed design decisions |
+| `docs/deferred/` | Durable future work for this repository |
+| `docs/handoffs/` | Temporary conversation transfers for this repository |
+| `CONTEXT.md` | Vocabulary of the advisor product |
 
-This repository uses the advisor to build itself. Installed advisor
-instructions, scaffolds, catalogs, and skills govern work here; project
-artifacts under `docs/` describe the advisor product. Those artifacts and
-`CONTEXT.md` are not payload for other projects.
-
-`src/` remains product data to author, distinct from the installed instructions.
-The [repository boundary](docs/architecture/repository-boundaries.md#self-application)
-and [contributor guidance](docs/development/repository-workflow.md) explain these
-roles. Editing one copy does not automatically update the other.
+Files under `src/` are product data to author. The installed instructions and
+scaffolds at the repository root are derived copies. Editing one does not
+automatically update the other. The
+[repository boundary](docs/architecture/repository-boundaries.md#self-application)
+defines the distinction.
 
 ## Contributing
 
-**An installed plugin is a snapshot, not a live link.** It is copied into
-`~/.claude/plugins/cache/` from the pushed GitHub repo and pinned to the commit
-it was installed at, so editing this working tree changes nothing about the
-`/delivery-process-advisor:init` you can run. To pick up a change: commit,
-push, then update the marketplace and reinstall the plugin.
+An installed plugin is a snapshot, not a live link. Claude Code copies it into
+its plugin cache from the pushed repository and pins it to a commit. Editing
+this checkout therefore does not change the installed
+`/delivery-process-advisor:init` command. To publish a change, commit and push
+it, then update the marketplace and reinstall the plugin.
 
-For a normal edit-and-try loop, skip the plugin and run the checkout, which
-always reflects your working tree:
+For a normal edit-and-try loop, run the checkout directly against a throwaway
+repository:
 
-```
+```sh
 node bin/init.mjs --target <a-throwaway-repo>
 ```
 
 Run the installer regression suite with Node's built-in test runner:
 
-```
+```sh
 node --test test/init.test.mjs
 ```
 
-Tests create and remove their own temporary plugin copies and target projects.
-They exercise real relative symlinks, so Windows must permit symlink creation.
-Permission failures and programming defects are also tested through controlled
-fault injection in child processes; the suite changes no machine settings.
+The tests create and remove temporary plugin copies and target projects. They
+exercise real relative symlinks, so Windows must permit symlink creation. They
+also test permission failures and programming defects through controlled fault
+injection without changing machine settings.
 
-The scratch target used while developing this repo:
+The current development scratch target is:
 
-```
+```powershell
 node bin/init.mjs --target "C:\Users\sebas\Documents\Code\Passion\delivery-process-target-test"
 ```
 
-Delivery replaces advisor-owned destinations while preserving project-owned
-ones, so a throwaway target can be re-delivered into as often as you like — but
-check the report, since a `skipped` line says only that a project-owned
-destination was left as found. If a previous run was interrupted while writing
-one file, inspect the resulting target before retrying; initialization does not
-stage or identify incomplete writes.
+Delivery is safe to rerun against a throwaway target because advisor-owned
+destinations converge on the invoked release and project-owned destinations are
+preserved. Still inspect the report: `skipped` means only that a project-owned
+destination was left as found. Delivery is not transactional, so inspect a
+target after an interrupted run before retrying.
 
-Keep payload source, delivery code, installed advisor instructions, and project
-artifacts distinct. Changes under `src/` change delivered content; `bin/` and
-`commands/` change the helper; project artifacts under `docs/` change the design.
-Use the [contributor guidance](docs/development/repository-workflow.md) when
-working on those boundaries.
+See [Working on the advisor repository](docs/development/repository-workflow.md)
+for the complete contributor rules.
 
-## Start reading
+## Continue reading
 
-- [CONTEXT.md](CONTEXT.md) — the terms the whole process is written in
-- [docs/product/overview.md](docs/product/overview.md) — the problem and what the system does
-- [docs/architecture/documentation-model.md](docs/architecture/documentation-model.md) — the model inside a guided project
-- [docs/architecture/initialization.md](docs/architecture/initialization.md) — the delivery contract
-- [docs/development/interaction-flows.md](docs/development/interaction-flows.md) — proposed acceptance scenarios and their open decisions
-- [docs/architecture/presets.md](docs/architecture/presets.md) — proposed shared preset mechanism
+- [Product description](docs/product/overview.md) — the problem, users,
+  capabilities, and boundaries.
+- [Guided-project documentation model](docs/architecture/documentation-model.md)
+  — authorities, scopes, artifacts, and decision readiness.
+- [Initialization](docs/architecture/initialization.md) — the complete delivery
+  contract.
+- [Repository boundaries](docs/architecture/repository-boundaries.md) — product
+  source, installed instructions, and self-application.
+- [Interaction flows](docs/development/interaction-flows.md) — acceptance
+  scenarios and open product decisions.
+- [Presets](docs/architecture/presets.md) — the proposed shared-preset design.

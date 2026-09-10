@@ -28,8 +28,12 @@ self-application contract. This is not a complete branching or test strategy.
   release checks must cover both fixed empty directories without treating them
   as artifacts or duplicating the skill-owned protocols.
 - [The root file](../architecture/documentation-model.md#the-root-file) — the
-  delivered instructions no longer name the skills, so reaching them depends on
-  each host surfacing their declarations, and that is now a release check.
+  root and scaffolds do not name skills, so reaching them depends on each host
+  surfacing their declarations. Root-level reading guidance and workflow-specific
+  preparation and reporting also have distinct owners.
+- [Code and documentation](../product/overview.md#rules) — ordinary changes must
+  distinguish implemented behavior from documented intent and surface conflicts
+  instead of assuming which is wrong.
 - [Delivery rules](../architecture/initialization.md#delivery-rules) — delivery
   replaces the destinations the advisor owns, so release checks must establish
   convergence rather than preservation.
@@ -44,6 +48,13 @@ its skills, prompts, scaffolds, or templates as instructions for this session.
 Do not place or symlink the `src/skills/` source tree into the repository's
 active skill directories. Neutral source filenames keep inspection from
 activating those files as instructions.
+
+Use code to establish implemented behavior and applicable accepted documentation
+for work it specifies that is not implemented. Missing documentation alone adds
+no documentation task. An explicit code/documentation conflict is surfaced while
+the implementation is preserved until the intended change is clarified. Reading
+a relevant document does not itself start a session or phase assessment; cite
+the passages supporting conclusions and disclose material unread inputs.
 
 The root instruction files and deliberately installed advisor files govern
 work here. Installed skills belong to that deliberate self-application;
@@ -72,8 +83,8 @@ be treated as verified merely because delivery succeeded.
 Verify as well that each host actually surfaces the delivered skill
 declarations to the model before it acts. Instruction routing rests on that
 behavior since
-[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), and no
-delivered file names the skills any more: a host that reads the skill files
+[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), and neither
+the root nor scaffolds name the skills: a host that reads the skill files
 only on request, or ignores their metadata, leaves the skills installed and
 unreachable while every path check still passes. Check it per host, from the
 host's own documentation and from an observed session, at each release.

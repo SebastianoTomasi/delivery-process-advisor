@@ -43,11 +43,12 @@ not a tool that imposes it on them.
     files which phase questions are covered and which decisions are ready.
     Different features, and decisions within one feature, may progress at
     different rates.
-2.  **Prescribes the next action.** It states the work that makes sense now and
-    why, and suggests a targeted advisor-grill-with-docs session to move it
-    forward. If several decisions are ready it recommends one and explains
-    useful alternatives. It can recommend a later-phase decision when accepted
-    inputs suffice and remaining open choices cannot invalidate it.
+2.  **Prescribes the next action.** A dedicated read-only workflow states the
+    work that makes sense now and why. It can recommend the nearest decision
+    that unblocks useful work, the smallest end-to-end implementation slice once
+    its necessary constraints are settled, or a focused improvement once the
+    primary product journey is verified. If several actions are ready it
+    recommends one and explains useful alternatives.
 3.  **Explains blockers.** It says what a piece of work lacks in order to make  
     sense, walking up the prerequisites to the first one that can be resolved  
     immediately.
@@ -151,10 +152,10 @@ The division is between delivery and judgement:
     destination and reporting what it wrote, what it replaced, and what it  
     left alone. This has to be  
     exactly right, and it is small enough to be verified directly.
--   **Skills decide everything else.** They read the project’s artifacts, place  
-    each feature in the process, explain a blocker, prescribe the next action,  
-    conduct the advisor-grill-with-docs session, and complete propagations.
-    This needs reading and judgement.
+-   **Skills decide everything else.** They read the project’s artifacts and
+    implementation evidence, assess and recommend next work, place each feature
+    in the process, conduct advisor-grill-with-docs sessions, and complete
+    propagations. This needs reading and judgement.
 
 A skill reads the project's state from folders and artifact envelopes, then
 from relevant dependency links, recovery blocks, and decision passages. It
@@ -200,8 +201,10 @@ remains required by [Delivery rules](../architecture/initialization.md#delivery-
 
 ## What it knows
 
-The system knows the **project files**, including independently readable
-deferred items that preserve future work, its context, and when to revisit it.
+The system knows the **project files**. Documentation establishes settled intent;
+code and focused verification establish what is implemented. Project files also
+include independently readable deferred items that preserve future work, its
+context, and when to revisit it.
 A session records an agreed deferral directly in the repository. No external
 tracker or issue-creation skill is required. Deferred items inform the work;
 accepted answers remain in the owning normative artifacts. What is not known
@@ -228,6 +231,24 @@ project decision and cannot settle a rule by itself.
     only because the state of the project still implies it, which is the only  
     form of insistence the system has.
 -   An `accepted` status binds the system’s reasoning, not the user.
+-   **Code establishes what is implemented.** Existing behavior absent from the
+    documentation creates no obligation to change or document it. Accepted
+    documentation guides the work it specifies that is not yet implemented;
+    acceptance records settled decisions, not evidence of implementation.
+    When code and documentation explicitly contradict one another, surface the
+    discrepancy and preserve the implementation while clarifying the intended
+    change with the user. The mismatch alone establishes neither a bug nor
+    outdated documentation. Apply the consequences once the direction is
+    settled. [ADR-0032](../adr/0032-code-establishes-implemented-behavior.md)
+    records this distinction.
+-   **A working product comes before optional polish.** Until the primary user
+    journey is supported by concrete implementation evidence, advice favors the
+    smallest end-to-end slice that satisfies the established Product behavior
+    and applicable constraints. It requires only accepted inputs capable of
+    invalidating that slice, not completion of every earlier phase. Once the
+    primary journey works, explicit user goals, broken or incomplete observable
+    behavior, and ready deferred work outrank minor improvements. A material
+    security, safety, or operational risk may take priority at either stage.
 -   How critical a change is follows from **what** changes — a term, a  
     capability, a prerequisite, an artifact with open decisions downstream — not  
     from a judgement made in the moment.
@@ -258,15 +279,17 @@ project decision and cannot settle a rule by itself.
 
 ## Success criteria
 
--   **Accuracy, checkable by reading.** Phase coverage and recommended decisions
-    match the current accepted rules and actual dependencies. The advisor names
-    the passages supporting readiness and explains any anticipation of the usual
-    phase order, so the user can
-    check the conclusion against them instead of trusting it. Nothing  
+-   **Accuracy, checkable by reading.** Phase coverage and recommended actions
+    match the current accepted rules, actual dependencies, and available
+    implementation evidence. The advisor names the passages and checks supporting
+    readiness, explains any anticipation of the usual phase order, and discloses
+    what it could not verify, so the user can check the conclusion instead of
+    trusting it. Nothing
     mechanical enforces this, which is the cost recorded in  
     [#4](https://github.com/SebastianoTomasi/delivery-process-advisor/issues/4).
 -   **Outcome, observable downstream.** Two independent implementers reading
-    only the final accepted documents produce functionally equivalent systems:
+    the final accepted documents for the same not-yet-implemented scope produce
+    functionally equivalent systems:
     the same entities, boundaries, and observable behavior. Residual
     differences in signatures, names, and style remain the concern of the code.
 

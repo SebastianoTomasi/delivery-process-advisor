@@ -25,6 +25,13 @@ The first proposed Product artifact under
 Product phase. Empty feature folders and later authority folders do not exist
 in advance of their first artifacts.
 
+Agree the readable name and confirm the slug with the user before that first
+write, unless the user already supplied it. An identity that already exists
+resumes its feature instead of declaring a new one. Check the relevant accepted
+foundation inputs before writing; when a necessary input is unresolved, explain
+the missing decision and offer to settle it first, and if the user proceeds
+without it, keep the artifact proposed and name the unresolved assumption.
+
 ## What a feature folder holds
 
 ```

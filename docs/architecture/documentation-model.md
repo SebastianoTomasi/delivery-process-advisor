@@ -262,8 +262,9 @@ Proposed dependants remain proposed and record their unresolved changed inputs.
 The root agent instructions start with envelopes and markers, then read relevant
 dependency and review sections and decision passages. Marker lines expose
 artifact status; they cannot prove phase coverage or decision readiness.
-The exact delivered format lives in `docs/advisor-docs.md` and the writing and
-propagation procedure in `advisor-grill-with-docs`.
+The exact delivered format lives in `docs/advisor-docs.md`, the writing and
+acceptance procedure in `advisor-grill-with-docs`, and the change-propagation
+procedure in `advisor-propagate-change`.
 
 The glossary and ADRs keep the domain-modeling skill's format. They are read for
 language, rationale, provenance, and recovery, never counted as phases or
@@ -530,11 +531,13 @@ is:
   implemented state, selection of one recommended action and useful alternatives,
   and the evidence and uncertainty reported with that advice.
 - `advisor-grill-with-docs` owns session preparation, feature creation, writing,
-  acceptance, phase checks, propagation, and their detailed reports. It uses
-  the shared reading guidance and completes relevant source reads before its
-  first question.
+  acceptance, phase checks, and their detailed reports. It uses the shared
+  reading guidance and completes relevant source reads before its first question.
+- `advisor-propagate-change` owns changes to accepted rules and restores
+  coherence across every affected dependant. It invokes the writing workflow
+  for the artifacts it changes.
 - `advisor-migrate-docs` owns full reads and transfer of selected inputs, invoking
-  the writing workflow for the decisions it needs.
+  the writing and propagation workflows for the decisions it needs.
 - `advisor-defer` owns deferred-item clarification, capture, classification,
   recovery, and closure; `advisor-next-work` and session preparation invoke its
   recovery.

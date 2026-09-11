@@ -1,6 +1,6 @@
 ---
 name: advisor-grill-me
-description: Pressure-test a proposal, strategy, or technical design through high-leverage, decision-critical questions. Use for an interrogation that leaves no trace in the project's files; when what settles should be written into the project's documents, use advisor-grill-with-docs instead.
+description: Pressure-test a proposal, strategy, or technical design through high-leverage, decision-critical questions. Use for an interrogation that changes no file: it resolves open questions in conversation and leaves what settles to whichever workflow records it.
 disable-model-invocation: false
 ---
 

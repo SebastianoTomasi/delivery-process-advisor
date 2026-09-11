@@ -81,14 +81,7 @@ If any condition is absent, do not create an ADR.
 
 Use [ADR-FORMAT.md](./ADR-FORMAT.md). Store system-wide ADRs in `/docs/adr/` and context-specific ADRs in that context’s `docs/adr/`.
 
-Preserve an adopted repository's existing ADR directory and numbering. Record
-the decision, reasons, and informative sources that motivated it, using a
-passage or version link when available. Link the current normative artifacts
-to the relevant ADR; the artifacts own today's rules, while the ADR preserves
-why they were chosen. A source update does not amend an accepted decision.
-
-When a qualifying change replaces an earlier decision, retain the old ADR and
-supersede it through the existing format. During an interrupted propagation,
-the affected artifacts' Review blocks link to that ADR and hold the remaining
-work; do not duplicate the rationale in a separate registry. ADRs themselves
-are neither advisor phases nor prerequisite artifacts.
+An adopted repository keeps the ADR directory and numbering it already has.
+Before writing or superseding an ADR, apply the provenance, dependency, and
+review rules in `docs/advisor-docs.md`; read that file when it is not already
+read. It owns those rules, and this skill does not restate them.

@@ -18,5 +18,6 @@ clear, already-agreed deferral merely to record it.
 Before recommending work or starting or resuming an advisor session, recover
 the relevant records through that procedure. Advice-only work reads them
 without changing them. When a deferred item is resolved, put the authoritative
-answer through the normal `advisor-grill-with-docs` acceptance or propagation
-procedure before closing the record.
+answer through the normal `advisor-grill-with-docs` acceptance procedure, or
+`advisor-propagate-change` when it changes an already accepted rule, before
+closing the record.

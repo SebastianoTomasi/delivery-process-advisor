@@ -1,6 +1,6 @@
 ---
 name: advisor-migrate-docs
-description: Migrate one or more user-selected documents into an initialized delivery-process-advisor project. Reorganize their content into advisor documents, resolve necessary decisions with the user, and replace the in-scope originals without retaining source copies. Use when adopting, migrating, or restructuring existing documentation, including pre-existing project documents that carry no advisor marker; the request to migrate is itself the adoption, and no second adoption request is needed. This skill owns the migration case and invokes advisor-grill-with-docs for writing, acceptance, and decision changes.
+description: Migrate one or more user-selected documents into an initialized delivery-process-advisor project. Reorganize their content into advisor documents, resolve necessary decisions with the user, and replace the in-scope originals without retaining source copies. Use when adopting, migrating, or restructuring existing documentation, including pre-existing project documents that carry no advisor marker; the request to migrate is itself the adoption, and no second adoption request is needed. This skill owns the migration case and invokes advisor-grill-with-docs for writing and acceptance, and advisor-propagate-change when a migration changes a rule the project has already accepted.
 disable-model-invocation: false
 ---
 
@@ -59,7 +59,7 @@ documents as decisions settle.
   organization, and wording autonomously within the advisor's rules.
 - A conflict with an accepted artifact is a decision for the user. Preserve
   the current rule while its replacement is only a proposal. Apply an agreed
-  change through `advisor-grill-with-docs`, including affected dependants.
+  change through `advisor-propagate-change`, including affected dependants.
 - Report catalog questions the inputs do not answer as gaps. Do not turn them
   into a general design interview, invent answers, or infer inapplicability
   from silence. An unresolved necessary input keeps the affected work proposed;
@@ -67,8 +67,9 @@ documents as decisions settle.
 
 ## Write and verify
 
-Use the writing, acceptance, and propagation procedures in
-`advisor-grill-with-docs` within this migration's scope. Use
+Use the writing and acceptance procedures in `advisor-grill-with-docs` within
+this migration's scope, and `advisor-propagate-change` when the migration
+changes a rule the project has already accepted. Use
 `advisor-domain-modeling` for resolved terminology and qualifying ADRs; preserve
 existing ADR locations, numbering, and decision history. Keep existing reasons
 and alternatives without inventing rationale or manufacturing an ADR for each

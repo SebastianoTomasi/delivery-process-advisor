@@ -83,10 +83,11 @@ be treated as verified merely because delivery succeeded.
 Verify as well that each host actually surfaces the delivered skill
 declarations to the model before it acts. Instruction routing rests on that
 behavior since
-[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), and the root
-names only the deferred-work trigger while the scaffolds name no skill at all:
-a host that reads the skill files only on request, or ignores their metadata,
-leaves the skills installed and unreachable while every path check still passes.
+[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), and since
+[ADR-0035](../adr/0035-deferred-recovery-belongs-to-the-workflows.md) no
+delivered document names a skill at all: a host that reads the skill files only
+on request, or ignores their metadata, leaves the skills installed and
+unreachable while every path check still passes.
 Check it per host, from the host's own documentation and from an observed
 session, at each release.
 

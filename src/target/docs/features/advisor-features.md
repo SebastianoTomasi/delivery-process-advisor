@@ -10,9 +10,11 @@ project-scoped catalog of the same authority.
 ## Feature identity
 
 A feature is a user-observable capability of the product, declared by writing
-its first feature-scoped Product artifact. It rests on the accepted foundation
-— the project-scoped Product description and Architecture shape — and nothing
-else.
+its first feature-scoped Product artifact. Its decisions use the relevant
+accepted foundation inputs — project-scoped Product and Architecture — under
+the [common readiness rule](../advisor-docs.md#usual-phase-order-and-decision-readiness).
+The foundation need not be complete before feature work begins or an individual
+feature decision is accepted.
 
 A feature has a project-meaningful readable name and a user-confirmed stable
 path slug: lowercase ASCII kebab-case matching `[a-z0-9]+(?:-[a-z0-9]+)*`.
@@ -36,6 +38,7 @@ without it, keep the artifact proposed and name the unresolved assumption.
 
 ```
 docs/features/<feature-slug>/
+  sources/       informative material shared across authorities, when needed
   product/       artifacts
   frontend/      artifacts
   architecture/  artifacts
@@ -52,6 +55,10 @@ what is there is this project's own work. Each authority folder appears with
 its first artifact. Its presence shows documentation in that authority, not
 completion of a phase or of any previous phase. Authorities outside the four
 feature phases may also hold feature artifacts; they introduce no new phases.
+
+The optional `sources/` folder follows the
+[common source rules](../advisor-docs.md#where-material-that-is-not-a-document-sits).
+It appears with its first source and adds no authority or phase.
 
 ### A phase with no decisions
 

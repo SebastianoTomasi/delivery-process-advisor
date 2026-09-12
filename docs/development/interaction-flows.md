@@ -18,7 +18,8 @@ below remain proposals and do not change those current rules.
   future-work recovery and explicit conversation transfer use different records
   and discovery rules.
 - [Artifact lifecycle and references](../architecture/documentation-model.md#visible-document-markers-and-decision-references)
-  and [coverage](../architecture/documentation-model.md#question-catalogs-and-completeness)
+  and [coverage](../architecture/documentation-model.md#question-catalogs-and-completeness),
+  with [decision readiness](../architecture/documentation-model.md#scope-and-prerequisites)
   — acceptance, recovery, and readiness expectations must match these contracts.
 - [Delivery rules](../architecture/initialization.md#delivery-rules) and
   [failure behavior](../architecture/initialization.md#failure-behavior) —
@@ -447,7 +448,8 @@ Undo, and Architecture fixes the document's consistency guarantees.
 - Frontend retains the visible Undo behavior; Implementation records only the
   significant internal trade-off, not every class, function, or signature.
 - Shared client conventions use the Implementation project catalog. CLI and job
-  mechanics have the same owner when their differences remain internal.
+  mechanics have the same owner when their alternatives satisfy the same
+  boundary contracts, even if permitted timing differences are measurable.
 
 ## Q. A procedure specific to one feature
 
@@ -507,6 +509,12 @@ guarantees. Architecture's export-file contract is not yet written.
   resolving that input before declaring the full contract ready.
 - Two mutually dependent drafts are a coupled decision to settle together, not
   evidence that both are ready.
+- The same assessment can support starting a feature while the foundation is
+  incomplete. If accepted artifacts settle its purpose, actors, data, and
+  outcomes, an unrelated open notification-delivery contract does not prevent
+  accepting its Product decisions. The agent establishes that independence and
+  leaves foundation coverage incomplete. If notification delivery could affect
+  those outcomes, that necessary input must be settled before acceptance.
 
 ## T. A source changes after a decision
 

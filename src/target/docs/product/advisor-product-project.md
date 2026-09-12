@@ -4,9 +4,12 @@ Read [the Product boundary](advisor-product.md) before using this catalog.
 This file contains only the progression and questions for project-scoped
 Product work.
 
-The questions below are the Product half of the foundation: the whole project
-rests on them, and they are answered before the first feature begins. A question
-with no substance is dismissed explicitly by its slug; silence is not an answer.
+The questions below are the Product half of the foundation. They define shared
+decisions for the project. Use the
+[common readiness rule](../advisor-docs.md#usual-phase-order-and-decision-readiness)
+to select work whose necessary inputs are accepted, including Architecture or
+feature decisions before this catalog is fully covered. A question with no
+substance is dismissed explicitly by its slug; silence is not an answer.
 
 ## How the foundation progresses
 
@@ -32,11 +35,11 @@ steps, or several artifacts may cover one, as long as every question is
 addressed. Screen-level interaction steps do not belong in this foundation;
 they become answerable for a concrete feature in its Frontend phase.
 
-The foundation is ready for Architecture when its artifacts are accepted and
-all nine questions below have an answer or an explicit dismissal. It leaves
-Architecture with the product boundary, actors and subjects, constrained data,
-observable capabilities, non-goals, compatibility promises, obligations, and
-external success criteria.
+The Product foundation is complete when compatible accepted artifacts cover
+all nine questions below with answers or explicit dismissals and no necessary
+input remains unresolved. Together, those decisions give Architecture the
+product boundary, actors and subjects, constrained data, observable capabilities,
+non-goals, compatibility promises, obligations, and external success criteria.
 
 ## Questions
 

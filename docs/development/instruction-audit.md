@@ -39,10 +39,10 @@ different branches. The starting examples are a request for a new feature,
 which routes to an `advisor-grill-with-docs` session, and a request to choose
 next work, which routes to the read-only `advisor-next-work` skill. Under
 [ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), workflow
-applicability belongs to skill descriptions. The root names only the
-cross-cutting deferred-recovery trigger, and scaffolds do not route requests by
-workflow name; a declaration that fails to claim its own case is therefore a
-navigation defect that following the file path cannot reveal.
+applicability belongs to skill descriptions. Neither the root nor the scaffolds
+names a workflow or routes requests by workflow name; a declaration that fails
+to claim its own case is therefore a navigation defect that following the file
+path cannot reveal.
 
 The full navigation trace is evidence required by this audit method. Ordinary
 advisor work follows the root's narrower obligation to cite supporting passages

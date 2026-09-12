@@ -42,11 +42,12 @@ to file later-phase material; record unresolved inputs in proposed work.
 
 ## Resolve only necessary decisions
 
-Use `advisor-grill-me`, the bundled `grill-me` skill, when a choice changes the
-migration. Ask one question at a time, explain the consequence, suggest a
-default, and wait for the answer before applying that choice. Continue
-independent transfers where useful. The migration request authorizes writing
-documents as decisions settle.
+Resolve explicitly delegated choices under `docs/advisor-docs.md`. Use
+`advisor-grill-me`, the bundled `grill-me` skill, for remaining choices that
+change the migration. Ask one question at a time, explain the consequence,
+suggest a default, and wait for the answer before applying that choice.
+Continue independent transfers where useful. The migration request authorizes
+writing documents as decisions settle.
 
 - Treat explicit decisions in documents the user identifies as current project
   specifications as already settled. Do not ask the user to approve them again.
@@ -57,7 +58,8 @@ documents as decisions settle.
   meaning, and substantive content that cannot be placed without changing or
   discarding it. Show the relevant passages. Resolve routine filenames,
   organization, and wording autonomously within the advisor's rules.
-- A conflict with an accepted artifact is a decision for the user. Preserve
+- A conflict with an accepted artifact requires a decision under
+  `docs/advisor-docs.md`. Preserve
   the current rule while its replacement is only a proposal. Apply an agreed
   change through `advisor-propagate-change`, including affected dependants.
 - Report catalog questions the inputs do not answer as gaps. Do not turn them
@@ -86,8 +88,8 @@ distinct from current rules, with their unresolved assumptions visible.
 Check the replacements against the inputs and relevant project documents:
 
 - Every meaningful passage is represented or its substantive exclusion was
-  agreed; constraints change only where the user settled a change during
-  migration.
+  settled; constraints change only where a change was settled with the user
+  or within their explicit delegation during migration.
 - Authority, scope, terminology, and cross-document decisions are coherent.
 - Dependencies point to the decisions actually relied on, explain why, and
   have compatible accepted inputs before the dependent artifact is accepted.

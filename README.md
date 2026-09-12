@@ -217,9 +217,10 @@ Product → Frontend → Architecture → Implementation
 
 This is guidance, not a gate. A particular decision can be ready early when its
 accepted inputs are sufficient and the remaining open choices cannot invalidate
-it. Conversely, a folder or an `accepted` marker does not prove that an entire
-phase is complete. The advisor checks the relevant question catalog and the
-meaning of the documents before making that claim.
+it, including a feature decision before the initial foundation is complete.
+Conversely, a folder or an `accepted` marker does not prove that an entire phase
+is complete. The advisor checks the relevant question catalog and the meaning
+of the documents before making that claim.
 
 Feature decisions live together under:
 

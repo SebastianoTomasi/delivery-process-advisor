@@ -12,8 +12,11 @@ topology. These are representative, not exhaustive.
 
 **Excludes:** Product behavior and Security policy, whose enforcement may be
 placed here but whose rule remains in the owning artifact; technology inventory
-and versions, owned by Stack; and private mechanics whose alternatives are not
-observable outside one unit, owned by Implementation.
+and versions, owned by Stack; and internal mechanics that satisfy the unit's
+contracts, owned by Implementation. Architecture defines or changes guarantees
+offered across the boundary, including guarantees still to be established.
+Measurable differences permitted by those contracts do not by themselves make
+an internal choice architectural.
 
 **Scope:** Project-scoped artifacts here hold the Architecture foundation and
 subsequent shared decisions. A new proposal does not replace the accepted

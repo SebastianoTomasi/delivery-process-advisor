@@ -88,10 +88,13 @@ therefore states the occasions that select the skill rather than summarizing its
 procedure, and it names another skill only to redirect an occasion it does not
 own.
 
-Delivered files name a skill only where a cross-cutting obligation would
-otherwise be easy to omit; `advisor-agents.md` names the deferred-work trigger
-on that basis and no other. Naming a skill from a document is an exception that
-costs a second place to maintain, not the routing mechanism.
+Delivered documents name no skill. A cross-cutting obligation belongs to each
+workflow that needs it, stated in that skill's own procedure, rather than to a
+trigger in a delivered document: naming a skill from a document costs a second
+place to maintain and is not the routing mechanism. Skills name each other,
+because a skill that invokes another owns that step of its own procedure. The
+reasoning is in
+[ADR-0035](../adr/0035-deferred-recovery-belongs-to-the-workflows.md).
 
 ## Reference files inside a skill
 

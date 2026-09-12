@@ -28,7 +28,10 @@ Expose the assumptions, risks, constraints, dependencies, tradeoffs, and hard-to
 * Ask exactly one question at a time.
 * Stay within the user’s stated scope and boundaries. Do not ask questions that are out of scope from the user's stated objective.
 * Use available conversation context, relevant codebase files, relevant `.md` files in `/docs`, and standard defaults before asking.
-* If a fact can be found by exploring the codebase, look it up rather than asking. Decisions belong to the user: present each one and wait for their answer.
+* If a fact can be found by exploring the codebase, look it up rather than asking.
+  For a decision the user has explicitly delegated, make and explain the choice
+  within that delegation. Otherwise, present the unresolved decision and wait
+  for their answer.
 * Make low-risk assumptions instead of interrupting; record them when relevant.
 * If the user’s chosen approach is clearly inefficient, incorrect, or hazardous, explain the practical concern clearly and ask for explicit confirmation.
 * If the user answers only “yes,” “ok,” or equivalent, proceed with the stated default.

@@ -38,3 +38,21 @@ The simpler marker-only rule was cheap to inspect but treated new proposals as
 withdrawal of current decisions and made independent work appear premature.
 The chosen semantic reading costs more and can be wrong; advice therefore names
 the supporting passages and discloses coverage it has not verified.
+
+## Foundation readiness
+
+On 2026-09-12, the user confirmed that the same readiness rule applies before
+the initial foundation is complete. A feature may begin and its decisions may
+be accepted when their necessary foundation inputs are accepted and compatible,
+and the remaining open choices cannot invalidate them. Architecture decisions
+can likewise use sufficient accepted Product inputs before Product coverage is
+complete. The foundation itself remains incomplete until its catalogs have
+full accepted coverage.
+
+Requiring the entire foundation first would be simpler to assess, but would
+delay independent work because of unrelated open questions. The chosen rule
+requires evidence of independence for each decision and preserves the usual
+order when it helps discovery. It does not make proposed inputs acceptable or
+let a ready feature stand in for missing foundation coverage. The current
+contract is in the documentation model's
+[Scope and prerequisites](../architecture/documentation-model.md#scope-and-prerequisites).

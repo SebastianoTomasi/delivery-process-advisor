@@ -11,6 +11,12 @@ retains contracts observable across unit boundaries. This supersedes
 [ADR-0001](0001-observability-separates-architecture-from-backend.md) while
 preserving its observability test.
 
+That retained test was later refined by
+[ADR-0037](0037-guarantees-separate-architecture-from-implementation.md):
+ownership follows the guarantees offered across a boundary, while measurable
+differences permitted by the contract can remain internal design choices.
+Implementation's scope across runtimes remains in force.
+
 The former server-only boundary left client implementation decisions without
 a clear owner. For Undo, Frontend specifies the visible behavior and
 Implementation records the choice between snapshots and inverse operations.

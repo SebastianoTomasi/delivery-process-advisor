@@ -11,8 +11,11 @@ dependencies, and recommended order in catalogs. Skills own repeatable
 procedures and their detailed reports, applying those rules and catalogs.
 Next-work assessment is a read-only workflow distinct from the
 `advisor-grill-with-docs` session that conducts user-chosen documentation work.
-The root retains one cross-cutting trigger to recover deferred work before advice
-or a session; `advisor-defer` owns the recovery procedure.
+The root retained one cross-cutting trigger to recover deferred work before
+advice or a session; that clause was later revised by
+[ADR-0035](0035-deferred-recovery-belongs-to-the-workflows.md), which moved the
+obligation into the workflows themselves. `advisor-defer` owns the recovery
+procedure in either case.
 
 The user chose this boundary while reviewing the root file because session
 preparation, feature creation, reading instructions, and documentation rules had
@@ -40,9 +43,10 @@ them for work that does not need them. Requiring the common rules file before
 every direct artifact read would avoid a summary but add an unnecessary read.
 Keeping next-work advice inside `advisor-grill-with-docs` would make a read-only
 request appear to enter the session used to establish and record decisions.
-Leaving deferred recovery only to individual workflows would make the same
-cross-cutting prerequisite easier to omit; the root repeats the trigger but not
-the procedure.
+Leaving deferred recovery only to individual workflows was judged, at the time
+of this decision, to make the same cross-cutting prerequisite easier to omit;
+the root repeated the trigger but not the procedure. ADR-0035 later accepted
+that alternative.
 The chosen split permits brief interpretation and routing summaries, not
 duplicate procedure definitions.
 

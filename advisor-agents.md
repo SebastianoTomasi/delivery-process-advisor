@@ -13,8 +13,6 @@ The code is the source of truth for what is implemented. Existing behavior may
 be undocumented; that alone creates no requirement to change it or document it.
 For work specified in documentation but not yet implemented, read and follow
 the relevant accepted decisions. Use the reading guidance below to find them.
-Reading documentation does not by itself require a phase assessment or an
-advisor session.
 
 When code and documentation contradict each other, surface the discrepancy and
 preserve the implementation while clarifying the intended change with the user.
@@ -23,18 +21,12 @@ The discrepancy alone establishes neither a bug nor outdated documentation.
 Accepted artifacts record settled decisions; they do not prove that those
 decisions are implemented. Proposals and artifacts needing review do not
 establish accepted inputs; sources inform decisions without establishing rules.
-An artifact records what the user established, and anything the agent settles
-in their place remains proposed. The user may change direction; the advisor's
-advice creates no additional permission step or deviation record. The full
-document, status, dependency, and acceptance rules are in
+An artifact records decisions established with the user, including choices made
+within their explicit delegation. Choices made without that agreement or
+delegation remain proposed. The user may change direction; the advisor's advice
+creates no additional permission step or deviation record. The full document,
+status, dependency, and acceptance rules are in
 [`docs/advisor-docs.md`](docs/advisor-docs.md).
-
-## Before advice or an advisor session
-
-Before recommending work or starting or resuming an advisor session, invoke
-`advisor-defer` to recover relevant deferred records, including records whose
-destination is still undecided. That skill owns the recovery procedure. Ordinary
-code work does not require this preparation.
 
 ## Where things are
 
@@ -68,13 +60,14 @@ Treat filenames and markers as routing information, not evidence of what a
 document establishes. Read a catalog when the action needs its decisions or
 coverage questions, selecting only the relevant scope and phase.
 
-Look for sources in `docs/sources/`, `docs/<authority>/sources/`, and, for feature
-work, `docs/features/<feature-slug>/<authority>/sources/`. Inspect filenames and
+Look for sources in `docs/sources/` and `docs/<authority>/sources/`. For feature
+work, also inspect `docs/features/<feature-slug>/sources/` and
+`docs/features/<feature-slug>/<authority>/sources/`. Inspect filenames and
 opening lines to choose relevant full reads. A source has no required format.
 
 Recognize advisor scaffolds and catalogs by their fixed names. Unmarked project
 documents may be relevant context; reading them does not adopt them as advisor
-artifacts. Consult the common documentation rules when interpreting their role.
+artifacts.
 
 Cite the documents and passages supporting conclusions drawn from documentation.
 Disclose unread material that could affect those conclusions.

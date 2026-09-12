@@ -96,8 +96,12 @@ specified in the
 [guided project documentation model](../architecture/documentation-model.md).
 
 **The foundation is Product and Architecture, project-scoped, over the language
-of `CONTEXT.md`.** Nothing else precedes a feature. Shared implementation
-conventions, the default frontend surface, the stack, a security policy — each is
+of `CONTEXT.md`.** Feature work may begin and its decisions may be accepted before
+the foundation is complete when their necessary inputs are accepted and
+compatible, and the remaining open foundation choices cannot invalidate them.
+The foundation still needs accepted coverage of all its catalog questions to
+be complete. Shared implementation conventions, the default frontend surface,
+the stack, a security policy — each is
 project-scoped, and each is written when a feature first needs it, governing
 the work that follows rather than blocking what came before. Being
 project-scoped is therefore not the same as being a prerequisite of every
@@ -306,10 +310,15 @@ project decision and cannot settle a rule by itself.
     surrounding it.
 -   **It does not invent artifacts in the user’s place.** It writes only to
     propagate confirmed corrections or to record the decisions, requirements,
-    and intent established with the user. A session is the ordinary way to
-    establish them and the one the advisor recommends; a document written any
-    other way states as accepted only what the user settled, and leaves the
-    rest proposed.
+    and intent established with the user, including choices the user explicitly
+    delegates to the agent. A choice within that delegation is settled and can
+    be accepted without subsequent user ratification once the usual acceptance
+    conditions hold. A choice made without the user's agreement or outside
+    their delegation remains proposed. A session is the ordinary way to
+    establish decisions and the one the advisor recommends; the same acceptance
+    rules apply to a document written another way.
+    [ADR-0036](../adr/0036-explicit-delegation-can-settle-decisions.md) records
+    the delegation decision.
 
 ## Provenance
 

@@ -32,6 +32,11 @@ gate is introduced — the product still
 [imposes no unavoidable steps](../product/overview.md#non-goals) — and a
 document written outside a session is answered with a status, not a refusal.
 
+That account of agent-made decisions was later refined by
+[ADR-0036](0036-explicit-delegation-can-settle-decisions.md): a choice within
+explicit user delegation can be accepted without later ratification. This
+changes the authority summary, while leaving this ADR's routing decision intact.
+
 Instruction routing now rests on host behavior the payload cannot verify when
 it is delivered. A host that ignores skill metadata leaves the skills installed
 and unreachable while every destination check still passes, so

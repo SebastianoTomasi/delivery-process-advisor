@@ -6,8 +6,11 @@ Product phase.
 
 ## Feature-scoped Product phase
 
-Rests on: the accepted foundation — the project-scoped Product description and
-Architecture shape.
+Usual inputs: the relevant accepted foundation decisions — project-scoped
+Product and Architecture. Apply the
+[common readiness rule](../advisor-docs.md#usual-phase-order-and-decision-readiness)
+to the specific feature decision; the foundation may remain incomplete when
+its open choices cannot invalidate that decision.
 
 Work through the phase in this order:
 

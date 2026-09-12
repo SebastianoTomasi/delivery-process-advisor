@@ -15,10 +15,13 @@ Code, migrations, and generated interfaces own exact signatures.
 For example, what Undo does for the actor belongs to Frontend; choosing document
 snapshots or inverse operations to implement its history belongs here. A
 guarantee exposed across a component boundary remains Architecture's.
+Internal alternatives may differ measurably, for example in execution time,
+while satisfying the same contract. Such permitted differences leave the
+choice here.
 
 **Excludes:** Client-visible behavior, owned by Frontend; the selected
-technology inventory and versions, owned by Stack; and contracts whose
-alternatives are observable outside one unit, owned by Architecture.
+technology inventory and versions, owned by Stack; and defining or changing
+guarantees offered across a unit's boundary, owned by Architecture.
 
 **Scope:** Project-scoped artifacts here hold shared conventions and defaults
 that later features inherit; they are demand-driven and not part of the

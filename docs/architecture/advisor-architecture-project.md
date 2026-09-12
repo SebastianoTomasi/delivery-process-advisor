@@ -5,10 +5,12 @@ catalog.
 This file contains only the progression and questions for project-scoped
 Architecture work.
 
-The questions below are the Architecture half of the foundation. They rest on
-the accepted Product description and are answered before the first feature
-begins. The slug is the question's identity and is what a dismissal cites; the
-number is presentation order only. A question with no substance here is
+The questions below are the Architecture half of the foundation. Each decision
+uses the accepted Product inputs it needs. Apply the
+[common readiness rule](../advisor-docs.md#usual-phase-order-and-decision-readiness)
+to Architecture and feature decisions even while foundation coverage is
+incomplete. The slug is the question's identity and is what a dismissal cites;
+the number is presentation order only. A question with no substance here is
 dismissed by name in one explicit line.
 
 ## How the foundation progresses
@@ -36,11 +38,12 @@ sequence, not a required document layout. Keep related answers together when
 that makes the contracts easier to read, and return to an earlier step if a
 later one exposes a missing component, owner, or boundary.
 
-The foundation is ready for feature work when its artifacts are accepted and
-all eight questions below have an answer or an explicit dismissal. It leaves
-each feature with a stable system boundary, a place for the work to land, rules
-for dependency and ownership, and the cross-system, consistency, trust, and
-failure contracts the feature must apply rather than reinvent.
+The Architecture foundation is complete when compatible accepted artifacts
+cover all eight questions below with answers or explicit dismissals and no
+necessary input remains unresolved. Together, those decisions give features a
+stable system boundary, a place for the work to land, rules for dependency and
+ownership, and the cross-system, consistency, trust, and failure contracts they
+must apply rather than reinvent.
 
 ## Questions
 

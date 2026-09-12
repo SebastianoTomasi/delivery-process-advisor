@@ -35,8 +35,9 @@ starts a focused session:
    Read each affected authority boundary and relevant catalog as the work reaches
    it, using the root file's selective reading guidance.
    Do not reopen unrelated phases merely because the change is upstream.
-3. Explain consequences and ask only new choices that the user has not settled,
-   one at a time. Apply consequences already determined by the answers without
+3. Explain consequences, resolve explicitly delegated choices under
+   `docs/advisor-docs.md`, and ask only the remaining new choices, one at a time.
+   Apply consequences already determined by the answers without
    seeking approval for each document edit. If more decisions are coupled,
    resolve their compatible replacement together; do not accept drafts using
    each other as their only evidence of readiness.

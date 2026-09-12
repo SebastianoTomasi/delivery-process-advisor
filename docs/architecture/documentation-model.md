@@ -24,6 +24,9 @@ target project is specified by [Initialization](initialization.md).
 - [Product rules](../product/overview.md#rules) — artifact lifecycle, sources,
   and propagation must preserve advisory choice and one accepted current rule;
   document acceptance establishes settled intent, not implemented behavior.
+- [User decision authority](../product/overview.md#non-goals) — artifact
+  acceptance and the root interpretation summary must recognize choices made
+  within explicit user delegation as settled decisions.
 - [Product capabilities](../product/overview.md#what-it-does) — catalogs and
   decision references must support advice, deferred work, session continuity,
   and complete propagation.
@@ -61,18 +64,26 @@ interfaces remain authoritative for exact signatures. For example, Undo's
 visible behavior belongs to Frontend; snapshots versus inverse operations for
 its history belong to Implementation.
 
-The line between the two is drawn by observability, not by how abstract a
-subject sounds. A question belongs to Architecture when two plausible answers
-produce a difference detectable from outside the unit — by a client, an
-integrator, another unit, or a reader of persisted state crossing a boundary.
-It belongs to Implementation when the difference is visible only inside one unit and
-no contract exposes it. So the transaction and consistency boundary, retry and
-duplicate-effect semantics, the degraded result permitted while a dependency is
-unavailable, the compatibility guarantee an interface carries, and the behavior
-visible when a migration fails partway are Architecture; the locking strategy,
-timeout and backoff values, adapters, schema and index choices, and the
-mechanics of a migration are Implementation. The rationale is recorded in
-[ADR-0018](../adr/0018-implementation-design-spans-all-runtimes.md).
+The line between the two follows the guarantees offered across a unit's
+boundary. Architecture defines or changes what a client, integrator, another
+unit, or a reader of persisted state may rely on, including guarantees still
+to be established. Implementation chooses the internal mechanics that satisfy
+those contracts. Measurable differences between internal alternatives remain
+Implementation's concern when the contracts permit them.
+
+Transaction and consistency boundaries, retry and duplicate-effect semantics,
+permitted degradation, interface compatibility, and guarantees when a migration
+fails partway belong to Architecture. Locking strategies, timeout and backoff
+values, adapters, schema and index choices, and migration mechanics belong to
+Implementation when they realize those guarantees. A timeout value that itself
+defines a guarantee to a caller is part of the Architecture contract.
+
+For example, promising a response within two seconds across a component boundary
+is Architecture; choosing an algorithm that meets that limit is Implementation,
+even if callers can measure timing differences between valid algorithms.
+[ADR-0018](../adr/0018-implementation-design-spans-all-runtimes.md) records the
+scope across runtimes; [ADR-0037](../adr/0037-guarantees-separate-architecture-from-implementation.md)
+records the refined ownership criterion.
 
 Architecture records which component enforces a Product or Security rule and
 the resulting invariant, boundary, or failure behavior. It does not restate
@@ -104,27 +115,30 @@ Origin determines what a document can mean:
   the artifact's subject determines its final structure. A template contains
   no project decision, declares no lifecycle status, and never blocks work.
 
-Two documents in a guided project fall outside these kinds, because the
-advisor does not own them. The glossary at `CONTEXT.md` and the decision
-records under `docs/adr/` are written and formatted by the
-`advisor-domain-modeling` skill the session invokes. Neither is an artifact:
-neither belongs to an authority, neither carries a lifecycle this model
-reads, and neither is a prerequisite of anything. Work rests on the artifact
-a decision shaped, never on the record of its rationale, and on the language
-a project fixed, never on the document that lists it.
+Two documents in a guided project fall outside these kinds while still
+belonging to the advisor's process. The glossary at `CONTEXT.md` and the
+decision records under `docs/adr/` are written and formatted by the
+`advisor-domain-modeling` skill the session invokes, and hold content the
+project owns. Neither is an artifact: neither belongs to an authority, neither
+carries a lifecycle this model reads, and neither is a prerequisite of
+anything. Work rests on the artifact a decision shaped, never on the record of
+its rationale, and on the language a project fixed, never on the document that
+lists it.
 
 Artifacts use the glossary's resolved language and link relevant ADRs. Keep the
 decision's reasons and sources in the ADR rather than duplicating them in each
 dependent artifact; a brief local explanation may clarify the dependency. The
-skill-owned formats and their exemption are recorded in
-[ADR-0005](../adr/0005-the-glossary-and-the-records-belong-to-the-skill.md).
+skill-owned formats and their exemption from these kinds are recorded in
+[ADR-0005](../adr/0005-the-glossary-and-the-records-belong-to-the-skill.md),
+and their standing inside the advisor's process in
+[ADR-0038](../adr/0038-the-glossary-and-the-records-are-advisor-positions.md).
 
-A third thing falls outside the kinds, and outside the advisor's ownership
-entirely. A **source** is material the user puts in a `sources/` folder for a
-session to read: know-how, an external specification, a description of a system
-being replaced. It is not written for this project and states none of its
-decisions, so it carries no authority, no status, and no release marker, and it
-is a prerequisite of nothing.
+A third thing falls outside the kinds, and unlike the two above it falls
+outside the advisor's process entirely. A **source** is material the user puts
+in a `sources/` folder for a session to read: know-how, an external
+specification, a description of a system being replaced. It is not written for
+this project and states none of its decisions, so it carries no authority, no
+status, and no release marker, and it is a prerequisite of nothing.
 
 A source informs a session and binds nothing. Anything in it that ought to
 constrain later work is written into the owning authority's artifact first, in
@@ -244,12 +258,19 @@ establish prerequisites, and no second dependency register is maintained.
 
 `proposed` is a draft, not a current rule. `accepted` means the artifact's own
 decisions are settled and its necessary decision inputs accepted and compatible.
+Whether a decision is settled follows
+[Product's decision-authority rule](../product/overview.md#non-goals), including
+choices made within explicit user delegation. Delegation does not bypass
+compatibility or prerequisite checks.
 Acceptance does not establish that a decision is implemented. Ordinary code work
 uses the [Product rule for code and documentation](../product/overview.md#rules);
 implementation gaps and conflicts do not silently change artifact status.
 `needs-review` means compatibility with a changed decision has yet to be checked;
-it is not a reliable input in the meantime. A previously accepted dependant may
-return to accepted unchanged after checking the new rule.
+it is not a reliable input in the meantime. Status applies to the whole artifact,
+so none of its passages supplies an accepted decision input until review is
+complete, even when only part of its content prompted the review. Unrelated
+accepted artifacts remain usable. A previously accepted dependant may return to
+accepted unchanged after checking the new rule.
 
 Every needs-review artifact carries `## Review` after Dependencies, or after
 Scope when no Dependencies exist. It names Cause, Changed decision (a passage
@@ -367,8 +388,8 @@ written in that authority's artifact instead.
 is `advisor-<folder>.md`, and the file at the project root is
 `advisor-agents.md`. The prefix says who owns the file
 before it is opened, and keeps advisor-owned files sorted together in any
-listing. It states ownership, not kind: what kind a document is remains its
-marker line and fixed name. A physically separate catalog is named
+listing. It states ownership; fixed names distinguish advisor scaffolds and
+catalogs, while an artifact's marker declares its status. A separate catalog is named
 `advisor-<authority>-project.md` or `advisor-<authority>-feature.md`, so its
 scope is visible before it is opened.
 
@@ -393,7 +414,7 @@ sessions, project-owned, and governed by their delivered skills rather than by
 scaffolds inside the directories.
 
 **Artifacts are not named by this model,** with one exception. A file's
-authority is the folder it sits in and its kind is its marker line, so its name
+authority is the folder it sits in and its status is its marker line, so its name
 is free and is chosen when it is written, and an authority folder holds as many
 artifacts as its work needs. Free means project-chosen, not opaque: the filename
 and title identify the artifact's subject well enough to support relevance
@@ -402,37 +423,44 @@ what the name alone cannot. The exception is `absent.md`, the artifact that
 closes a phase a feature has no substance for: its name is fixed so that the
 dismissal is visible in a listing, at the same cost as the folder's existence.
 
-Two skill-owned document positions in a guided project are not delivered with
-the scaffold. `CONTEXT.md` sits at the project root and `docs/adr/` beside the
-authority folders; each comes into existence when a session first needs it,
-neither carries the `advisor-` prefix, and neither has a scaffold or a question
-list, because the skill that maintains them carries their format. The empty
-`docs/deferred/` and `docs/handoffs/` positions are delivered, but their
-eventual records remain project-owned rather than advisor-owned documents.
+Two positions of the advisor's process are not delivered with the scaffold.
+`CONTEXT.md` sits at the project root and `docs/adr/` beside the authority
+folders; each comes into existence when a session first needs it, neither
+carries the `advisor-` prefix, and neither has a scaffold or a question list,
+because nothing is delivered there and the skill that maintains them carries
+their format. They take the shape of the empty `docs/deferred/` and
+`docs/handoffs/` positions, which are delivered while their eventual records
+remain the project's: the prefix marks delivered advisor content, so a position
+holding the project's own records does not take it.
 
 ### Sources
 
-A `sources/` folder may sit at three positions and nowhere else:
+A `sources/` folder may sit at four positions and nowhere else:
 
 ```
 docs/sources/
 docs/<authority>/sources/
+docs/features/<feature-slug>/sources/
 docs/features/<feature-slug>/<authority>/sources/
 ```
 
-Its position is what states which work the material is relevant to, so a
-session reads the folders on the path to what it is doing: writing a feature's
-Implementation artifact, it reads `docs/sources/`, `docs/implementation/sources/`, and the
-feature's own. A folder inside an authority's is not owned by that authority —
-position states relevance, never ownership, and a source belongs to no
-authority at any of the three.
+Its position states which work the material is relevant to. When writing a
+feature's Implementation artifact, a session considers `docs/sources/`,
+`docs/implementation/sources/`, `docs/features/<feature-slug>/sources/`, and
+`docs/features/<feature-slug>/implementation/sources/`. It selects relevant
+full reads from filenames and opening lines. Position states relevance, never
+ownership: a source belongs to no authority at any of these positions.
 
-`docs/sources/` is on the path to every piece of work, so what sits there is
-read by every session for the life of the project. That is what it is for — a
-description of the system being replaced, during a rebuild, informs every
-decision — and it is also the position that floods a session most easily.
-Material that only changes some decisions belongs under the authority whose
-decisions it changes.
+`docs/sources/` is considered across the project. A description of the system
+being replaced may belong there, while material shared across authorities of
+only one feature belongs in that feature's `sources/` folder. A specification
+used by Product, Architecture, and Implementation of one import feature can
+therefore remain one file discoverable from all three. Material relevant to
+one authority belongs under that authority at the applicable project or feature
+scope. Broad placement increases how often a source is considered; it does not
+require a full read when the material is irrelevant to the current work.
+This extends the source positions recorded in
+[ADR-0008](../adr/0008-sources-inform-and-never-bind.md).
 
 Nothing here is delivered and no scaffold file exists. A `sources/` folder
 holds material rather than answers, names nothing, and enumerates no questions,
@@ -467,8 +495,6 @@ between the advisor files, catalogs, and skills. Its sections are:
 
 - **Using project documentation:** the brief authority summary and the
   [Product relationship between code and documentation](../product/overview.md#rules).
-- **Before advice or an advisor session:** the cross-cutting trigger to recover
-  deferred work through its owning skill.
 - **Where things are:** the map to common rules, authority boundaries, catalogs,
   feature artifacts, vocabulary, decision records, deferred work, and handoffs.
 - **Reading guidance:** selecting relevant material, following decision
@@ -486,8 +512,9 @@ during ordinary code work.
 The root's short interpretation summary is deliberately repeated at entry
 depth: accepted means settled, not proven implemented; proposals and artifacts
 needing review do not establish accepted inputs; sources inform decisions.
-It also states that only user-established decisions can be accepted and that
-advice adds no permission step or deviation record. Full definitions remain in
+It also summarizes Product's decision-authority rule, including explicit
+delegation, and states that advice adds no permission step or deviation record.
+Full definitions remain in
 `docs/advisor-docs.md`. This lets direct reads start informed without forcing a
 read of the whole common contract or copying its detailed acceptance rules.
 
@@ -503,18 +530,21 @@ than shipping a second account into every target.
 
 Skill descriptions declare when they apply, surfaced by the host under
 [ADR-0028](../adr/0028-skills-declare-their-own-applicability.md). The root does
-not generally repeat them. It names `advisor-defer` only for the cross-cutting
-requirement to recover relevant deferred work before advice or a session; the
-skill owns the procedure. The project's own instruction file gains a host-specific
+not repeat them and names no skill at all. Every workflow that must consider
+deferred work invokes `advisor-defer` from its own procedure, as recorded in
+[ADR-0035](../adr/0035-deferred-recovery-belongs-to-the-workflows.md); advice
+given without entering such a workflow carries no documented obligation to
+recover them. The project's own instruction file gains a host-specific
 reference to the root; Codex is told to read and follow it, while Claude Code
 uses its supported import syntax.
 
 Every instruction has a home reached before the action needing it. The division
-recorded in [ADR-0031](../adr/0031-shared-guidance-and-workflows-have-distinct-homes.md)
-is:
+recorded in [ADR-0031](../adr/0031-shared-guidance-and-workflows-have-distinct-homes.md),
+revised for deferred recovery by
+[ADR-0035](../adr/0035-deferred-recovery-belongs-to-the-workflows.md), is:
 
-- `advisor-agents.md` owns shared interpretation, reading, navigation, and the
-  cross-cutting deferred-recovery trigger described above.
+- `advisor-agents.md` owns shared interpretation, navigation, and selective
+  reading. It names no skill and carries no workflow trigger.
 - `docs/advisor-docs.md` owns the common documentation contract: authority
   routing, placement, source authority, artifact envelopes and statuses,
   dependencies, provenance, acceptance conditions, and decision readiness.
@@ -539,8 +569,9 @@ is:
 - `advisor-migrate-docs` owns full reads and transfer of selected inputs, invoking
   the writing and propagation workflows for the decisions it needs.
 - `advisor-defer` owns deferred-item clarification, capture, classification,
-  recovery, and closure; `advisor-next-work` and session preparation invoke its
-  recovery.
+  recovery, and closure. `advisor-next-work`, `advisor-grill-with-docs`, and
+  `advisor-propagate-change` invoke its recovery from their own procedures, and
+  `advisor-migrate-docs` reaches it through the workflows it invokes.
 - Explicitly invoked `advisor-handoff` owns compact conversation-transfer files,
   without automatic discovery or lifecycle management. The root limits reads
   of handoffs to those the user identifies.
@@ -592,14 +623,17 @@ broadly its decisions apply; it does not by itself make the artifact a
 prerequisite.
 
 The foundation is deliberately thin: the project-scoped Product description
-and Architecture shape, over the language fixed in `CONTEXT.md`. Every feature
-rests on that foundation. Other project-scoped artifacts, including shared
+and Architecture shape, over the language fixed in `CONTEXT.md`. Each feature
+decision uses the accepted foundation inputs it needs; the entire foundation
+is not a prerequisite for declaring a feature or accepting one of its decisions.
+Other project-scoped artifacts, including shared
 Implementation conventions, the default Frontend surface, the Stack, and Security
 policy, are created when a feature first needs them. They govern subsequent
 work rather than retroactively blocking work that preceded the need.
 
 A feature is represented under `docs/features/<feature-slug>/`, which holds one
-folder per authority that writes a feature-scoped artifact. Its slug is
+folder per authority that writes a feature-scoped artifact and may hold shared
+informative material in `sources/` under the [source rules](#sources). Its slug is
 lowercase ASCII kebab-case matching `[a-z0-9]+(?:-[a-z0-9]+)*`; its readable
 name remains in artifact titles and prose. Project-scoped content remains under
 `docs/<authority>/`. Keeping the feature's artifacts together makes the unit
@@ -677,9 +711,18 @@ work; its artifact stays proposed and records unresolved assumptions. No
 deviation register or reminder follows that choice.
 
 Initial Product and Architecture foundations need accepted coverage of their
-catalogs before the foundation is complete. A later proposal does not withdraw
-that coverage. A draft replacement identifies the accepted passage it proposes
-to change, while the current rule stays in force. When the change is agreed,
+catalogs before the foundation is complete. Decision readiness applies while
+that initial coverage is unfinished too: Architecture can use sufficient
+accepted Product inputs before all Product questions are covered, and a feature
+can begin and have accepted decisions before either foundation phase is complete.
+The session must establish that remaining open foundation choices cannot
+invalidate the particular decision; proposed passages cannot substitute for
+accepted inputs. This application is recorded in
+[ADR-0020](../adr/0020-readiness-follows-decisions-not-phase-order.md#foundation-readiness).
+A new proposal does not withdraw coverage already supplied by accepted
+artifacts, including during an incomplete foundation. A draft replacement
+identifies the accepted passage it proposes to change, while the current rule
+stays in force. When the change is agreed,
 the session updates that one owning rule and propagates through affected
 dependencies, including across features. It does not reopen all features merely
 because a proposal appears under Product or Architecture.

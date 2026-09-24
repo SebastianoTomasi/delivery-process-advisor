@@ -109,6 +109,10 @@ _Avoid_: deferred item, checkpoint
 A project-owned record of a question, idea, or other future work that is not needed by the current work, clarified enough to say what should be revisited and to name a possible outcome or a meaningful revisit condition. It is distinct from an unresolved current input and from a Product non-goal; a non-goal creates no deferred item unless there is also something to reconsider later.
 _Avoid_: handoff, backlog, deferred idea
 
+**Ticket**  
+A self-contained unit of implementation work, produced once from a feature's documentation for a system outside the advisor to build, naming the tickets that must complete before it. Once written it belongs to that system; it is distinct from an artifact, a deferred item, and a handoff.  
+_Avoid_: issue, task
+
 **Feature**  
 A user-observable product capability represented by its feature-scoped artifacts. It begins with the first Product artifact and has an agreed identity rather than being merely an empty directory.
 _Avoid_: epic, module, vertical slice

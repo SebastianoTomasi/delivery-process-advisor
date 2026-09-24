@@ -77,8 +77,10 @@ not a tool that imposes it on them.
     selected documents into the advisor structure, resolving only choices
     needed for the migration. It verifies fidelity, coherence, and dependencies,
     reports missing decisions as later work, and replaces the in-scope originals
-    without retaining source copies. Specifications identified as current carry
-    settled decisions, while artifact acceptance still requires verification.
+    without redundant copies. Existing informative references retain their role
+    and may be relocated as the sole source copy; replaced specifications are
+    not archived as sources. Specifications identified as current carry settled
+    decisions, while artifact acceptance still requires verification.
 
 A phase is complete when accepted, compatible artifacts address every question
 it owns and no unresolved input needed by that coverage remains. Accepted

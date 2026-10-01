@@ -148,11 +148,16 @@ repository.
 | --- | --- |
 | `advisor-agents.md` | Routes an agent through the advisor process |
 | `docs/` | Scaffolds and question catalogs for each decision authority |
-| `docs/deferred/` | Project-owned records of durable future work |
 | `docs/handoffs/` | Project-owned temporary conversation handoffs |
 | `.agents/skills/` | The canonical project-local advisor skills |
 | `.claude/skills/` | Relative links to those same skills for Claude Code |
 | `AGENTS.md` / `CLAUDE.md` | Seed files or appended references that activate the advisor |
+
+Deferred work uses `advisor:deferred` issues in the project's configured tracker.
+Configure it through `docs/agents/issue-tracker.md` and
+`docs/agents/triage-labels.md`; these project-owned files are not delivered by
+initialization. Existing `docs/deferred/` files remain an archive until an
+explicit migration is requested.
 
 The report names every destination and says whether it was written, replaced,
 linked, appended, skipped, or removed. Advisor-owned scaffolds and skills are
@@ -265,18 +270,20 @@ The installed skills provide a small set of deliberate interaction modes:
 You do not need to memorize these names for ordinary use. Describe the outcome
 you want and the agent can select the applicable skill. The handoff skill is the
 exception: it runs only when explicitly requested, because handoffs are
-temporary and their lifecycle remains yours.
+temporary. The continuation session closes an identified handoff after use,
+and you can also request closure explicitly.
 
 ### Deferred work, handoffs, and changed decisions
 
 These solve three different problems:
 
 - **Deferred work** is a durable idea, question, or concern for later. It keeps
-  its context and revisit condition under `docs/deferred/`, and resurfaces when
-  it becomes relevant.
+  its context and revisit condition in an `advisor:deferred` issue in the
+  configured tracker, and resurfaces when it becomes relevant.
 - **A handoff** moves an active conversation into a fresh session. It records
   the next objective and current state under `docs/handoffs/`; you identify it
-  to the next session and remove it when it is no longer useful.
+  to the next session, which preserves durable information and removes the
+  handoff when the session ends. You can also request closure explicitly.
 - **A changed decision** updates its one owning rule and then follows dependency
   links through every affected document. An interrupted propagation uses
   `needs-review` to say what remains inconsistent.
@@ -323,7 +330,7 @@ The roles remain separate:
 | `src/instructions/` | Seed `CLAUDE.md` and `AGENTS.md` files |
 | `test/` | Installer regression tests and fault injection |
 | `docs/` | This product's own accepted and proposed design decisions |
-| `docs/deferred/` | Durable future work for this repository |
+| `docs/deferred/` | Legacy archive, consulted only for an explicit migration |
 | `docs/handoffs/` | Temporary conversation transfers for this repository |
 | `CONTEXT.md` | Vocabulary of the advisor product |
 

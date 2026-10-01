@@ -29,4 +29,5 @@ information.
 Create one new file only. Do not inventory, discover, prioritize, resume,
 archive, mark, or delete handoffs; checking whether the chosen destination is
 occupied is not lifecycle management. A fresh session reads only the handoff
-the user identifies, and cleanup remains manual.
+the user identifies. `advisor-close-handoff` closes it when that session ends
+or the user explicitly requests closure.

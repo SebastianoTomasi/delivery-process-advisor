@@ -1,14 +1,14 @@
 # Ticket production
 
-**Status:** proposed
+**Status:** accepted
 
 ## Scope
 
-This artifact governs what the Ticket production feature promises: turning a
-feature's documentation into a set of implementation tickets that an
-independent implementing system consumes. It leaves the ticket file contract and
-its destination to the feature's Architecture, how the user requests and reviews
-the breakdown to Frontend, and the procedure that realizes it to Implementation.
+This artifact governs what the Ticket production feature promises: using the
+external `to-tickets` skill to turn a plan, specification, conversation, or
+feature documentation into implementation tickets. It leaves tracker and label
+contracts to Architecture, how the user requests the work to Frontend, and
+composition with the external skill to Implementation.
 
 ## Dependencies
 
@@ -24,26 +24,28 @@ the breakdown to Frontend, and the procedure that realizes it to Implementation.
   class. The same passage says that what is not known "is asked rather than
   invented", which is the line between underspecified and well-specified input.
   A change there requires reviewing both answers.
-- [Non-goals](../../../product/overview.md#non-goals) — "It does not integrate
-  external task systems": this feature is compatible with that non-goal only
-  because it writes tickets once, as project files, and never publishes to,
-  reads from, or synchronizes with a tracker. Publishing to a hosted tracker
-  would require changing that non-goal first. The same passage lets the user
-  explicitly delegate choices to the agent, which is how an underspecified
-  input can proceed without the user settling each gap.
+- [Non-goals](../../../product/overview.md#non-goals) — implementation tickets
+  remain owned by the configured tracker and `to-tickets`; the advisor reads
+  and writes only `advisor:deferred` issues for future-work recovery. The same
+  passage permits explicit delegation of choices left open by an input.
+- [Deferred items](../../../architecture/documentation-model.md#deferred-items)
+  — the advisor and `to-tickets` use one configured tracker, and the advisor
+  supplies the relevant documentation and settled constraints.
 
 ## Purpose
 
-Once this feature exists, a user can obtain from a feature's documentation a set
-of tickets that an implementing system can build without the advisor. Tickets
-are tracer-bullet vertical slices, each naming the tickets that block it.
+Once this feature exists, a user can obtain from a plan, specification,
+conversation, or feature documentation a set of tickets that an implementing
+system can build without the advisor. The advisor supplies the relevant
+project documents and constraints; `to-tickets` breaks the work into
+tracer-bullet vertical slices, asks the user to review the breakdown, and
+publishes the approved tickets to the configured tracker.
 
 The motivating consumer is sandcastle, the implementing system Antonio is
-building, which reads tickets in the local-file form of Matt Pocock's
-`to-tickets` skill, described in
-[the observed ticket form](../sources/matt-pocock-to-tickets.md). The feature
-promises output in the form that consumer reads; the exact contract belongs to
-Architecture.
+building. The observed local and hosted forms of Matt Pocock's skill are
+described in [the source note](../sources/matt-pocock-to-tickets.md). The
+configured tracker determines which form is published; the exact contract
+belongs to Architecture.
 
 ## What the feature promises
 
@@ -74,16 +76,19 @@ or statuses they were derived from, and no indication of whether that basis was
 accepted. The implementing system needs no knowledge of the advisor process, and
 the two systems stay independent.
 
-**A feature's ticket set is produced once.** The advisor writes the set and never
-changes it afterwards. If a set already exists for the feature, it stops and
-says so. Updating, regenerating, archiving, or removing an existing set happens
-outside the advisor. The reasons and rejected alternatives for this independence
-are in [ADR-0039](../../../adr/0039-tickets-stay-independent-of-the-advisor.md).
+**More tickets may be produced later.** A later plan or change in the same
+feature can be passed through `to-tickets` again and reviewed before
+publication. The advisor does not impose the former one-set-per-feature
+limit in [ADR-0039](../../../adr/0039-tickets-stay-independent-of-the-advisor.md),
+as revised by [ADR-0040](../../../adr/0040-deferred-work-uses-the-configured-issue-tracker.md). Published
+tickets remain owned by their implementing system rather than by the advisor's
+documentation process.
 
-**Written tickets belong to the implementing system.** Their status lines,
-claims, and comments are that system's record of delivery, consistent with
-delivery status living in the task system rather than in the documentation
-tree. The advisor does not read or interpret them.
+**Written tickets belong to the implementing system.** Their status, claims,
+and comments are that system's record of delivery, consistent with delivery
+status living in the task system rather than in the documentation tree. The
+advisor's deferred-work recovery selects only `advisor:deferred` issues; it
+does not infer feature progress from implementation-ticket status.
 
 ## Participants
 
@@ -95,14 +100,14 @@ The implementing system, sandcastle at present, consumes the tickets but is not
 an actor of the product. It is developed together with the advisor, so the
 product makes it no compatibility promise: the ticket form is an Architecture
 contract that changes by agreement between the two projects, not a Product
-guarantee to a third party. The planned merge of the two systems is recorded as
-[future work](../../../deferred/advisor-and-sandcastle-merge.md).
+guarantee to a third party.
 
 ## Data
 
-Tickets introduce no new class of data. They are project files whose content is
-derived from the project's own documentation and code, and they hold nothing the
-project does not already hold. A ticket carries the same obligations as the
+Tickets introduce no new class of data. They are tracker issues or local
+project files whose content is derived from the project's own documentation
+and code, and they hold nothing the project does not already hold. A ticket
+carries the same obligations as the
 material it was derived from and adds none; content copied from a document keeps
 that document's sensitivity after the ticket passes to the implementing system.
 
@@ -114,18 +119,12 @@ Data, beyond those the accepted Product description already declares.
 
 ## Non-goals
 
-- Publishing tickets to a hosted tracker such as GitHub or Linear.
 - Recording in a ticket the documentation it derives from, or whether that
   documentation was accepted.
 - Keeping a ticket set current as the documentation changes.
 - Reading ticket status to assess a feature's progress.
+- Maintaining a duplicate advisor-owned ticket breakdown and publication
+  procedure alongside `to-tickets`.
 
-## Open decisions
-
-- `feature-purpose` and `feature-preconditions` — whether input other than a
-  declared feature's documentation can be turned into tickets. The user expects
-  it can. That would change Purpose, the rule that a feature's set is produced
-  once, and where tickets are placed, which today relies on the feature's
-  identity.
-- `feature-outcomes` — the observable success result and the ordinary failure
-  outcomes, including an existing ticket set.
+If tracker configuration or the external `to-tickets` skill is unavailable,
+the advisor names the missing prerequisite and stops ticket production.

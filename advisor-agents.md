@@ -43,8 +43,10 @@ status, dependency, and acceptance rules are in
   defines feature structure and routes each phase to its boundary and catalog.
 - `CONTEXT.md` holds the project's vocabulary; `docs/adr/` holds decision
   records explaining important choices. Neither is an artifact or phase.
-- `docs/deferred/` holds future work. `docs/handoffs/` holds temporary
-  conversation bridges; read those only when the user identifies one.
+- Deferred work is tracked as `advisor:deferred` issues in the project's
+  configured issue tracker. Legacy `docs/deferred/` files are an archive.
+  `docs/handoffs/` holds temporary conversation bridges; read those only when
+  the user identifies one.
 
 ## Reading guidance
 
@@ -64,6 +66,10 @@ Look for sources in `docs/sources/` and `docs/<authority>/sources/`. For feature
 work, also inspect `docs/features/<feature-slug>/sources/` and
 `docs/features/<feature-slug>/<authority>/sources/`. Inspect filenames and
 opening lines to choose relevant full reads. A source has no required format.
+
+Look for experiment material in the `experiments/` subfolders of these sources
+locations. See the
+[experiment placement convention](docs/advisor-docs.md#where-material-that-is-not-a-document-sits).
 
 Recognize advisor scaffolds and catalogs by their fixed names. Unmarked project
 documents may be relevant context; reading them does not adopt them as advisor

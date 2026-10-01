@@ -52,11 +52,12 @@ not a tool that imposes it on them.
 3.  **Explains blockers.** It says what a piece of work lacks in order to make  
     sense, walking up the prerequisites to the first one that can be resolved  
     immediately.
-4.  **Defers and recovers future work.** Deferred items are kept in project
-    files and considered when recommending work or starting or resuming a
-    session. A clear question, idea, or other future concern can be recorded
+4.  **Defers and recovers future work.** Deferred work is kept as
+    `advisor:deferred` issues in the configured tracker and considered when
+    recommending work or starting or resuming a session. A clear question,
+    idea, or other future concern can be recorded
     directly; an unclear one is first sharpened through a short grill. Relevant
-    items resurface before decisions that depend on them, including items whose
+    issues resurface before decisions that depend on them, including issues whose
     destination still needs classification. Recovery distinguishes work ready
     now, work still waiting, and work already answered or superseded. Items
     retain an open/closed lifecycle and link to authoritative answers. A Product
@@ -64,9 +65,12 @@ not a tool that imposes it on them.
     reconsider later.
 5.  **Transfers an active conversation.** On explicit request it compacts the
     context needed to continue the current work into a handoff for a fresh
-    conversation. The user identifies the handoff to the new session and removes
-    it manually when it is no longer useful; the advisor does not discover,
-    prioritize, archive, or delete handoffs automatically.
+    conversation. The user identifies the handoff to the new session. That
+    session closes and removes it at the end, after preserving decisions and
+    unfinished work; the user can also close an identified handoff explicitly.
+    The advisor does not discover or prioritize handoffs automatically.
+    [ADR-0041](../adr/0041-handoffs-close-by-removal-after-use.md) records why
+    closure removes the temporary file.
 6.  **Propagates corrections.** When an artifact changes, it identifies those
     that rested on the changed decision and updates them. Wording-only edits
     can be applied directly; substantive changes run a focused session that
@@ -169,9 +173,8 @@ checks catalog coverage semantically before claiming a phase is complete.
 There is deliberately no command that returns the phase, the first unaccepted
 prerequisite, or the authority that
 owns it: placing a feature in the process is a reading like any other, and it  
-fails the way a reading fails rather than the way a program does. What that  
-costs, and what would justify reversing it, is recorded in  
-[#4](https://github.com/SebastianoTomasi/delivery-process-advisor/issues/4).
+fails the way a reading fails rather than the way a program does. Correctness
+therefore depends on the agent's reading and judgement.
 
 Initialization is the helper alone. It writes the scaffolding whole and
 nothing else, so there is no selection to make and no judgement to exercise;
@@ -207,12 +210,11 @@ remains required by [Delivery rules](../architecture/initialization.md#delivery-
 
 ## What it knows
 
-The system knows the **project files**. Documentation establishes settled intent;
-code and focused verification establish what is implemented. Project files also
-include independently readable deferred items that preserve future work, its
-context, and when to revisit it.
-A session records an agreed deferral directly in the repository. No external
-tracker or issue-creation skill is required. Deferred items inform the work;
+The system knows the **project files and configured issue tracker**.
+Documentation establishes settled intent; code and focused verification
+establish what is implemented. Open `advisor:deferred` issues preserve future
+work, its context, and when to revisit it. A session records an agreed deferral
+in the tracker shared with `to-tickets`. Deferred issues inform the work;
 accepted answers remain in the owning normative artifacts. What is not known
 from the conversation or project evidence is asked rather than invented.
 
@@ -222,13 +224,19 @@ The representation and recovery contracts for
 belong to Architecture. Their separation and repository locations are recorded
 in [ADR-0030](../adr/0030-deferred-items-and-session-handoffs-are-distinct.md).
 
-Among the project files are the **sources**: material the user drops in a  
-`sources/` folder for a session to read — know-how, an external  
-specification, a description of a system being replaced. Where the folder  
-sits is what states which work the material is relevant to, and a session  
+Among the project files are the **sources**: informative material retained in a
+`sources/` folder for a session to read — know-how, an external
+specification, a description of a system being replaced, or an experiment's
+report and results. Where the folder sits is what states which work the
+material is relevant to, and a session
 reads the folders on the path to what it is doing, judging from each file's
 name and opening lines whether to read it whole. A source carries no accepted
 project decision and cannot settle a rule by itself.
+
+The advisor defines where experiment material is stored and found. The agent
+carrying out the experiments manages their conduct and lifecycle. The placement
+contract is in
+[Sources](../architecture/documentation-model.md#sources).
 
 ## Rules
 
@@ -290,9 +298,7 @@ project decision and cannot settle a rule by itself.
     implementation evidence. The advisor names the passages and checks supporting
     readiness, explains any anticipation of the usual phase order, and discloses
     what it could not verify, so the user can check the conclusion instead of
-    trusting it. Nothing
-    mechanical enforces this, which is the cost recorded in  
-    [#4](https://github.com/SebastianoTomasi/delivery-process-advisor/issues/4).
+    trusting it. Nothing mechanical enforces this.
 -   **Outcome, observable downstream.** Two independent implementers reading
     the final accepted documents for the same not-yet-implemented scope produce
     functionally equivalent systems:
@@ -304,8 +310,9 @@ project decision and cannot settle a rule by itself.
 -   **It does not impose the process.** There are no blocks, mandatory approvals,  
     or unavoidable steps.
 -   **It is not a project status dashboard.** It produces advice, not reporting.
--   **It does not integrate external task systems.** Deferred-item capture and
-    recovery use repository files; tracker synchronization, mail, and meeting
+-   **It does not synchronize every task.** It reads and writes only
+    `advisor:deferred` issues for future-work recovery; implementation tickets
+    remain owned by the configured tracker and `to-tickets`. Mail and meeting
     integrations are outside the product.
 -   **It does not model customers, engagements, or deliveries.** The domain is  
     the process by which the project matures, not the commercial relationship  

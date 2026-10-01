@@ -4,6 +4,10 @@ status: accepted
 
 # Tickets stay independent of the advisor
 
+The one-set-per-feature limit and refusal to produce later tickets below were
+superseded by [ADR-0040](0040-deferred-work-uses-the-configured-issue-tracker.md).
+Self-contained tickets and implementing-system ownership remain current.
+
 Tickets the advisor produces from a feature's documentation carry no link to the
 artifacts, passages, or statuses they were derived from, and a feature's ticket
 set is written once and never updated by the advisor. The user chose this on

@@ -4,6 +4,12 @@ status: accepted
 
 # Deferred items and session handoffs are distinct
 
+The `docs/deferred/` storage and initialization parts below were superseded
+by [ADR-0040](0040-deferred-work-uses-the-configured-issue-tracker.md).
+The handoff no-lifecycle and manual-removal parts below were changed by
+[ADR-0041](0041-handoffs-close-by-removal-after-use.md). The separation of
+durable future work from temporary handoffs remains current.
+
 Keep durable future work as deferred items under `docs/deferred/`, owned by an
 implicitly invocable `advisor-defer` skill, and keep explicitly requested
 conversation summaries as handoffs under `docs/handoffs/`, owned by

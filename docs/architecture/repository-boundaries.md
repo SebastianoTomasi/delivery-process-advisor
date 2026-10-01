@@ -21,9 +21,9 @@ target project is specified separately in
 - [Document kinds](documentation-model.md#document-kinds) — installed advisor
   instructions and project-owned artifacts have different roles and lifecycles.
 - [Deferred items](documentation-model.md#deferred-items) and
-  [session handoffs](documentation-model.md#session-handoffs) — the initialized
-  record directories have fixed destinations but no source assets or delivered
-  files.
+  [session handoffs](documentation-model.md#session-handoffs) — deferred issues
+  use the configured tracker; only the handoff directory is a fixed,
+  asset-free initialized destination.
 - [Target selection](initialization.md#target-selection) — the helper's target
   is selected by that contract; self-application does not establish a second rule.
 - [Skill hosts](initialization.md#skill-hosts) — payload layout must keep
@@ -106,12 +106,11 @@ the target, so the mapping from each mirrored asset to its destination is the
 identity. Delivering those fixed files is a recursive copy that skips occupied
 destinations.
 
-The initialized structure has two fixed destinations with no source assets:
-`docs/deferred/` and `docs/handoffs/`. Empty directories cannot be expressed as
-files in the mirror, so the helper declares, creates, and reports both
-directories directly. It adds no placeholder or protocol file; their records
-remain project-owned, and the corresponding delivered skills own their
-operational rules.
+The initialized structure has one fixed destination with no source asset:
+`docs/handoffs/`. An empty directory cannot be expressed as a file in the
+mirror, so the helper creates and reports it directly. It adds no placeholder
+or protocol file. Legacy `docs/deferred/` is project-owned archival content,
+never created or altered by a fresh delivery.
 
 The other three directories are not mirrors and do not pretend to be, and each
 is excluded for its own reason.
@@ -144,8 +143,7 @@ keeping them outside `src/target/` stops the mirror from being half true.
 
 Delivery still resolves every file, directory, and link destination through
 one mapping. The mirror makes most file mappings the identity, while the
-deferred-item and handoff directories are the two asset-free structural
-destinations.
+handoff directory is the asset-free structural destination.
 
 ## Target and project identity
 

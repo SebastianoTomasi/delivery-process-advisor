@@ -8,8 +8,8 @@ Use an `advisor-grill-me` session to resolve open decisions, invoking the
 `advisor-domain-modeling` skill as terms or qualifying decisions settle.
 Invoke `advisor-defer` to record agreed future work and to recover relevant
 items before starting or resuming a session. That skill owns clarification,
-capture, classification, recovery, partial progress, and closure under
-`docs/deferred/`.
+capture, classification, recovery, partial progress, and closure in the
+configured issue tracker.
 
 ## Preparation
 

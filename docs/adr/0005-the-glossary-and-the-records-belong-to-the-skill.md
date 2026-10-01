@@ -12,6 +12,5 @@ them into the documentation model.
 
 An adopted repository keeps its existing ADR folder and numbering. The three
 vendored advisor skills came from `shared-skills` at commit `0a4bcf1`; their
-copies now drift unless synchronized manually. Replacing the shared format
-remains tracked in
-[#5](https://github.com/SebastianoTomasi/delivery-process-advisor/issues/5).
+copies now drift unless synchronized manually. That vendoring arrangement was
+later superseded by [ADR-0034](0034-skills-are-authored-here.md).

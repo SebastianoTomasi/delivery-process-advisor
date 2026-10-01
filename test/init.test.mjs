@@ -97,7 +97,8 @@ test('fresh delivery preserves all asset bytes, reports its release, and is idem
   const version = JSON.parse(readFileSync(join(f.plugin, '.claude-plugin/plugin.json'))).version;
   assert.ok(first.stdout.includes(`delivery-process-advisor@${version}`));
   assert.doesNotMatch(first.stdout, /copied/);
-  const recordDirectories = ['deferred', 'handoffs'].map(name => join(f.target, 'docs', name));
+  const recordDirectories = ['handoffs'].map(name => join(f.target, 'docs', name));
+  assert.equal(existsSync(join(f.target, 'docs/deferred')), false);
   for (const directory of recordDirectories) {
     assert.ok(lstatSync(directory).isDirectory());
     assert.deepEqual(readdirSync(directory), []);
@@ -151,7 +152,7 @@ test('a dangling asset link is replaced as an entry without creating its referen
   assert.match(result.stdout, /replaced\s+advisor-agents\.md/);
 });
 
-for (const directory of ['deferred', 'handoffs']) {
+for (const directory of ['handoffs']) {
   for (const kind of ['file', 'dangling link']) {
     test(`an occupied ${directory} directory destination is skipped when it is a ${kind}`, t => {
       const f = fixture(t);
@@ -293,6 +294,7 @@ test('project files beside the delivered scaffolding are never touched', t => {
   const artifact = join(f.target, 'docs/product/overview.md');
   writeFileSync(artifact, 'a project artifact the payload does not map');
   const record = join(f.target, 'docs/deferred/0001-deferred-question.md');
+  mkdirSync(dirname(record), { recursive: true });
   writeFileSync(record, 'a deferred item');
   success(run(f));
   assert.equal(readFileSync(artifact, 'utf8'), 'a project artifact the payload does not map');
@@ -362,7 +364,7 @@ test('an unreadable source asset gives operation, path and cause', t => {
   assert.equal(existsSync(join(f.target, 'advisor-agents.md')), false);
 });
 
-for (const directory of ['deferred', 'handoffs']) {
+for (const directory of ['handoffs']) {
   test(`a denied ${directory}-directory creation fails concisely after earlier writes`, t => {
     const f = fixture(t);
     const path = join(f.target, 'docs', directory);

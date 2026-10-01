@@ -57,9 +57,9 @@ survives anywhere outside a delivered skill directory, since `docs/` holds the
 project's own artifacts beside the advisor's and they cannot be told apart
 without the rejected inventory. Delivery therefore promises that it brings what
 it delivers to the invoked release, not that the installation contains nothing
-else. That remainder, and release-mixture detection, keep
-[#3](https://github.com/SebastianoTomasi/delivery-process-advisor/issues/3)
-open; the upgrade of occupied advisor-owned destinations no longer belongs to it.
+else. Removing that remainder and detecting a mixture of releases remain
+outside initialization; upgrading occupied advisor-owned destinations is covered
+by this decision.
 
 Delivery remains idempotent in effect, but for a different reason: a second run
 against the same release rewrites the same bytes rather than skipping the

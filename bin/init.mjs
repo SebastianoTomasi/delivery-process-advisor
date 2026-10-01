@@ -40,7 +40,7 @@ const SKILL_LINK_HOST = join('.claude', 'skills');
 
 // These structural destinations have no source assets. Their records are
 // project-owned and each skill remains the single home of its protocol.
-const RECORD_DIRECTORIES = [join('docs', 'deferred'), join('docs', 'handoffs')];
+const RECORD_DIRECTORIES = [join('docs', 'handoffs')];
 
 // Assets held under neutral names because their destination is
 // instruction-bearing.
@@ -129,7 +129,7 @@ function filesUnder(dir) {
 }
 
 // The delivery mapping is fixed and enumerated: mirrored assets keep their
-// path, two structural directories have no assets, and each skill becomes files
+// path, one structural directory has no assets, and each skill becomes files
 // under one host plus a link under the other. Nothing is derived from the target.
 function mapping() {
   const entries = [];

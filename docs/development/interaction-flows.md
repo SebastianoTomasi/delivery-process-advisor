@@ -197,30 +197,30 @@ of the chain inside an existing guided project remains part of the proposal.
 
 ## F. A postponed decision comes back
 
-**Given.** `docs/deferred/` contains open records for a feature, shared project
-work, and a question whose destination is undecided. One record holds partial
-progress from an earlier session. No external tracker is available.
+**Given.** The configured tracker contains open `advisor:deferred` issues for
+a feature, shared project work, and a question whose destination is undecided.
+One issue holds partial progress from an earlier session.
 
 **When.** The user asks what to do next, or starts or resumes relevant work.
 
 **Expect.**
 
-- The agent lists opening fields and reads relevant open deferred items in full,
-  including applicable shared work and undecided records needing classification.
-  A general next-work request considers all open records. An incomplete routing
+- The agent queries open `advisor:deferred` issues and reads relevant issues in
+  full, including applicable shared work and undecided routing. A general
+  next-work request considers every open advisor-deferred issue. An incomplete routing
   field or outdated destination does not silently hide related work.
 - It distinguishes ready work, questions still waiting on specific inputs, and
   apparently answered or superseded questions against current documents.
 - Relevant deferred items are addressed before dependent decisions. A prerequisite
   needed now cannot be deferred merely to accept the current artifact.
 - Prior progress is read before questioning; unresolved matters remain in the
-  same open record, without repeating settled questions.
-- A resolved deferred item closes with a link to its accepted answer. A deliberately
-  dropped question closes with the agreed reason. The file stays at its path;
-  there is no parallel deferred-item index or duplicate normative answer.
-- Initialization creates the empty deferred-item directory but no sample records.
-  Creating the first deferred item writes only that record and creates no feature
-  folder.
+  same open issue, without repeating settled questions.
+- A resolved deferred issue closes with a link to its accepted answer. A
+  deliberately dropped question closes with the agreed reason. The closed issue
+  remains consultable; there is no parallel readiness index or duplicate
+  normative answer.
+- Initialization creates no deferred-item directory or sample issue. New issues
+  use the configured tracker and create no feature folder.
 
 ## G. A screening question has substance
 
@@ -593,7 +593,7 @@ now includes a client-visible surface.
 ## X. An explicit conversation handoff
 
 **Given.** The active conversation contains context needed to continue the work
-and `docs/handoffs/` may contain older files that the user has not removed.
+and `docs/handoffs/` may contain older files that have not been used or closed.
 
 **When.** The user explicitly invokes `advisor-handoff`, optionally naming the
 focus of the next conversation.
@@ -609,8 +609,13 @@ focus of the next conversation.
 - No handoff is created automatically, and `advisor-agents.md` does not scan the
   handoff directory during ordinary routing.
 - A fresh conversation reads only the handoff the user identifies. The advisor
-  assigns it no lifecycle state and never archives or deletes it; cleanup
-  remains manual.
+  closes and removes it at the end after persisting decisions and unfinished
+  work. A user may also ask to close an identified handoff directly. Closure
+  keeps no status file or archive and does not discover unrelated handoffs.
+- The handoff cannot be cited by another project file. Before removal, the
+  closing procedure checks for inbound references and information that exists
+  only in the handoff, moves that information to its durable home, and repairs
+  references. If it cannot do so, the handoff stays and the session reports why.
 
 ## Y. Documentation during ordinary code work
 

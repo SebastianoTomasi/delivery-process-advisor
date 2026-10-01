@@ -4,6 +4,10 @@ status: accepted
 
 # The glossary and the decision records are positions of the advisor's process
 
+References below to `docs/deferred/` as a delivered position describe the
+earlier release; [ADR-0040](0040-deferred-work-uses-the-configured-issue-tracker.md)
+superseded that storage choice.
+
 `CONTEXT.md` and `docs/adr/` belong to the advisor's process and hold content
 the project owns. They keep the names they have and take no `advisor-` prefix,
 no scaffold and no question list, and they stay outside the document kinds: no

@@ -30,9 +30,9 @@ target project is specified by [Initialization](initialization.md).
 - [Product capabilities](../product/overview.md#what-it-does) — catalogs and
   decision references must support advice, deferred work, session continuity,
   and complete propagation.
-- [File-resident deferred items and handoffs](../product/overview.md#what-it-knows)
-  — future-work recovery and explicit conversation transfer must use project
-  files without an external tracker or hidden session store.
+- [Deferred issues and file-resident handoffs](../product/overview.md#what-it-knows)
+  — future-work recovery uses the configured tracker while explicit
+  conversation transfer uses project files.
 
 ## Authority ownership
 
@@ -134,11 +134,11 @@ and their standing inside the advisor's process in
 [ADR-0038](../adr/0038-the-glossary-and-the-records-are-advisor-positions.md).
 
 A third thing falls outside the kinds, and unlike the two above it falls
-outside the advisor's process entirely. A **source** is material the user puts
-in a `sources/` folder for a session to read: know-how, an external
-specification, a description of a system being replaced. It is not written for
-this project and states none of its decisions, so it carries no authority, no
-status, and no release marker, and it is a prerequisite of nothing.
+outside the advisor's process entirely. A **source** is informative material
+retained in a `sources/` folder for a session to read: know-how, an external
+specification, a description of a system being replaced, or an experiment's
+report and results. It establishes none of the project's decisions, so it
+carries no authority, status, or release marker and is a prerequisite of nothing.
 
 A source informs a session and binds nothing. Anything in it that ought to
 constrain later work is written into the owning authority's artifact first, in
@@ -162,20 +162,23 @@ sources, decision records, and handoffs. It carries a question, idea, or other
 future work, not an accepted answer, and counts toward no phase. Its state is
 `open` or `closed`, separate from the artifact lifecycle.
 [ADR-0030](../adr/0030-deferred-items-and-session-handoffs-are-distinct.md)
-records why durable future work and conversation transfer use different names,
-skills, and directories.
+records why durable future work and conversation transfer use different names
+and skills. [ADR-0040](../adr/0040-deferred-work-uses-the-configured-issue-tracker.md)
+records the move to the shared issue tracker.
 
-Each deferred item is one Markdown file at
-`docs/deferred/<descriptive-name>.md`, relative to the project root.
-Initialization creates and reports the empty `docs/deferred/` directory as a
-fixed structural destination. It delivers no file into it: the operational
-protocol remains in `advisor-defer`, and the first real deferred item is the
-first project-owned content there. A record keeps a stable name so links survive
-closure or a change of destination.
+Each deferred item is an issue in the tracker configured by
+`docs/agents/issue-tracker.md` and `docs/agents/triage-labels.md`, shared
+with the separately installed `to-tickets` skill. The additional
+`advisor:deferred` label identifies the issues recovered by the advisor;
+type and triage labels remain independent. Missing configuration stops
+capture and recovery and prompts tracker setup. An unreachable configured
+tracker stops a session requiring recovery. For a local tracker, one issue
+occupies one stable file under `.scratch/advisor-deferred/issues/`, separate
+from `to-tickets` feature ticket sets.
 
-Its opening fields identify state, scope (`project`, `feature:<slug>`, or
-`undecided`), destination (one authority name or `undecided`), and the condition
-for revisiting it. Its body states what should be revisited, why it can wait,
+The issue records scope (`project`, `feature:<slug>`, or `undecided`),
+destination (one authority name or `undecided`), and the condition for
+revisiting it. Its body states what should be revisited, why it can wait,
 relevant context and links, and any established facts or remaining questions
 needed to resume. Unknown routing or conditions are explicit, not guessed. A
 deferral does not create a feature folder or give a proposed feature an accepted
@@ -188,12 +191,14 @@ until that minimum is clear. It does not preserve an unintelligible idea merely
 to avoid asking. A Product non-goal creates no deferred item automatically; an
 item about reconsidering it links to the Product rule instead of duplicating it.
 
-Before recommending work or starting or resuming a session, the agent lists
-deferred items and reads their opening fields. It reads relevant open records in
-full, including shared project records and undecided routing that may affect the
-work. Missing routing fields prompt classification rather than exclusion. On a
-general next-work request it considers all open deferred items. Related records
-are also followed by subject or reference, since destinations can be outdated.
+Before recommending work or starting or resuming a session, the agent queries
+open `advisor:deferred` issues and reads their routing fields. It reads
+relevant issues in full, including shared project work and undecided routing
+that may affect the work. Missing routing fields prompt classification rather
+than exclusion. On a general next-work request it considers all open
+`advisor:deferred` issues. It follows related subjects and references because
+destinations can be outdated. Ordinary issues and implementation tickets are
+outside this recovery query.
 
 The agent compares those items with current artifacts and accepted inputs,
 reports what is ready, still waiting, or apparently answered or superseded, and
@@ -203,31 +208,48 @@ input stays an open decision in its owning artifact; calling it a deferred item
 does not make that artifact acceptable.
 
 When an item is answered, the session writes and accepts its authoritative
-answer first, then closes the deferred item with a link under `## Resolution`.
+answer first, then adds the resolution link and closes the issue.
 Already-answered items require checking that the linked answer still applies. A
-deliberately dropped item closes with the user's agreed reason; any change to
+deliberately dropped issue closes with the user's agreed reason; any change to
 accepted rules still follows normal propagation. Partial progress stays in the
-open record. Closure alone never proves decision readiness.
+open issue, and closed issues remain consultable in the tracker. Closure alone
+never proves decision readiness.
 
 The operational format and capture, classification, recovery, and closure
 procedure have one home in the delivered `advisor-defer` skill.
 `advisor-next-work` and session workflows invoke it before the action requiring
-recovery. Existing external issues are not automatically imported, changed, or
-closed.
+recovery. Legacy `docs/deferred/` records are an archive, even when marked
+`open`; they are not recovered or imported automatically. The explicitly
+invoked `advisor-migrate-deferred` skill can transfer selected open records
+after checking for duplicates, preserving context, and repairing references.
 
 ## Session handoffs
 
 A handoff is a project-owned Markdown file at
 `docs/handoffs/<descriptive-focus>-handoff.md` that compacts the current
 conversation for a fresh session continuing the same work. It is intended as a
-temporary bridge, not project history or future-work tracking, but has no
-managed state: the user removes it manually when it is no longer useful.
+temporary bridge, not project history or future-work tracking. Closing a
+handoff removes its file; no closed file or additional state is kept.
+[ADR-0041](../adr/0041-handoffs-close-by-removal-after-use.md) records the
+reason for this lifecycle.
 
 `advisor-handoff` creates a handoff only on explicit invocation. The skill does
-not discover, prioritize, resume, archive, or delete handoffs. A fresh
-conversation reads the file the user identifies as ordinary project context;
-root instructions do not scan `docs/handoffs/` automatically. Multiple files
-may coexist, and no recency is inferred from filenames or timestamps.
+not discover, prioritize, resume, or archive handoffs. A fresh conversation
+reads only the file the user identifies as ordinary project context; root
+instructions do not scan `docs/handoffs/` automatically. Multiple files may
+coexist, and no recency is inferred from filenames or timestamps. The session
+using the identified handoff closes it at the end, after placing decisions and
+unfinished work in durable project locations. The user may also close an
+identified handoff explicitly. If needed information cannot yet be preserved,
+the handoff remains and the session reports what prevents closure.
+
+No project file may cite a handoff, including artifacts, decision records,
+deferred issues, and other handoffs. A handoff links outward to durable
+information, never serves as the only source for it. Before deletion, the
+closing procedure searches for references to the identified file, moves any
+unique durable information to its owning artifact, issue, or source, and
+repairs inbound references. Delete only when no required information or broken
+link would remain.
 
 A handoff's layout adapts to its work but identifies the next conversation's
 objective, current state, settled decisions and constraints, authoritative
@@ -300,8 +322,7 @@ scaffold file places nothing; a scaffold file outside its folder describes
 nothing. Fixed non-authority positions are named explicitly below.
 
 Initialization writes this tree whole, down to and including
-`docs/features/advisor-features.md` and the empty `docs/deferred/` and
-`docs/handoffs/` directories.
+`docs/features/advisor-features.md` and the empty `docs/handoffs/` directory.
 Only the feature folders inside `features/` are absent at the start, because a
 feature is named by the project and its authority folders appear only with
 their first artifacts.
@@ -310,7 +331,6 @@ their first artifacts.
 advisor-agents.md
 docs/
   advisor-docs.md
-  deferred/       durable future-work records, initially empty
   handoffs/       temporary conversation bridges, initially empty
   product/
     advisor-product.md
@@ -354,12 +374,12 @@ docs/
 Four rules govern it.
 
 **One folder per authority, plus explicit non-authority positions.** The top
-level of `docs/` is the authority table above, plus `features/`, `deferred/`,
+level of `docs/` is the authority table above, plus `features/`,
 `handoffs/`, `adr/`, and `sources/`. Anything an authority owns sits in that
 authority's folder, whatever kind of document it is. The other positions have
 deliberately different roles: `features/` groups feature-scoped artifacts;
-`deferred/` holds durable future-work records; `handoffs/` holds temporary
-conversation bridges; `adr/` holds skill-owned decision records; and `sources/`
+`handoffs/` holds temporary conversation bridges; `adr/` holds skill-owned
+decision records; and `sources/`
 holds informative material owned by no authority. None becomes an authority by
 being inside `docs/`.
 
@@ -408,10 +428,10 @@ Architecture, or Implementation whose phase asks it; screening questions are
 co-located with the phase where they first become answerable and retain their
 cross-cutting authority owner.
 
-`docs/deferred/` and `docs/handoffs/` are also fixed and are created directly by
-initialization, but contain no shipped file. Their contents are named by
-sessions, project-owned, and governed by their delivered skills rather than by
-scaffolds inside the directories.
+`docs/handoffs/` is also fixed and created directly by initialization, but
+contains no shipped file. Its contents are named by sessions, project-owned,
+and governed by its delivered skill. A pre-existing `docs/deferred/` directory
+is preserved as an archive and is not an output of a fresh initialization.
 
 **Artifacts are not named by this model,** with one exception. A file's
 authority is the folder it sits in and its status is its marker line, so its name
@@ -428,9 +448,8 @@ Two positions of the advisor's process are not delivered with the scaffold.
 folders; each comes into existence when a session first needs it, neither
 carries the `advisor-` prefix, and neither has a scaffold or a question list,
 because nothing is delivered there and the skill that maintains them carries
-their format. They take the shape of the empty `docs/deferred/` and
-`docs/handoffs/` positions, which are delivered while their eventual records
-remain the project's: the prefix marks delivered advisor content, so a position
+their format. `docs/handoffs/` likewise holds project-owned records without a
+delivered file. The prefix marks delivered advisor content, so a position
 holding the project's own records does not take it.
 
 ### Sources
@@ -461,6 +480,13 @@ scope. Broad placement increases how often a source is considered; it does not
 require a full read when the material is irrelevant to the current work.
 This extends the source positions recorded in
 [ADR-0008](../adr/0008-sources-inform-and-never-bind.md).
+
+Store experiment material in an `experiments/` subfolder of the relevant
+`sources/` location. Use `docs/sources/experiments/` for experiments relevant
+across the project. Look in these subfolders when selecting sources relevant
+to the current work. Experiment material remains informative; storing it does
+not adopt its findings as decisions. The agent carrying out the experiments
+manages their conduct and lifecycle.
 
 Nothing here is delivered and no scaffold file exists. A `sources/` folder
 holds material rather than answers, names nothing, and enumerates no questions,
@@ -572,9 +598,10 @@ revised for deferred recovery by
   recovery, and closure. `advisor-next-work`, `advisor-grill-with-docs`, and
   `advisor-propagate-change` invoke its recovery from their own procedures, and
   `advisor-migrate-docs` reaches it through the workflows it invokes.
-- Explicitly invoked `advisor-handoff` owns compact conversation-transfer files,
-  without automatic discovery or lifecycle management. The root limits reads
-  of handoffs to those the user identifies.
+- Explicitly invoked `advisor-handoff` creates compact conversation-transfer
+  files. `advisor-close-handoff` closes an identified handoff on request or at
+  the end of a session that used it. Neither procedure discovers unrelated
+  handoffs; the root limits reads to those the user identifies.
 
 Documentation rules state what must hold. Skills define how to carry out and
 check the work. Brief summaries support interpretation and routing, while a
@@ -597,7 +624,7 @@ Before assessing candidates, it invokes `advisor-defer` to recover relevant
 future work. An unscoped request inventories all authority and feature artifact
 envelopes before selecting bodies. A scoped request reads that scope, shared
 prerequisites, evidence affecting readiness, and relevant or unclassified
-deferred records. Both routes use the root's selective reading guidance and the
+deferred issues. Both routes use the root's selective reading guidance and the
 common documentation rules; neither infers coverage or readiness from folders
 or markers.
 

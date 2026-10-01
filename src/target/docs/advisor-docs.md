@@ -112,6 +112,13 @@ to one authority belongs in that authority's `sources/` folder at project or
 feature scope. Select full reads by relevance; broader placement makes a
 source a candidate for more work, not a mandatory full read for every session.
 
+Store experiment material in an `experiments/` subfolder of the relevant
+`sources/` location. Use `docs/sources/experiments/` for experiments relevant
+across the project. Look in these subfolders when selecting sources relevant
+to the current work. Experiment material remains informative; storing it does
+not adopt its findings as decisions. The agent carrying out the experiments
+manages their conduct and lifecycle.
+
 A source is the user’s file, not the advisor’s: no `advisor-` prefix, no  
 scaffold, no question list and no marker line, so it belongs to no phase and  
 counts toward no position. None is delivered — a `sources/` folder exists  
@@ -126,11 +133,10 @@ the workflow determines when that reading is needed.
 
 ## What a document says about itself
 
-`docs/deferred/` holds project-owned deferred-item records beside the  
-normative documentation tree but outside every authority and phase. They have  
-no artifact marker or phase coverage. Their `open`/`closed` work state is  
-distinct from the artifact statuses below. Initialization creates the empty  
-directory but no sample record or local protocol file.
+Deferred work lives in project-owned `advisor:deferred` issues in the
+configured tracker, outside every authority and phase. Issue open/closed state
+is distinct from the artifact statuses below. Legacy `docs/deferred/` files
+are an archive and are not recovered unless explicitly migrated.
 
 An artifact places one line directly below its title, never in frontmatter:
 
@@ -178,6 +184,15 @@ sources. If a decision does not qualify for an ADR, a brief informative source
 link may accompany it. Such links preserve provenance, never delegate the rule  
 to a source. A changed or removed source prompts assessment, not an automatic  
 change of status or rule. ADRs are not phases or prerequisites.
+
+Handoffs under `docs/handoffs/` are temporary conversation bridges, not
+durable evidence. No project file may cite one as a dependency, provenance, or
+source; a handoff may link outward to durable information. Put a durable fact
+in its owning artifact, issue, or source before citing it. A session that used
+an identified handoff closes it at the end, after preserving decisions and
+unfinished work. Closing removes that file after inbound references are
+repaired; it keeps no closed copy. The user may also close an identified
+handoff explicitly.
 
 ### Interrupted review
 

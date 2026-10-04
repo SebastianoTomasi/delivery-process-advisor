@@ -343,10 +343,17 @@ defines the distinction.
 ## Contributing
 
 An installed plugin is a snapshot, not a live link. Claude Code copies it into
-its plugin cache from the pushed repository and pins it to a commit. Editing
-this checkout therefore does not change the installed
-`/delivery-process-advisor:init` command. To publish a change, commit and push
-it, then update the marketplace and reinstall the plugin.
+its plugin cache from the pushed repository and keeps that copy until the
+`version` in `.claude-plugin/plugin.json` changes. Editing this checkout
+therefore does not change the installed `/delivery-process-advisor:init`
+command, and neither does a push that leaves the version as it was. To publish
+a change, raise the patch version, commit and push it, then update the
+marketplace and the plugin:
+
+```sh
+claude plugin marketplace update delivery-process-advisor
+claude plugin update delivery-process-advisor@delivery-process-advisor
+```
 
 For a normal edit-and-try loop, run the checkout directly against a throwaway
 repository:

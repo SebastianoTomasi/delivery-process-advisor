@@ -1,7 +1,7 @@
 {
   "name": "delivery-process-advisor",
   "description": "Guides a software project's decisions and normative documents through a known process. Delivers the scaffolds, skills and instruction files a guided project carries.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": {
     "name": "Sebastiano Tomasi"
   }

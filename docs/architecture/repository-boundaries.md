@@ -130,13 +130,13 @@ mirrored, and reintroduce exactly the hazard that rule exists to prevent. A
 skill also has two different destination roles: delivered files and a host
 link. A literal mirror cannot express both roles as one recursive copy.
 
-`src/instructions/` holds the seed instruction files written into a project
-that has none, one per host. Their destinations are fixed, but they are
-instruction-bearing at those destinations and so fall under the same rule as a
-skill. They differ from every other asset in one way worth stating: once
-written each is the project's file, not the advisor's, which is why neither
-carries an `advisor-` prefix or a standard marker and why no later delivery
-touches their content.
+`src/instructions/` holds the seed `AGENTS.md` written into a project that
+has none; both hosts read it. Its destination is fixed, but it is
+instruction-bearing there and so falls under the same rule as a skill. It
+differs from every other asset in one way worth stating: once written it is
+the project's file, not the advisor's, which is why it carries no `advisor-`
+prefix or standard marker and why no later delivery touches its content beyond
+appending a missing reference.
 
 All three therefore take their destinations from the installer's mapping, and
 keeping them outside `src/target/` stops the mirror from being half true.

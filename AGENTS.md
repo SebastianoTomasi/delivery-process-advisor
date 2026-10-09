@@ -1,5 +1,7 @@
 # Project instructions
 
+@advisor-agents.md
+
 Before doing any work, read and follow [advisor-agents.md](advisor-agents.md).
 
 ## Regenerating the installed advisor

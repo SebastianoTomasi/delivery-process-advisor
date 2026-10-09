@@ -144,8 +144,8 @@ leave that directory exactly as it was: what is being checked is that the
 helper refused, not that it tidied up. A file or a link at that same path must
 be replaced instead. This evidence establishes destination behavior, not agent
 access. Keep the required instruction-file reference checks separate: an
-unreadable linked `AGENTS.md` or `CLAUDE.md` still fails delivery, and neither
-instruction file is ever replaced.
+unreadable linked `AGENTS.md` still fails delivery, the instruction file is
+never replaced, and an existing `CLAUDE.md` is never touched.
 
 ## Provenance
 

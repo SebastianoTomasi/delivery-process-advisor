@@ -151,7 +151,7 @@ repository.
 | `docs/handoffs/` | Project-owned temporary conversation handoffs |
 | `.agents/skills/` | The canonical project-local advisor skills |
 | `.claude/skills/` | Relative links to those same skills for Claude Code |
-| `AGENTS.md` / `CLAUDE.md` | Seed files or appended references that activate the advisor |
+| `AGENTS.md` | Seed file or appended references that activate the advisor for both hosts |
 
 Deferred work uses `advisor:deferred` issues in the project's configured tracker.
 Configure it through `docs/agents/issue-tracker.md` and
@@ -302,10 +302,12 @@ The helper is intentionally mechanical; all judgment lives in the skills.
   operation.
 
 Advisor-owned destinations are updated to the invoked release. Project-owned
-destinations are created when absent and otherwise left alone. Existing
-`AGENTS.md` and `CLAUDE.md` files receive only the host-specific advisor
-reference when needed. Initialization never writes through an occupied
-instruction-file link.
+destinations are created when absent and otherwise left alone. An existing
+`AGENTS.md` receives only the missing advisor references: the
+`@advisor-agents.md` import for Claude Code and the read-and-follow directive
+for Codex. Both hosts read `AGENTS.md`, so no `CLAUDE.md` is seeded or
+changed. Initialization never writes through an occupied instruction-file
+link.
 
 Skill files are written once under `.agents/skills/`. Relative directory links
 under `.claude/skills/` let both hosts use the same copy and continue to work if
@@ -327,7 +329,7 @@ The roles remain separate:
 | `commands/init.md` | Claude Code `/init` command wrapper |
 | `src/target/` | Literal mirror of the target-project scaffold |
 | `src/skills/` | Source skills delivered to target projects |
-| `src/instructions/` | Seed `CLAUDE.md` and `AGENTS.md` files |
+| `src/instructions/` | Seed `AGENTS.md` file |
 | `test/` | Installer regression tests and fault injection |
 | `docs/` | This product's own accepted and proposed design decisions |
 | `docs/deferred/` | Legacy archive, consulted only for an explicit migration |

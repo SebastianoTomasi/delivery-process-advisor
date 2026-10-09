@@ -95,13 +95,12 @@ The `advisor-` prefix satisfies the rule by construction. `advisor-agents.md`
 is the project's advisor instruction file, and no tool reads that name as
 instructions, so it ships and lands under one name and needs no rename.
 
-The seed instruction files are the exceptions that need the rename. There are
-two, one per host — delivered as `CLAUDE.md` and `AGENTS.md`, both
-instruction-bearing — so both are held under neutral names in
-`src/instructions/` and renamed at their destinations. They are also the only
-assets that are not the advisor's once written: each becomes the project's own
-file, and therefore carries neither the `advisor-` prefix nor a standard
-marker.
+The seed instruction file is the exception that needs the rename. It is
+delivered as `AGENTS.md`, which is instruction-bearing, so it is held under a
+neutral name in `src/instructions/` and renamed at its destination. It is also
+the only asset that is not the advisor's once written: it becomes the
+project's own file, and therefore carries neither the `advisor-` prefix nor a
+standard marker.
 
 ## Skill hosts
 
@@ -118,12 +117,15 @@ The two hosts are Claude Code and Codex, and they differ in where they look:
 | Host | Skill destination | Instruction file |
 | --- | --- | --- |
 | Codex | Canonical files in `.agents/skills/<name>/` | `AGENTS.md` |
-| Claude Code | Relative directory symlink at `.claude/skills/<name>` | `CLAUDE.md` |
+| Claude Code | Relative directory symlink at `.claude/skills/<name>` | `AGENTS.md` |
 
-Neither host reads the other's instruction file, so both are ensured to exist
-and to carry their host-specific reference to `advisor-agents.md`: Claude Code
-uses `@advisor-agents.md`, while Codex receives the explicit directive
+Both hosts read `AGENTS.md`, so it is the one instruction file ensured, and it
+carries each host's reference to `advisor-agents.md`: Claude Code expands the
+import `@advisor-agents.md`, while Codex follows the explicit directive
 `Before doing any work, read and follow [advisor-agents.md](advisor-agents.md).`
+No `CLAUDE.md` is seeded; one the project already has is its own and is left
+untouched. [ADR-0042](../adr/0042-agents-md-is-the-only-instruction-file.md)
+records why.
 A successful link exposes the canonical delivered skill files to both hosts.
 
 The helper creates a relative directory symlink from the Claude host to the
@@ -232,9 +234,8 @@ is no default feature.
 
 The output is the root file, the scaffolding including the empty
 `docs/handoffs/` directory, the skills in both host
-directories, a host-specific
-reference in each of the project's two instruction files — or those files
-themselves, where the project had none — and a report.
+directories, both host-specific references in the project's `AGENTS.md` — or
+that file itself, where the project had none — and a report.
 
 The report is one line per file, structural directory, or skill-directory
 destination, saying `written`, `replaced`, `appended`, `skipped`, or `linked`,
@@ -315,8 +316,8 @@ entry itself, without following links: a symbolic link or junction occupies
 its name even when its referent is missing. What occupancy then means depends
 on who owns the destination, and the mapping fixes that before the target is
 ever inspected: the mirrored assets, the root file, and the skill directories
-are the advisor's, while the two instruction files and `docs/handoffs/` are
-the project's. Ordinary files and the explicit record directory use the rules
+are the advisor's, while the instruction file and `docs/handoffs/` are the
+project's. Ordinary files and the explicit record directory use the rules
 below; [Skill hosts](#skill-hosts) defines directory-link occupancy and failure
 behavior. The reasons for treating links as occupied are recorded in
 [ADR-0024](../adr/0024-initialization-never-writes-through-an-occupied-link.md),
@@ -340,35 +341,35 @@ and the reasons for replacing rather than preserving what the advisor owns in
 4. The destination is `docs/handoffs/` and something already
    occupies it — leave it untouched and record it as skipped, whatever kind of
    entry it is. The project owns the records that go there.
-5. The destination is one of the project's own instruction files — ensure it
-   carries that host's reference to `advisor-agents.md`. If the file is absent
-   it is created holding nothing but the reference; if it is present the
-   reference is appended, leaving existing content unchanged; if that exact
-   reference is already there the file is left alone and recorded as skipped.
-   If the destination is a link, the helper may read through it only to check
-   for the exact reference. It never appends through the link: a reference
-   already present is reported as skipped, while a missing reference or an
-   unreadable or dangling link ends delivery with a concise diagnostic.
+5. The destination is the project's own instruction file — ensure it carries
+   both hosts' references to `advisor-agents.md`. If the file is absent it is
+   created holding nothing but the references; if it is present the missing
+   references are appended, leaving existing content unchanged; if both exact
+   references are already there the file is left alone and recorded as
+   skipped. If the destination is a link, the helper may read through it only
+   to check for the exact references. It never appends through the link:
+   references already present are reported as skipped, while a missing
+   reference or an unreadable or dangling link ends delivery with a concise
+   diagnostic.
 
 Rule 5 is an ensure rather than a write, and it is the only rule that is.
-The instruction chain starts at that reference, so both host instruction files
-must contain it even when they already exist. This establishes the entry
-directive, not the integrity of the rest of the chain. An unusable existing
+The instruction chain starts at those references, so the instruction file must
+contain them even when it already exists. This establishes the entry
+directives, not the integrity of the rest of the chain. An unusable existing
 scaffold and a broken link occupying a Claude skill destination are now
 replaced under rule 2, which is what makes a second delivery converge; a
 directory occupying `advisor-agents.md` ends delivery under rule 3 instead of
 passing unnoticed. A destination the helper preserves does not itself make
 delivery fail; a later required operation that encounters an error still does.
 
-The rule applies once per host, to `CLAUDE.md` and to `AGENTS.md`. Both are
-ensured in every project, because neither host reads the other's file. Each is
-the project's own from the moment it is written: it carries no `advisor-`
-prefix and no standard marker, and the advisor never touches its content again
-beyond the check above.
+The rule applies to `AGENTS.md` only, which both hosts read. The file is the
+project's own from the moment it is written: it carries no `advisor-` prefix
+and no standard marker, and the advisor never touches its content again beyond
+the check above.
 
-The check is a substring match for the exact host-specific reference anywhere
-in the file: `@advisor-agents.md` for Claude Code and the full explicit
-read-and-follow directive for Codex. That is a small amount of target content
+The check is a separate substring match for each exact host-specific reference
+anywhere in the file: `@advisor-agents.md` for Claude Code and the full
+explicit read-and-follow directive for Codex. That is a small amount of target content
 read by a helper otherwise defined as judgement-free, and it is accepted
 because it is what makes the idempotence invariant true rather than
 aspirational.
@@ -392,8 +393,8 @@ was empty is never asked.
 ## Invariants
 
 - A file at a destination the advisor does not own is never modified, with the
-  single exception of appending the host-specific reference to the project's
-  own instruction files. At a destination it does own, an existing file is
+  single exception of appending the host-specific references to the project's
+  own instruction file. At a destination it does own, an existing file is
   replaced whether or not the advisor wrote it.
 - Newly delivered asset text is byte-identical to the asset in `src/`, and
   identical between projects receiving the same
@@ -401,8 +402,8 @@ was empty is never asked.
   by Skill hosts; this does not add transformations to asset text. Verification
   compares delivered bytes directly with `src/` and separately checks the host
   representation. This comparison concerns the assets it writes or replaces,
-  not the destinations it preserved or existing project instruction files
-  receiving a reference.
+  not the destinations it preserved or an existing project instruction file
+  receiving references.
 - Nothing beyond the scaffolding is written. The empty `docs/handoffs/`
   directory is part of that scaffolding; no handoff, document that decides
   something, or template is created before a
@@ -429,8 +430,7 @@ was empty is never asked.
   rewriting identical bytes rather than from leaving the destination alone, and
   a Claude skill-directory destination reaches the same relative symlink
   whether it was absent, a link, a junction, or a copy. For the instruction
-  files, which are
-  appended to rather than written, it holds because the exact
+  file, which is appended to rather than written, it holds because each exact
   host-specific reference is looked for before it is added.
 - Successful delivery establishes each host's exact entry directive and
   completes the per-destination rules. It makes no whole-installation

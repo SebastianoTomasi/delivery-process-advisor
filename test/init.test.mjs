@@ -12,6 +12,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const repository = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const faultLoader = pathToFileURL(join(repository, 'test/fixtures/filesystem-fault.mjs')).href;
+const claudeImport = '@advisor-agents.md';
 const codexDirective = 'Before doing any work, read and follow [advisor-agents.md](advisor-agents.md).';
 
 function fixture(t) {
@@ -74,10 +75,7 @@ function deliveredAssets(f) {
         path === 'skill-asset.md' ? 'SKILL.md' : path)]);
     }
   }
-  for (const host of ['agents', 'claude']) {
-    assets.push([join(f.plugin, `src/instructions/instruction-${host}.md`),
-      join(f.target, `${host.toUpperCase()}.md`)]);
-  }
+  assets.push([join(f.plugin, 'src/instructions/instruction-agents.md'), join(f.target, 'AGENTS.md')]);
   return assets;
 }
 
@@ -109,7 +107,9 @@ test('fresh delivery preserves all asset bytes, reports its release, and is idem
   const before = deliveredAssets(f).map(([, path]) => [path, readFileSync(path)]);
   // What the project owns must not be rewritten; what the advisor owns may be,
   // as long as the bytes it writes again are the same.
-  const untouched = [...recordDirectories, join(f.target, 'AGENTS.md'), join(f.target, 'CLAUDE.md')]
+  // Claude Code reads AGENTS.md, so no CLAUDE.md is seeded.
+  assert.equal(existsSync(join(f.target, 'CLAUDE.md')), false);
+  const untouched = [...recordDirectories, join(f.target, 'AGENTS.md')]
     .map(path => [path, lstatSync(path).mtimeMs]);
   const second = run(f);
   success(second);
@@ -178,35 +178,54 @@ for (const directory of ['handoffs']) {
   }
 }
 
-for (const [host, directive] of [['AGENTS.md', codexDirective], ['CLAUDE.md', '@advisor-agents.md']]) {
-  test(`${host}: regular instructions are appended once, preserving existing text`, t => {
-    const f = fixture(t);
-    const path = join(f.target, host);
-    writeFileSync(path, 'existing instructions');
-    success(run(f));
-    const updated = readFileSync(path, 'utf8');
-    assert.equal(updated, `existing instructions\n\n${directive}\n`);
-    success(run(f));
-    assert.equal(readFileSync(path, 'utf8'), updated);
-  });
+test('AGENTS.md: regular instructions receive both references once, preserving existing text', t => {
+  const f = fixture(t);
+  const path = join(f.target, 'AGENTS.md');
+  writeFileSync(path, 'existing instructions');
+  success(run(f));
+  const updated = readFileSync(path, 'utf8');
+  assert.equal(updated, `existing instructions\n\n${claudeImport}\n\n${codexDirective}\n`);
+  success(run(f));
+  assert.equal(readFileSync(path, 'utf8'), updated);
+});
 
-  for (const kind of ['present', 'missing', 'dangling']) {
-    test(`${host}: ${kind} reference through a link never modifies its referent`, t => {
-      const f = fixture(t);
-      const referent = join(f.root, 'instructions.md');
-      const path = join(f.target, host);
-      const text = kind === 'present' ? `prefix ${directive} suffix\n` : 'keep these instructions\n';
-      if (kind !== 'dangling') writeFileSync(referent, text);
-      symlinkSync(referent, path, 'file');
-      const result = run(f);
-      if (kind === 'present') success(result);
-      else operationalFailure(result, path);
-      assert.ok(lstatSync(path).isSymbolicLink());
-      if (kind === 'dangling') assert.equal(existsSync(referent), false);
-      else assert.equal(readFileSync(referent, 'utf8'), text);
-    });
-  }
+for (const [present, absent] of [[claudeImport, codexDirective], [codexDirective, claudeImport]]) {
+  test(`AGENTS.md: holding only ${present === claudeImport ? 'the import' : 'the directive'} receives just the other reference`, t => {
+    const f = fixture(t);
+    const path = join(f.target, 'AGENTS.md');
+    writeFileSync(path, `existing instructions\n\n${present}\n`);
+    success(run(f));
+    assert.equal(readFileSync(path, 'utf8'), `existing instructions\n\n${present}\n\n${absent}\n`);
+  });
 }
+
+for (const kind of ['present', 'partial', 'missing', 'dangling']) {
+  test(`AGENTS.md: ${kind} references through a link never modify their referent`, t => {
+    const f = fixture(t);
+    const referent = join(f.root, 'instructions.md');
+    const path = join(f.target, 'AGENTS.md');
+    const text = {
+      present: `prefix ${claudeImport} ${codexDirective} suffix\n`,
+      partial: `prefix ${codexDirective} suffix\n`,
+    }[kind] ?? 'keep these instructions\n';
+    if (kind !== 'dangling') writeFileSync(referent, text);
+    symlinkSync(referent, path, 'file');
+    const result = run(f);
+    if (kind === 'present') success(result);
+    else operationalFailure(result, path);
+    assert.ok(lstatSync(path).isSymbolicLink());
+    if (kind === 'dangling') assert.equal(existsSync(referent), false);
+    else assert.equal(readFileSync(referent, 'utf8'), text);
+  });
+}
+
+test('an existing CLAUDE.md is the project\'s own and is left untouched', t => {
+  const f = fixture(t);
+  const path = join(f.target, 'CLAUDE.md');
+  writeFileSync(path, 'claude instructions');
+  success(run(f));
+  assert.equal(readFileSync(path, 'utf8'), 'claude instructions');
+});
 
 test('an unreadable instruction referent fails without being modified', t => {
   const f = fixture(t);

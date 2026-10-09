@@ -9,8 +9,8 @@
 //
 // Nothing here exercises judgement about content. Every destination comes from
 // the mapping below, asset bytes are copied unchanged, and the only
-// file whose existing content is read is an instruction file, to see whether
-// its advisor reference is already there. New skill links are always relative.
+// file whose existing content is read is the instruction file, to see whether
+// its advisor references are already there. New skill links are always relative.
 
 import {
   readFileSync,
@@ -47,19 +47,17 @@ const RECORD_DIRECTORIES = [join('docs', 'handoffs')];
 const SKILL_ENTRY_ASSET = 'skill-asset.md';
 const SKILL_ENTRY_DESTINATION = 'SKILL.md';
 
-// One seed per host. Each becomes the project's own file once written.
-const INSTRUCTION_FILES = [
-  {
-    asset: join('instructions', 'instruction-claude.md'),
-    destination: 'CLAUDE.md',
-    directive: '@advisor-agents.md',
-  },
-  {
-    asset: join('instructions', 'instruction-agents.md'),
-    destination: 'AGENTS.md',
-    directive: 'Before doing any work, read and follow [advisor-agents.md](advisor-agents.md).',
-  },
-];
+// Both hosts read AGENTS.md, so one seed serves them; it becomes the project's
+// own file once written. Each directive is the reference one host acts on:
+// Claude Code expands the import, Codex follows the explicit sentence.
+const INSTRUCTION_FILE = {
+  asset: join('instructions', 'instruction-agents.md'),
+  destination: 'AGENTS.md',
+  directives: [
+    '@advisor-agents.md',
+    'Before doing any work, read and follow [advisor-agents.md](advisor-agents.md).',
+  ],
+};
 
 class DeliveryError extends Error {}
 
@@ -178,15 +176,13 @@ function mapping() {
     }
   }
 
-  // Instruction files are ensured rather than written.
-  for (const seed of INSTRUCTION_FILES) {
-    entries.push({
-      asset: join(PAYLOAD, seed.asset),
-      destination: seed.destination,
-      directive: seed.directive,
-      mode: 'ensure',
-    });
-  }
+  // The instruction file is ensured rather than written.
+  entries.push({
+    asset: join(PAYLOAD, INSTRUCTION_FILE.asset),
+    destination: INSTRUCTION_FILE.destination,
+    directives: INSTRUCTION_FILE.directives,
+    mode: 'ensure',
+  });
 
   return entries;
 }
@@ -285,8 +281,9 @@ function link(entry, target) {
   }
 }
 
-// Rule 5: ensure the file carries its host-specific advisor reference. Created
-// if absent, appended to if present, left alone if the reference is already there.
+// Rule 5: ensure the file carries every host-specific advisor reference. Created
+// if absent, appended to with the missing references if present, left alone if
+// they are all already there.
 function ensure(entry, target) {
   const path = join(target, entry.destination);
   const existingEntry = entryAt(path);
@@ -299,12 +296,13 @@ function ensure(entry, target) {
     fail(`cannot ensure instruction reference in ${path}: not a regular file or symbolic link`);
   }
   const existing = readFileSync(path, 'utf8');
-  if (existing.includes(entry.directive)) return 'skipped';
+  const missing = entry.directives.filter(directive => !existing.includes(directive));
+  if (missing.length === 0) return 'skipped';
   if (existingEntry.isSymbolicLink()) {
-    fail(`cannot ensure instruction reference in ${path}: the linked file lacks the required reference; initialization never appends through a link`);
+    fail(`cannot ensure instruction reference in ${path}: the linked file lacks a required reference; initialization never appends through a link`);
   }
   const separator = existing.endsWith('\n') ? '\n' : '\n\n';
-  appendFileSync(path, `${separator}${entry.directive}\n`);
+  appendFileSync(path, `${separator}${missing.join('\n\n')}\n`);
   return 'appended';
 }
 

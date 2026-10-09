@@ -531,8 +531,8 @@ not repeat them and names no skill at all. Every workflow that must consider
 deferred work invokes `advisor-defer` from its own procedure, as recorded in
 [ADR-0035](../adr/0035-deferred-recovery-belongs-to-the-workflows.md); advice
 given without entering such a workflow carries no documented obligation to
-recover them. The project's own instruction file gains a host-specific
-reference to the root; Codex is told to read and follow it, while Claude Code
+recover them. The project's own instruction file gains a reference to the
+root for each host; Codex is told to read and follow it, while Claude Code
 uses its supported import syntax.
 
 Every instruction has a home reached before the action needing it. The division

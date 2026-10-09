@@ -97,16 +97,17 @@ test('fresh delivery preserves all asset bytes, reports its release, and is idem
   for (const absent of ['docs/deferred', 'docs/handoffs', 'handoffs']) {
     assert.equal(existsSync(join(f.target, absent)), false, absent);
   }
+  // Claude Code reads AGENTS.md, so no CLAUDE.md is seeded.
+  assert.equal(existsSync(join(f.target, 'CLAUDE.md')), false);
   const before = deliveredAssets(f).map(([, path]) => [path, readFileSync(path)]);
   // What the project owns must not be rewritten; what the advisor owns may be,
   // as long as the bytes it writes again are the same.
-  // Claude Code reads AGENTS.md, so no CLAUDE.md is seeded.
-  assert.equal(existsSync(join(f.target, 'CLAUDE.md')), false);
-  const untouched = [join(f.target, 'AGENTS.md')].map(path => [path, lstatSync(path).mtimeMs]);
+  const instructions = join(f.target, 'AGENTS.md');
+  const instructionsMtime = lstatSync(instructions).mtimeMs;
   const second = run(f);
   success(second);
   assert.match(second.stdout, /0 written, \d+ replaced, 0 linked, 0 appended, \d+ skipped, 0 removed/);
-  for (const [path, mtime] of untouched) assert.equal(lstatSync(path).mtimeMs, mtime, path);
+  assert.equal(lstatSync(instructions).mtimeMs, instructionsMtime);
   for (const [path, bytes] of before) assert.deepEqual(readFileSync(path), bytes, path);
 });
 
@@ -151,8 +152,11 @@ test('AGENTS.md: regular instructions receive both references once, preserving e
   assert.equal(readFileSync(path, 'utf8'), updated);
 });
 
-for (const [present, absent] of [[claudeImport, codexDirective], [codexDirective, claudeImport]]) {
-  test(`AGENTS.md: holding only ${present === claudeImport ? 'the import' : 'the directive'} receives just the other reference`, t => {
+for (const [label, present, absent] of [
+  ['the import', claudeImport, codexDirective],
+  ['the directive', codexDirective, claudeImport],
+]) {
+  test(`AGENTS.md: holding only ${label} receives just the other reference`, t => {
     const f = fixture(t);
     const path = join(f.target, 'AGENTS.md');
     writeFileSync(path, `existing instructions\n\n${present}\n`);
@@ -347,8 +351,11 @@ test('an unreadable source asset gives operation, path and cause', t => {
 
 test('a denied skill-directory creation fails concisely after earlier writes', t => {
   const f = fixture(t);
+  // The fault matches the exact directory created for the first file delivered.
   const skill = readdirSync(join(f.plugin, 'src/skills'))[0];
-  const path = join(f.target, '.agents/skills', skill);
+  const first = filesUnder(join(f.plugin, 'src/skills', skill))[0];
+  const path = dirname(join(f.target, '.agents/skills', skill,
+    first === 'skill-asset.md' ? 'SKILL.md' : first));
   const result = run(f, { fault: { method: 'mkdirSync', path, code: 'EACCES' } });
   operationalFailure(result, path);
   assert.match(result.stderr, /EACCES/);

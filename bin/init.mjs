@@ -168,12 +168,7 @@ function mapping() {
   }
 
   // The instruction file is ensured rather than written.
-  entries.push({
-    asset: join(PAYLOAD, INSTRUCTION_FILE.asset),
-    destination: INSTRUCTION_FILE.destination,
-    directives: INSTRUCTION_FILE.directives,
-    mode: 'ensure',
-  });
+  entries.push({ ...INSTRUCTION_FILE, asset: join(PAYLOAD, INSTRUCTION_FILE.asset), mode: 'ensure' });
 
   return entries;
 }

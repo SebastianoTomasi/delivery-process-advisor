@@ -5,6 +5,10 @@ superseded_by: ADR-0023
 
 # The payload serves two skill hosts
 
+The instruction-file part below was changed by
+[ADR-0042](0042-agents-md-is-the-only-instruction-file.md): both hosts now read
+`AGENTS.md`, which carries both references, and no `CLAUDE.md` is seeded.
+
 Although the helper installs as a Claude Code plugin, it delivers each skill to
 both `.claude/skills/` and `.agents/skills/` and ensures a host-specific
 reference to `advisor-agents.md` in both instruction files. `CLAUDE.md` uses

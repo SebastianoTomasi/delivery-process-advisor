@@ -335,7 +335,11 @@ stays in place. A project initialized before
 [ADR-0043](docs/adr/0043-general-skills-come-from-matt-pocock.md) removes the
 superseded `advisor-grill-me`, `advisor-domain-modeling`, `advisor-handoff`,
 and `advisor-close-handoff` from both skill directories, renames `CONTEXT.md`
-to `GLOSSARY.md`, and removes an empty `docs/handoffs/` by hand.
+to `GLOSSARY.md`, and removes an empty `docs/handoffs/` by hand. A project
+initialized before
+[ADR-0042](docs/adr/0042-agents-md-is-the-only-instruction-file.md) also moves
+its own instructions from a seeded `CLAUDE.md` into `AGENTS.md` and deletes
+that file; otherwise Claude Code loads `advisor-agents.md` twice.
 
 ### This repository uses itself
 

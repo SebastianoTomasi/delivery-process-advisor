@@ -41,10 +41,10 @@ For new features, use Starting a feature above before the first write.
    the content; otherwise create the minimum new artifact with a descriptive
    name, proposed status, and Scope. Choose a structure suited to its subject.
    This choice is autonomous and may be revised as answers settle.
-2. Resolve explicitly delegated choices under `docs/advisor-docs.md`. Ask one
-   decision-critical question at a time for the remaining unresolved choices,
-   and write each answer as it settles into the artifact where it naturally
-   belongs. Questions measure coverage; they do not become the document layout.
+2. Resolve explicitly delegated choices under `docs/advisor-docs.md`. Put the
+   remaining unresolved, decision-critical choices to the user through
+   `grilling`, and write each answer as it settles into the artifact where it
+   naturally belongs. Questions measure coverage; they do not become the document layout.
 3. Keep each artifact under one authority. Link decisions owned elsewhere and
    write new cross-authority decisions in their owning artifacts, at project
    scope when shared or feature scope when specific. Maintain Dependencies with

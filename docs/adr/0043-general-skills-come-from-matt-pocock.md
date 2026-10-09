@@ -51,7 +51,7 @@ conventions. The advisor keeps only the skills that carry its own process:
   the four skills from `.agents/skills/` and `.claude/skills/`, renames
   `CONTEXT.md`, and removes an empty `docs/handoffs/` by hand.
 
-## Alternatives
+## Considered Options
 
 Keeping the advisor's copies would preserve one-question-at-a-time interviews,
 the `CONTEXT.md` name, and handoffs kept in the repository, at the cost of two

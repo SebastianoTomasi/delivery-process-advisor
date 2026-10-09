@@ -56,7 +56,7 @@ the implementation is preserved until the intended change is clarified. Reading
 a relevant document does not itself start a session or phase assessment; cite
 the passages supporting conclusions and disclose material unread inputs.
 
-The root instruction files and deliberately installed advisor files govern
+The root instruction file and deliberately installed advisor files govern
 work here. Installed skills belong to that deliberate self-application;
 they do not turn the source tree into an instruction directory. Keep changes
 to product source and changes to the installed process distinct.
@@ -89,7 +89,9 @@ delivered document names a skill at all: a host that reads the skill files only
 on request, or ignores their metadata, leaves the skills installed and
 unreachable while every path check still passes.
 Check it per host, from the host's own documentation and from an observed
-session, at each release.
+session, at each release. In the same observed session, confirm that Claude
+Code loads `AGENTS.md` and expands its `@advisor-agents.md` import, which
+[ADR-0042](../adr/0042-agents-md-is-the-only-instruction-file.md) relies on.
 
 Check that each host can reach the delivered skill through a newly created
 relative directory symlink. Inspect the filesystem to verify that a `linked`

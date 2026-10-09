@@ -61,7 +61,7 @@ helper in `bin/`, its command in `commands/`, and the payload is the `src/`
 tree beside them, so the thing installed and the thing shipped are one artifact
 and cannot disagree about a release. The arrangement holds only
 because no payload asset sits where the host looks: the payload's skills are at
-`src/skills/`, not the plugin's own `skills/`, and its instruction files are at
+`src/skills/`, not the plugin's own `skills/`, and its seed instruction file is at
 `src/instructions/`, not the root. That is the same rule as the
 instruction-bearing filename rule below, applied to directories instead of
 filenames — installing the helper must not make a target project's process

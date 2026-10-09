@@ -435,7 +435,7 @@ was empty is never asked.
 An unreadable asset, an unresolvable destination, a failed write or relative
 skill-link creation, a directory occupying an advisor-owned file destination,
 or an instruction-file link that cannot safely satisfy
-its required reference ends the operation at that point with a non-zero
+its required references ends the operation at that point with a non-zero
 result. Expected operational errors, including filesystem failures involving
 files, paths, or permissions, produce a concise diagnostic identifying the
 operation, affected path, and cause, without a stack trace. A file occupying a
@@ -458,7 +458,7 @@ Delivery is not atomic. Assets are written one at a time and what was written
 before the failure stays written, so an interrupted delivery leaves the target
 part-initialized. That is tolerable because of what the delivery rules still
 guarantee: what the project owns is untouched, the only file whose content is
-altered gains one appended line, and what the advisor owns holds bytes a later
+altered gains only the references it lacked, and what the advisor owns holds bytes a later
 run writes again identically.
 
 Re-running the helper recovers the destinations the advisor owns without any

@@ -86,10 +86,10 @@ feature has nothing to decide in. Its name is fixed so the dismissal is visible
 in a listing.
 
 Two positions belong to the advisor’s process but hold content the project  
-owns: `CONTEXT.md` at the project root, and `docs/adr/` for decision records.  
+owns: `GLOSSARY.md` at the project root, and `docs/adr/` for decision records.  
 Neither is an artifact, and neither carries the `advisor-` prefix, a scaffold  
 or a question list: nothing is delivered there, and the  
-`advisor-domain-modeling` skill carries their format.
+separately installed `domain-modeling` skill carries their format.
 
 ## Where material that is not a document sits
 
@@ -184,15 +184,6 @@ sources. If a decision does not qualify for an ADR, a brief informative source
 link may accompany it. Such links preserve provenance, never delegate the rule  
 to a source. A changed or removed source prompts assessment, not an automatic  
 change of status or rule. ADRs are not phases or prerequisites.
-
-Handoffs under `docs/handoffs/` are temporary conversation bridges, not
-durable evidence. No project file may cite one as a dependency, provenance, or
-source; a handoff may link outward to durable information. Put a durable fact
-in its owning artifact, issue, or source before citing it. A session that used
-an identified handoff closes it at the end, after preserving decisions and
-unfinished work. Closing removes that file after inbound references are
-repaired; it keeps no closed copy. The user may also close an identified
-handoff explicitly.
 
 ### Interrupted review
 

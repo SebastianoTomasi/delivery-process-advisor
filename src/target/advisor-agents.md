@@ -41,12 +41,10 @@ status, dependency, and acceptance rules are in
   catalog in their boundary file.
 - [`docs/features/advisor-features.md`](docs/features/advisor-features.md)
   defines feature structure and routes each phase to its boundary and catalog.
-- `CONTEXT.md` holds the project's vocabulary; `docs/adr/` holds decision
+- `GLOSSARY.md` holds the project's vocabulary; `docs/adr/` holds decision
   records explaining important choices. Neither is an artifact or phase.
 - Deferred work is tracked as `advisor:deferred` issues in the project's
   configured issue tracker. Legacy `docs/deferred/` files are an archive.
-  `docs/handoffs/` holds temporary conversation bridges; read those only when
-  the user identifies one.
 
 ## Reading guidance
 

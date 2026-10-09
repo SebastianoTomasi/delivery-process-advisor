@@ -8,9 +8,10 @@ turning an idea into software that is clear enough to build. It reads the
 decisions already recorded in the repository, finds the next useful piece of work,
 and helps you work from product intent through architecture and implementation.
 
-It asks one decision-critical question at a time. What you agree becomes the
-project's documentation; what you do not agree remains open. The advisor
-recommends a path, but never blocks you from choosing another one.
+It asks the decision-critical questions that can be settled now, in numbered
+rounds, each with a recommended answer. What you agree becomes the project's
+documentation; what you do not agree remains open. The advisor recommends a
+path, but never blocks you from choosing another one.
 
 ## The short version
 
@@ -34,9 +35,10 @@ not unblock delivery.
 
 You: Let's define the file contract.
 
-Advisor: Who must be able to consume the exported file?
+Advisor: Q1. Who must be able to consume the exported file?
+Recommended: people using Excel, plus your own import tool.
 
-You: People using Excel, plus our own import tool.
+You: Yes, both.
 
 Advisor: That gives us two compatibility requirements...
 ```
@@ -105,6 +107,13 @@ has no `/plugin`, so use the shell form there.
 Installing the plugin only makes the initialization helper available. It does
 not change a project yet.
 
+The advisor's workflows also invoke skills from
+[Matt Pocock's set](https://github.com/mattpocock/skills), which you install
+separately for both hosts: `grilling` for the questions, `domain-modeling` for
+the glossary and decision records, and `to-tickets` for implementation tickets.
+Conversation transfers use his `handoff`. Without them, a workflow that invokes
+one cannot run that step.
+
 ### 2. Initialize a project
 
 From a Claude Code session, deliver the advisor into a project root:
@@ -148,7 +157,6 @@ repository.
 | --- | --- |
 | `advisor-agents.md` | Routes an agent through the advisor process |
 | `docs/` | Scaffolds and question catalogs for each decision authority |
-| `docs/handoffs/` | Project-owned temporary conversation handoffs |
 | `.agents/skills/` | The canonical project-local advisor skills |
 | `.claude/skills/` | Relative links to those same skills for Claude Code |
 | `AGENTS.md` | Seed file or appended references that activate the advisor for both hosts |
@@ -161,8 +169,8 @@ explicit migration is requested.
 
 The report names every destination and says whether it was written, replaced,
 linked, appended, skipped, or removed. Advisor-owned scaffolds and skills are
-brought to the invoked release. Project-owned deferred items, handoffs, and
-instruction content are preserved according to the
+brought to the invoked release. Project-owned deferred items and instruction
+content are preserved according to the
 [initialization contract](docs/architecture/initialization.md).
 
 On Windows, creating the relative skill links may require Developer Mode or an
@@ -211,7 +219,7 @@ Those are written only as you settle them.
 The advisor starts with a deliberately thin project foundation:
 
 1. define the product;
-2. establish the shared language in `CONTEXT.md`;
+2. establish the shared language in `GLOSSARY.md`;
 3. decide the architectural shape needed to begin feature work.
 
 It then moves feature by feature through the usual route:
@@ -257,21 +265,26 @@ The installed skills provide a small set of deliberate interaction modes:
 
 - `advisor-next-work` assesses the current documentation and implementation and
   recommends one next action without starting it.
-- `advisor-grill-with-docs` asks one question at a time and writes each settled
-  answer into the project documents.
-- `advisor-grill-me` pressure-tests a proposal without changing project files.
-- `advisor-domain-modeling` keeps shared terminology and important architectural
-  decisions coherent.
+- `advisor-grill-with-docs` asks rounds of numbered questions, each with a
+  recommended answer, and writes each settled answer into the project
+  documents.
+- `advisor-propagate-change` carries an agreed change to an accepted rule
+  through every document that depends on it.
 - `advisor-defer` records and later recovers work that can safely wait.
-- `advisor-handoff` creates an explicit temporary bridge to a fresh conversation.
+- `advisor-to-tickets` prepares the relevant documents and constraints, then
+  uses `to-tickets` to draft and publish implementation tickets.
 - `advisor-migrate-docs` moves selected existing documents into the advisor
   structure without keeping duplicate source copies.
+- `advisor-migrate-deferred` moves legacy `docs/deferred/` records into the
+  configured tracker when you ask for that migration.
+
+General procedures come from Matt Pocock's separately installed skills. The
+workflows use `grilling` to ask their questions and `domain-modeling` to keep
+shared terminology in `GLOSSARY.md` and important decisions in ADRs. To move
+an active conversation into a fresh session, invoke his `handoff`.
 
 You do not need to memorize these names for ordinary use. Describe the outcome
-you want and the agent can select the applicable skill. The handoff skill is the
-exception: it runs only when explicitly requested, because handoffs are
-temporary. The continuation session closes an identified handoff after use,
-and you can also request closure explicitly.
+you want and the agent can select the applicable skill.
 
 ### Deferred work, handoffs, and changed decisions
 
@@ -280,10 +293,10 @@ These solve three different problems:
 - **Deferred work** is a durable idea, question, or concern for later. It keeps
   its context and revisit condition in an `advisor:deferred` issue in the
   configured tracker, and resurfaces when it becomes relevant.
-- **A handoff** moves an active conversation into a fresh session. It records
-  the next objective and current state under `docs/handoffs/`; you identify it
-  to the next session, which preserves durable information and removes the
-  handoff when the session ends. You can also request closure explicitly.
+- **A handoff** moves an active conversation into a fresh session. Matt
+  Pocock's `handoff` writes it to your operating system's temporary directory,
+  outside the project, so no project document can cite it; you identify it to
+  the next session.
 - **A changed decision** updates its one owning rule and then follows dependency
   links through every affected document. An interrupted propagation uses
   `needs-review` to say what remains inconsistent.
@@ -317,6 +330,13 @@ links. Files no longer shipped inside a canonical advisor skill directory are
 pruned. See the [skill-host contract](docs/architecture/initialization.md#skill-hosts)
 for the exact rules.
 
+A whole skill that an earlier release delivered and this one no longer ships
+stays in place. A project initialized before
+[ADR-0043](docs/adr/0043-general-skills-come-from-matt-pocock.md) removes the
+superseded `advisor-grill-me`, `advisor-domain-modeling`, `advisor-handoff`,
+and `advisor-close-handoff` from both skill directories, renames `CONTEXT.md`
+to `GLOSSARY.md`, and removes an empty `docs/handoffs/` by hand.
+
 ### This repository uses itself
 
 This repository is both the source of the advisor and a project guided by it.
@@ -333,8 +353,7 @@ The roles remain separate:
 | `test/` | Installer regression tests and fault injection |
 | `docs/` | This product's own accepted and proposed design decisions |
 | `docs/deferred/` | Legacy archive, consulted only for an explicit migration |
-| `docs/handoffs/` | Temporary conversation transfers for this repository |
-| `CONTEXT.md` | Vocabulary of the advisor product |
+| `GLOSSARY.md` | Vocabulary of the advisor product |
 
 Files under `src/` are product data to author. The installed instructions and
 scaffolds at the repository root are derived copies. Editing one does not

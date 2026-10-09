@@ -1,11 +1,12 @@
 ---
 name: advisor-grill-with-docs
-description: Conduct an advisor-grill-with-docs session — one question at a time, writing what settles into the project's own documents as it settles. Use when writing, filling in, or accepting a normative document under docs/ (product, architecture, implementation, frontend, security, deployment, operations, development, stack), when declaring or advancing a feature, or when pressure-testing a plan or design whose outcome the project should keep. To change a rule the project has already accepted, use advisor-propagate-change.
+description: Conduct an advisor-grill-with-docs session, writing what settles into the project's own documents as it settles. Use when writing, filling in, or accepting a normative document under docs/ (product, architecture, implementation, frontend, security, deployment, operations, development, stack), when declaring or advancing a feature, or when pressure-testing a plan or design whose outcome the project should keep. To change a rule the project has already accepted, use advisor-propagate-change.
 disable-model-invocation: false
 ---
 
-Use an `advisor-grill-me` session to resolve open decisions, invoking the
-`advisor-domain-modeling` skill as terms or qualifying decisions settle.
+Use the separately installed `grilling` skill to resolve open decisions,
+invoking the separately installed `domain-modeling` skill as terms or
+qualifying decisions settle.
 Invoke `advisor-defer` to record agreed future work and to recover relevant
 items before starting or resuming a session. That skill owns clarification,
 capture, classification, recovery, partial progress, and closure in the
@@ -50,7 +51,7 @@ For new features, use Starting a feature above before the first write.
    passage links and explanations, not just navigation links. For a substantive
    screening answer, link its authoritative answer and settle any input needed
    now; use `advisor-defer` only for work that can wait.
-4. Invoke `advisor-domain-modeling` to update resolved terms and qualifying ADRs
+4. Invoke `domain-modeling` to update resolved terms and qualifying ADRs
    as decisions settle. Important decisions keep their reasons, alternatives,
    and informative source links in the ADR; current artifacts state the rule
    and link to it. Preserve existing ADR folders and numbering.

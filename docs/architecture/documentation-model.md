@@ -11,7 +11,7 @@ state is exposed.
 
 The Product behavior built on this model is specified in the
 [Product description](../product/overview.md). The terms used by the model are
-defined in [`CONTEXT.md`](../../CONTEXT.md). How the model is delivered into a
+defined in [`GLOSSARY.md`](../../GLOSSARY.md). How the model is delivered into a
 target project is specified by [Initialization](initialization.md).
 
 ## Dependencies
@@ -30,9 +30,9 @@ target project is specified by [Initialization](initialization.md).
 - [Product capabilities](../product/overview.md#what-it-does) — catalogs and
   decision references must support advice, deferred work, session continuity,
   and complete propagation.
-- [Deferred issues and file-resident handoffs](../product/overview.md#what-it-knows)
+- [Deferred issues and conversation handoffs](../product/overview.md#what-it-knows)
   — future-work recovery uses the configured tracker while explicit
-  conversation transfer uses project files.
+  conversation transfer stays outside the project.
 
 ## Authority ownership
 
@@ -116,22 +116,24 @@ Origin determines what a document can mean:
   no project decision, declares no lifecycle status, and never blocks work.
 
 Two documents in a guided project fall outside these kinds while still
-belonging to the advisor's process. The glossary at `CONTEXT.md` and the
-decision records under `docs/adr/` are written and formatted by the
-`advisor-domain-modeling` skill the session invokes, and hold content the
-project owns. Neither is an artifact: neither belongs to an authority, neither
-carries a lifecycle this model reads, and neither is a prerequisite of
-anything. Work rests on the artifact a decision shaped, never on the record of
-its rationale, and on the language a project fixed, never on the document that
-lists it.
+belonging to the advisor's process. The glossary at `GLOSSARY.md` (with a
+`GLOSSARY-MAP.md` when the project has several contexts) and the decision
+records under `docs/adr/` are written and formatted by the separately installed
+`domain-modeling` skill the session invokes, and hold content the project owns.
+Neither is an artifact: neither belongs to an authority, neither carries a
+lifecycle this model reads, and neither is a prerequisite of anything. Work
+rests on the artifact a decision shaped, never on the record of its rationale,
+and on the language a project fixed, never on the document that lists it.
 
 Artifacts use the glossary's resolved language and link relevant ADRs. Keep the
 decision's reasons and sources in the ADR rather than duplicating them in each
 dependent artifact; a brief local explanation may clarify the dependency. The
 skill-owned formats and their exemption from these kinds are recorded in
 [ADR-0005](../adr/0005-the-glossary-and-the-records-belong-to-the-skill.md),
-and their standing inside the advisor's process in
-[ADR-0038](../adr/0038-the-glossary-and-the-records-are-advisor-positions.md).
+their standing inside the advisor's process in
+[ADR-0038](../adr/0038-the-glossary-and-the-records-are-advisor-positions.md),
+and the move to `domain-modeling` and `GLOSSARY.md` in
+[ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md).
 
 A third thing falls outside the kinds, and unlike the two above it falls
 outside the advisor's process entirely. A **source** is informative material
@@ -186,10 +188,11 @@ identity.
 
 An input that already identifies what should be revisited and gives either a
 possible outcome or a meaningful revisit condition can be recorded directly.
-When it does not, `advisor-defer` runs a short `advisor-grill-me` session only
-until that minimum is clear. It does not preserve an unintelligible idea merely
-to avoid asking. A Product non-goal creates no deferred item automatically; an
-item about reconsidering it links to the Product rule instead of duplicating it.
+When it does not, `advisor-defer` uses the separately installed `grilling` skill
+only until that minimum is clear. It does not preserve an unintelligible idea
+merely to avoid asking. A Product non-goal creates no deferred item
+automatically; an item about reconsidering it links to the Product rule instead
+of duplicating it.
 
 Before recommending work or starting or resuming a session, the agent queries
 open `advisor:deferred` issues and reads their routing fields. It reads
@@ -225,43 +228,17 @@ after checking for duplicates, preserving context, and repairing references.
 
 ## Session handoffs
 
-A handoff is a project-owned Markdown file at
-`docs/handoffs/<descriptive-focus>-handoff.md` that compacts the current
-conversation for a fresh session continuing the same work. It is intended as a
-temporary bridge, not project history or future-work tracking. Closing a
-handoff removes its file; no closed file or additional state is kept.
-[ADR-0041](../adr/0041-handoffs-close-by-removal-after-use.md) records the
-reason for this lifecycle.
-
-`advisor-handoff` creates a handoff only on explicit invocation. The skill does
-not discover, prioritize, resume, or archive handoffs. A fresh conversation
-reads only the file the user identifies as ordinary project context; root
-instructions do not scan `docs/handoffs/` automatically. Multiple files may
-coexist, and no recency is inferred from filenames or timestamps. The session
-using the identified handoff closes it at the end, after placing decisions and
-unfinished work in durable project locations. The user may also close an
-identified handoff explicitly. If needed information cannot yet be preserved,
-the handoff remains and the session reports what prevents closure.
-
-No project file may cite a handoff, including artifacts, decision records,
-deferred issues, and other handoffs. A handoff links outward to durable
-information, never serves as the only source for it. Before deletion, the
-closing procedure searches for references to the identified file, moves any
-unique durable information to its owning artifact, issue, or source, and
-repairs inbound references. Delete only when no required information or broken
-link would remain.
-
-A handoff's layout adapts to its work but identifies the next conversation's
-objective, current state, settled decisions and constraints, authoritative
-file or history references, next action, and open questions. It links to
-persisted information instead of duplicating it and redacts sensitive data. A
-user argument sets its focus; otherwise the active work does. Creation never
-overwrites an existing file: a collision receives another descriptive name.
-
-Initialization creates and reports the empty `docs/handoffs/` directory as a
-fixed structural destination but delivers no record or protocol file into it.
-No compatibility or migration is provided for deferred-question records left
-there by earlier releases.
+A handoff compacts the current conversation for a fresh session continuing the
+same work. It is not a project record: the user invokes Matt Pocock's
+separately installed `handoff`, which writes a temporary file to the operating
+system's temporary directory, outside the project. No project file can cite
+it, the advisor's payload carries no handoff procedure, and initialization
+creates no handoff directory. A `docs/handoffs/` left by an earlier release is
+project content that initialization leaves untouched.
+[ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md) records the
+move out of the repository; the separation from deferred work in
+[ADR-0030](../adr/0030-deferred-items-and-session-handoffs-are-distinct.md)
+stands.
 
 ## Visible document markers and decision references
 
@@ -322,16 +299,14 @@ scaffold file places nothing; a scaffold file outside its folder describes
 nothing. Fixed non-authority positions are named explicitly below.
 
 Initialization writes this tree whole, down to and including
-`docs/features/advisor-features.md` and the empty `docs/handoffs/` directory.
-Only the feature folders inside `features/` are absent at the start, because a
-feature is named by the project and its authority folders appear only with
-their first artifacts.
+`docs/features/advisor-features.md`. Only the feature folders inside
+`features/` are absent at the start, because a feature is named by the project
+and its authority folders appear only with their first artifacts.
 
 ```
 advisor-agents.md
 docs/
   advisor-docs.md
-  handoffs/       temporary conversation bridges, initially empty
   product/
     advisor-product.md
     advisor-product-project.md
@@ -374,14 +349,12 @@ docs/
 Four rules govern it.
 
 **One folder per authority, plus explicit non-authority positions.** The top
-level of `docs/` is the authority table above, plus `features/`,
-`handoffs/`, `adr/`, and `sources/`. Anything an authority owns sits in that
-authority's folder, whatever kind of document it is. The other positions have
-deliberately different roles: `features/` groups feature-scoped artifacts;
-`handoffs/` holds temporary conversation bridges; `adr/` holds skill-owned
-decision records; and `sources/`
-holds informative material owned by no authority. None becomes an authority by
-being inside `docs/`.
+level of `docs/` is the authority table above, plus `features/`, `adr/`, and
+`sources/`. Anything an authority owns sits in that authority's folder,
+whatever kind of document it is. The other positions have deliberately
+different roles: `features/` groups feature-scoped artifacts; `adr/` holds
+skill-owned decision records; and `sources/` holds informative material owned
+by no authority. None becomes an authority by being inside `docs/`.
 
 An authority scaffold defines its directory by a semantic ownership boundary,
 not a closed catalog of document types. It states what the authority governs,
@@ -428,10 +401,9 @@ Architecture, or Implementation whose phase asks it; screening questions are
 co-located with the phase where they first become answerable and retain their
 cross-cutting authority owner.
 
-`docs/handoffs/` is also fixed and created directly by initialization, but
-contains no shipped file. Its contents are named by sessions, project-owned,
-and governed by its delivered skill. A pre-existing `docs/deferred/` directory
-is preserved as an archive and is not an output of a fresh initialization.
+A pre-existing `docs/deferred/` directory is preserved as an archive, and a
+pre-existing `docs/handoffs/` is left as found; neither is an output of a fresh
+initialization.
 
 **Artifacts are not named by this model,** with one exception. A file's
 authority is the folder it sits in and its status is its marker line, so its name
@@ -444,12 +416,11 @@ closes a phase a feature has no substance for: its name is fixed so that the
 dismissal is visible in a listing, at the same cost as the folder's existence.
 
 Two positions of the advisor's process are not delivered with the scaffold.
-`CONTEXT.md` sits at the project root and `docs/adr/` beside the authority
+`GLOSSARY.md` sits at the project root and `docs/adr/` beside the authority
 folders; each comes into existence when a session first needs it, neither
 carries the `advisor-` prefix, and neither has a scaffold or a question list,
 because nothing is delivered there and the skill that maintains them carries
-their format. `docs/handoffs/` likewise holds project-owned records without a
-delivered file. The prefix marks delivered advisor content, so a position
+their format. The prefix marks delivered advisor content, so a position
 holding the project's own records does not take it.
 
 ### Sources
@@ -522,7 +493,7 @@ between the advisor files, catalogs, and skills. Its sections are:
 - **Using project documentation:** the brief authority summary and the
   [Product relationship between code and documentation](../product/overview.md#rules).
 - **Where things are:** the map to common rules, authority boundaries, catalogs,
-  feature artifacts, vocabulary, decision records, deferred work, and handoffs.
+  feature artifacts, vocabulary, decision records, and deferred work.
 - **Reading guidance:** selecting relevant material, following decision
   dependencies, finding sources, and citing supporting evidence.
 
@@ -598,10 +569,12 @@ revised for deferred recovery by
   recovery, and closure. `advisor-next-work`, `advisor-grill-with-docs`, and
   `advisor-propagate-change` invoke its recovery from their own procedures, and
   `advisor-migrate-docs` reaches it through the workflows it invokes.
-- Explicitly invoked `advisor-handoff` creates compact conversation-transfer
-  files. `advisor-close-handoff` closes an identified handoff on request or at
-  the end of a session that used it. Neither procedure discovers unrelated
-  handoffs; the root limits reads to those the user identifies.
+- Separately installed skills from Matt Pocock's set own the general
+  procedures the workflows invoke: `grilling` the rounds of questions,
+  `domain-modeling` the glossary and decision records, and `to-tickets` ticket
+  slicing. Advisor-specific rules stay in the advisor's own skills and
+  documents rather than in a copy of a general skill, as recorded in
+  [ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md).
 
 Documentation rules state what must hold. Skills define how to carry out and
 check the work. Brief summaries support interpretation and routing, while a
@@ -650,7 +623,7 @@ broadly its decisions apply; it does not by itself make the artifact a
 prerequisite.
 
 The foundation is deliberately thin: the project-scoped Product description
-and Architecture shape, over the language fixed in `CONTEXT.md`. Each feature
+and Architecture shape, over the language fixed in `GLOSSARY.md`. Each feature
 decision uses the accepted foundation inputs it needs; the entire foundation
 is not a prerequisite for declaring a feature or accepting one of its decisions.
 Other project-scoped artifacts, including shared

@@ -11,8 +11,8 @@ classifying, resuming, or closing one.
 
 Record an already-clear question, idea, or other future concern directly. If
 the input does not yet identify what should be revisited and provide either a
-possible outcome or a meaningful revisit condition, use `advisor-grill-me` for
-a short, one-question-at-a-time clarification before writing. Do not reopen a
+possible outcome or a meaningful revisit condition, use the separately
+installed `grilling` skill for a short clarification before writing. Do not reopen a
 clear, already-agreed deferral merely to record it.
 
 Before recommending work or starting or resuming an advisor session, recover

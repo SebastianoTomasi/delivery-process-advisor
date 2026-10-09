@@ -4,6 +4,12 @@ status: accepted
 
 # The glossary and the decision records belong to the skill
 
+The glossary file and its skill below were changed by
+[ADR-0043](0043-general-skills-come-from-matt-pocock.md): the glossary is now
+`GLOSSARY.md`, and Matt Pocock's separately installed `domain-modeling`
+carries both formats. The exemption from the advisor's document kinds remains
+current.
+
 `CONTEXT.md` and `docs/adr/` are written by the
 `advisor-domain-modeling` skill and are not advisor artifacts: they have no
 owning authority, artifact lifecycle, scaffold, or prerequisite role. This

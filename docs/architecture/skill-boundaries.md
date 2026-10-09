@@ -80,6 +80,13 @@ that reorganizing a document cannot silently break the skills depending on it.
 Declaring prerequisites replaces copying a rule into a skill so that it would
 hold on every path.
 
+A skill may also invoke a skill the advisor does not deliver. The workflows
+declare `grilling`, `domain-modeling`, and `to-tickets` from Matt Pocock's set
+as separately installed prerequisites; a machine without them leaves the
+workflows that invoke them unable to run that step. Conversation handoffs use
+his `handoff`, which no advisor skill invokes. The choice is recorded in
+[ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md).
+
 ## How a skill is reached
 
 A skill declares when it applies in its own description, as decided in
@@ -112,6 +119,13 @@ The skills the advisor delivers are written and maintained in this repository.
 Where an external skill supplied the idea, the idea is adapted and the result is
 owned here: no copy is tracked upstream and no synchronization is owed, as
 decided in [ADR-0034](../adr/0034-skills-are-authored-here.md).
+
+General procedures are not among them. Interviewing, domain modeling, ticket
+slicing, and conversation handoff come from the separately installed skills in
+[How skills compose](#how-skills-compose), and advisor-specific rules stay in
+the advisor's own skills and documents rather than in a copy of a general
+skill, as decided in
+[ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md).
 
 A format a skill delivers may be advisor-specific even when the procedure around
 it is general.

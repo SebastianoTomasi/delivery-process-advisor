@@ -49,10 +49,10 @@ to file later-phase material; record unresolved inputs in proposed work.
 
 ## Resolve only necessary decisions
 
-Resolve explicitly delegated choices under `docs/advisor-docs.md`. Use
-`advisor-grill-me`, the bundled `grill-me` skill, for remaining choices that
-change the migration. Ask one question at a time, explain the consequence,
-suggest a default, and wait for the answer before applying that choice.
+Resolve explicitly delegated choices under `docs/advisor-docs.md`. Use the
+separately installed `grilling` skill for remaining choices that change the
+migration: explain each consequence, suggest a default, and wait for the answer
+before applying that choice.
 Continue independent transfers where useful. The migration request authorizes
 writing documents as decisions settle.
 
@@ -79,7 +79,7 @@ writing documents as decisions settle.
 Use the writing and acceptance procedures in `advisor-grill-with-docs` within
 this migration's scope, and `advisor-propagate-change` when the migration
 changes a rule the project has already accepted. Use
-`advisor-domain-modeling` for resolved terminology and qualifying ADRs; preserve
+`domain-modeling` for resolved terminology and qualifying ADRs; preserve
 existing ADR locations, numbering, and decision history. Keep existing reasons
 and alternatives without inventing rationale or manufacturing an ADR for each
 moved paragraph.

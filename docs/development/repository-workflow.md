@@ -25,8 +25,8 @@ self-application contract. This is not a complete branching or test strategy.
   skipped destinations are not certified by a zero exit result.
 - [Deferred items](../architecture/documentation-model.md#deferred-items) and
   [session handoffs](../architecture/documentation-model.md#session-handoffs) —
-  release checks cover the fixed handoff directory and confirm no new deferred
-  directory is created, without duplicating the skill-owned protocols.
+  release checks confirm that initialization creates no deferred or handoff
+  directory.
 - [The root file](../architecture/documentation-model.md#the-root-file) — the
   root and scaffolds do not name skills, so reaching them depends on each host
   surfacing their declarations. Root-level reading guidance and workflow-specific
@@ -114,14 +114,10 @@ its reader cannot recover from. These checks apply the contract in
 
 ## Installer failure verification
 
-On a fresh isolated target, verify that initialization creates and reports
-`docs/handoffs/` as a directory, creates neither `docs/deferred/` nor a root
-`handoffs/` and no sample record, and reports the handoff directory as skipped
-on an idempotent rerun. For that destination, exercise an occupied file or link: it
-must be preserved and skipped because the project owns it, which is now the
-exception rather than the norm and therefore worth exercising at every release.
-A denied directory creation must follow the concise operational-failure
-contract below.
+On a fresh isolated target, verify that initialization creates none of
+`docs/deferred/`, `docs/handoffs/`, or a root `handoffs/`, and no sample
+record. A denied creation of a skill directory must follow the concise
+operational-failure contract below.
 
 Use isolated targets to exercise a file occupying a required parent directory
 (such as `docs`), an unreadable asset, and a denied filesystem operation. Check

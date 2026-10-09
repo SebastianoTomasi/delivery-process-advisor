@@ -10,7 +10,7 @@ replace the accepted source and initialization contracts. It exists because
 the advisor ships only questions today, and a project that wants the standard answer to a recurring piece of work — a login
 feature, a backoffice frontend — has to derive it from scratch every time.
 
-Vocabulary is [`CONTEXT.md`](../../CONTEXT.md). The rules a preset obeys once
+Vocabulary is [`GLOSSARY.md`](../../GLOSSARY.md). The rules a preset obeys once
 it is in a project are the ones already fixed in the
 [documentation model](documentation-model.md) and
 [Initialization](initialization.md); nothing here weakens them. What this
@@ -37,7 +37,7 @@ document does not settle is collected in [Open decisions](#open-decisions).
 
 A preset is a named bundle of know-how and blank forms for a recurring piece
 of work, shipped by the advisor and imported into a project that wants it as a
-starting base. It is a [source](../../CONTEXT.md): a session reads it, and the
+starting base. It is a [source](../../GLOSSARY.md): a session reads it, and the
 artifact the session writes is still the project's own words.
 
 It is the one source a project does not write itself. Every other property of

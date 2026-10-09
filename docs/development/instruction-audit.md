@@ -121,8 +121,6 @@ the advisor's entry points. The initial catalog covers these request families:
 - ask what work to do next in both an early product with no verified primary
   journey and an established product with working behavior;
 - record, recover, or close a deferred item;
-- create an explicit conversation handoff without making it part of automatic
-  routing;
 - migrate existing documentation;
 - perform ordinary code work, checking for unnecessary instruction loading.
 

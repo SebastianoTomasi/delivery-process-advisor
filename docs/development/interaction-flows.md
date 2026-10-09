@@ -15,8 +15,8 @@ below remain proposals and do not change those current rules.
   exercise the behavior the advisor promises to users.
 - [Deferred items](../architecture/documentation-model.md#deferred-items) and
   [session handoffs](../architecture/documentation-model.md#session-handoffs) —
-  future-work recovery and explicit conversation transfer use different records
-  and discovery rules.
+  future-work recovery uses the configured tracker, while explicit conversation
+  transfer stays outside the project.
 - [Artifact lifecycle and references](../architecture/documentation-model.md#visible-document-markers-and-decision-references)
   and [coverage](../architecture/documentation-model.md#question-catalogs-and-completeness),
   with [decision readiness](../architecture/documentation-model.md#scope-and-prerequisites)
@@ -45,8 +45,8 @@ Quoted requests are illustrative. In the scenarios below:
 - **derive the position** means starting with folders and artifact envelopes,
   then reading relevant dependencies, review notes, decision passages, and
   catalog coverage as required by the documentation model;
-- **run a session** means the file-backed, one-question-at-a-time exchange
-  defined in [`CONTEXT.md`](../../CONTEXT.md);
+- **run a session** means the file-backed exchange in rounds of numbered
+  questions defined in [`GLOSSARY.md`](../../GLOSSARY.md);
 - **initialized** means the helper has delivered the fixed scaffolding,
   instructions, and skills defined by Initialization. Scenarios relying on
   usable instructions assume those paths are actually readable; the helper's
@@ -56,7 +56,7 @@ Quoted requests are illustrative. In the scenarios below:
 ## A. An idea meets an initialized project
 
 **Given.** An initialized project has no artifacts, feature folders, or
-`CONTEXT.md`.
+`GLOSSARY.md`.
 
 **When.** The user asks to develop a product idea.
 
@@ -71,7 +71,7 @@ Quoted requests are illustrative. In the scenarios below:
 - Once complete, the artifact becomes accepted and Architecture foundation is
   named as the next action.
 
-**Leaves behind.** `CONTEXT.md` and the Product artifact; no empty artifacts
+**Leaves behind.** `GLOSSARY.md` and the Product artifact; no empty artifacts
 for other authorities.
 
 ## B. Asking for a phase the project has not reached
@@ -110,7 +110,7 @@ for editors, and an Implementation filter depends on the search contract.
 - It asks only new choices, such as which actors count as editors, and applies
   consequences already determined by the answers.
 - Important reasons, alternatives, and sources enter the relevant ADR through
-  `advisor-domain-modeling`; superseded records remain in the original numbering.
+  `domain-modeling`; superseded records remain in the original numbering.
 - The current rule, affected documents, dependencies, and screening answers are
   updated and checked together. The session ends with coherent accepted rules,
   not a list of documents left for the user to review.
@@ -263,8 +263,9 @@ existing documents.
   already settled. Other material is adopted only according to its intended
   role; an old marker or confident wording alone does not confer acceptance.
 - Necessary ambiguities, contradictions, and substantive exclusions are settled
-  through `advisor-grill-me`, one question at a time. A conflict with an
-  accepted rule follows the full decision-change propagation procedure.
+  through `grilling`, in rounds of numbered questions with recommended answers.
+  A conflict with an accepted rule follows the full decision-change propagation
+  procedure.
 - The agent verifies fidelity, coherence, and necessary decision inputs before
   accepting artifacts. It reports unrelated catalog gaps as later work and
   does not reopen settled design choices or require a second approval round.
@@ -592,30 +593,24 @@ now includes a client-visible surface.
 
 ## X. An explicit conversation handoff
 
-**Given.** The active conversation contains context needed to continue the work
-and `docs/handoffs/` may contain older files that have not been used or closed.
+**Given.** The active conversation contains context needed to continue the work.
 
-**When.** The user explicitly invokes `advisor-handoff`, optionally naming the
-focus of the next conversation.
+**When.** The user explicitly invokes Matt Pocock's separately installed
+`handoff`, optionally naming the focus of the next conversation.
 
 **Expect.**
 
-- The skill writes a new descriptively named `*-handoff.md` without overwriting
-  an existing file.
-- The handoff states the next objective, current state, settled decisions and
-  constraints, authoritative references, next action, and open questions. It
-  redacts sensitive data and links to persisted information instead of copying
-  it.
-- No handoff is created automatically, and `advisor-agents.md` does not scan the
-  handoff directory during ordinary routing.
-- A fresh conversation reads only the handoff the user identifies. The advisor
-  closes and removes it at the end after persisting decisions and unfinished
-  work. A user may also ask to close an identified handoff directly. Closure
-  keeps no status file or archive and does not discover unrelated handoffs.
-- The handoff cannot be cited by another project file. Before removal, the
-  closing procedure checks for inbound references and information that exists
-  only in the handoff, moves that information to its durable home, and repairs
-  references. If it cannot do so, the handoff stays and the session reports why.
+- The handoff is written to the operating system's temporary directory, outside
+  the project, as
+  [ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md) records. No
+  project file is created for it, and initialization created no handoff
+  directory.
+- It links to persisted information instead of copying it and redacts
+  sensitive data.
+- No advisor skill or delivered document creates, discovers, or closes a
+  handoff, and `advisor-agents.md` names no handoff location.
+- No project file cites the handoff. A fresh conversation reads only the
+  handoff the user identifies.
 
 ## Y. Documentation during ordinary code work
 

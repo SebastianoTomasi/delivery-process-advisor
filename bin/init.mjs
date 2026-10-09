@@ -38,10 +38,6 @@ const MANIFEST = join(PLUGIN_ROOT, '.claude-plugin', 'plugin.json');
 const SKILL_FILE_HOST = join('.agents', 'skills');
 const SKILL_LINK_HOST = join('.claude', 'skills');
 
-// These structural destinations have no source assets. Their records are
-// project-owned and each skill remains the single home of its protocol.
-const RECORD_DIRECTORIES = [join('docs', 'handoffs')];
-
 // Assets held under neutral names because their destination is
 // instruction-bearing.
 const SKILL_ENTRY_ASSET = 'skill-asset.md';
@@ -127,8 +123,8 @@ function filesUnder(dir) {
 }
 
 // The delivery mapping is fixed and enumerated: mirrored assets keep their
-// path, one structural directory has no assets, and each skill becomes files
-// under one host plus a link under the other. Nothing is derived from the target.
+// path, and each skill becomes files under one host plus a link under the
+// other. Nothing is derived from the target.
 function mapping() {
   const entries = [];
 
@@ -137,11 +133,6 @@ function mapping() {
   if (!occupied(mirror)) fail(`the payload mirror is missing at ${mirror}`);
   for (const path of filesUnder(mirror)) {
     entries.push({ asset: join(mirror, path), destination: path, mode: 'write' });
-  }
-
-  // Empty directories cannot be represented by the literal file mirror.
-  for (const destination of RECORD_DIRECTORIES) {
-    entries.push({ destination, mode: 'directory' });
   }
 
   // Skills are directories, written whole to the file host, then linked from
@@ -245,15 +236,6 @@ function prune(entry, target) {
   return removed;
 }
 
-// Rules 1 and 4: each project-owned structural destination is created when
-// absent and preserved once it exists, whatever occupies it.
-function directory(entry, target) {
-  const path = join(target, entry.destination);
-  if (occupied(path)) return 'skipped';
-  mkdirSync(path, { recursive: true });
-  return 'written';
-}
-
 // Rules 1 and 2 for the second host. A relative symlink preserves the connection
 // when the whole project moves. Failure has no junction or copy fallback.
 // The advisor owns this entry, so an older link, junction, or independent copy
@@ -281,7 +263,7 @@ function link(entry, target) {
   }
 }
 
-// Rule 5: ensure the file carries every host-specific advisor reference. Created
+// Rule 4: ensure the file carries every host-specific advisor reference. Created
 // if absent, appended to with the missing references if present, left alone if
 // they are all already there.
 function ensure(entry, target) {
@@ -306,7 +288,7 @@ function ensure(entry, target) {
   return 'appended';
 }
 
-const DELIVER = { write, directory, ensure, link };
+const DELIVER = { write, ensure, link };
 
 function main() {
   const options = parseArguments(process.argv.slice(2));
@@ -347,9 +329,8 @@ function main() {
     const outcome = DELIVER[entry.mode](entry, target);
     counts[outcome] += 1;
     const destination = entry.destination.split(sep).join('/');
-    const shown = entry.mode === 'directory' ? `${destination}/` : destination;
     const suffix = entry.mode === 'link' ? ` -> ${entry.linked.split(sep).join('/')}` : '';
-    process.stdout.write(`${outcome.padEnd(8)} ${shown}${suffix}\n`);
+    process.stdout.write(`${outcome.padEnd(8)} ${destination}${suffix}\n`);
   }
 
   process.stdout.write(

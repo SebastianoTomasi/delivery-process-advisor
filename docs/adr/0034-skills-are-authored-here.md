@@ -4,6 +4,11 @@ status: accepted
 
 # The advisor's skills are authored in this repository
 
+The general interview, domain-modeling, and handoff procedures were changed by
+[ADR-0043](0043-general-skills-come-from-matt-pocock.md): they now come from
+Matt Pocock's separately installed skills, and the `ADR-FORMAT.md` consequence
+below no longer applies. The advisor's own skills remain authored here.
+
 The skills the advisor delivers are written and maintained here. Where an
 external skill supplied the idea, the idea is adapted to this repository and the
 result is owned here: no copy is tracked upstream and no synchronization is owed.

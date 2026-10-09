@@ -22,8 +22,8 @@ target project is specified separately in
   instructions and project-owned artifacts have different roles and lifecycles.
 - [Deferred items](documentation-model.md#deferred-items) and
   [session handoffs](documentation-model.md#session-handoffs) — deferred issues
-  use the configured tracker; only the handoff directory is a fixed,
-  asset-free initialized destination.
+  use the configured tracker and handoffs stay outside the project, so no
+  initialized destination is asset-free.
 - [Target selection](initialization.md#target-selection) — the helper's target
   is selected by that contract; self-application does not establish a second rule.
 - [Skill hosts](initialization.md#skill-hosts) — payload layout must keep
@@ -34,7 +34,7 @@ target project is specified separately in
 
 ## Documentation and product source
 
-Project artifacts under `docs/` and the glossary `CONTEXT.md` describe the
+Project artifacts under `docs/` and the glossary `GLOSSARY.md` describe the
 advisor: what it is for, how it is built, and why its design was chosen. They
 are never used as payload for other target projects. This self-applied
 repository also holds installed advisor scaffolds and catalogs under `docs/`;
@@ -106,11 +106,10 @@ the target, so the mapping from each mirrored asset to its destination is the
 identity. Delivering those fixed files is a recursive copy that skips occupied
 destinations.
 
-The initialized structure has one fixed destination with no source asset:
-`docs/handoffs/`. An empty directory cannot be expressed as a file in the
-mirror, so the helper creates and reports it directly. It adds no placeholder
-or protocol file. Legacy `docs/deferred/` is project-owned archival content,
-never created or altered by a fresh delivery.
+The initialized structure has no destination without a source asset: deferred
+issues live in the configured tracker and handoffs outside the project. Legacy
+`docs/deferred/` and `docs/handoffs/` are project-owned content, never created
+or altered by a fresh delivery.
 
 The other three directories are not mirrors and do not pretend to be, and each
 is excluded for its own reason.
@@ -142,8 +141,7 @@ All three therefore take their destinations from the installer's mapping, and
 keeping them outside `src/target/` stops the mirror from being half true.
 
 Delivery still resolves every file, directory, and link destination through
-one mapping. The mirror makes most file mappings the identity, while the
-handoff directory is the asset-free structural destination.
+one mapping, and the mirror makes most file mappings the identity.
 
 ## Target and project identity
 

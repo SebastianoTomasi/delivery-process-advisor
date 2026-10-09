@@ -1,5 +1,6 @@
 ---
-status: accepted
+status: superseded
+superseded_by: ADR-0043
 ---
 
 # Handoffs close by removal after use

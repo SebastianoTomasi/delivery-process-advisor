@@ -16,9 +16,9 @@ Do not tell the simulator which skills or files it is expected to find.
 | New feature | "Vorrei aggiungere l'esportazione CSV dei libri." | Coherent project Product and Architecture foundations; no export feature yet. |
 | Resume work | "Riprendiamo il documento di architettura dell'esportazione CSV." | An existing export feature, the named draft, and its actual accepted inputs and open decisions. |
 | Change an accepted decision | "L'esportazione deve includere anche i libri archiviati." | An accepted rule excluding archived books and related artifacts with real decision references. |
-| Next work | "Quale lavoro ha senso affrontare adesso?" | A small mixed state with accepted and proposed artifacts and a relevant open handoff. |
-| Handoff capture | "Rimandiamo la scelta della politica di retry; annotala per riprenderla quando definiamo il provider." | A current topic and enough established context to locate the deferred question. |
-| Handoff resumption | "Riprendiamo la questione della politica di retry." | A matching repository handoff and the documents containing its known inputs. |
+| Next work | "Quale lavoro ha senso affrontare adesso?" | A small mixed state with accepted and proposed artifacts and a relevant open deferred issue. |
+| Deferral capture | "Rimandiamo la scelta della politica di retry; annotala per riprenderla quando definiamo il provider." | A current topic and enough established context to locate the deferred question. |
+| Deferral resumption | "Riprendiamo la questione della politica di retry." | A matching deferred issue in the configured tracker and the documents containing its known inputs. |
 | Migration | "Migra docs-legacy/requisiti.md nella struttura dell'advisor." | Initialized advisor and the actual selected legacy document at that path. |
 | Ordinary code | "Correggi questo refuso nel messaggio di errore." | A specified code location with a spelling-only change and no unresolved product or contract decision. |
 
@@ -38,7 +38,7 @@ Retain these focused variants when their instruction is affected:
 
 | Variant | Starting distinction | Obligation to review |
 | --- | --- | --- |
-| Handoff without agreed feature identity | An agreed deferred question, no confirmed slug, and insufficient evidence to establish scope or destination. | Inspect identifiable relevant work; retain unknown fields without inventing a feature or interviewing merely to record the deferral. |
+| Deferral without agreed feature identity | An agreed deferred question, no confirmed slug, and insufficient evidence to establish scope or destination. | Inspect identifiable relevant work; retain unknown fields without inventing a feature or interviewing merely to record the deferral. |
 | Change with reason already supplied | The same accepted rule and dependants, but the prompt explicitly supplies its motivation. | Discover impacts and retain that motivation without asking for it again. |
 | Feature with slug already confirmed | The prompt confirms readable name and stable slug; no feature folder yet. | Keep that identity and reach foundation verification and the next unresolved decision without repeating confirmation. |
 
@@ -50,7 +50,7 @@ facts match; do not rerun unrelated families merely to increase a case count.
 
 Run the [local fixture check](execution.md#prepare-a-case) before simulation,
 then read the decision passages supporting the case's critical premises. Verify
-that accepted claims are supported by accepted artifacts, not just handoff prose.
+that accepted claims are supported by accepted artifacts, not just conversation prose.
 Record that semantic review with the expected obligations, outside the target.
 Changing fixture facts creates a new case revision; before/after evidence for
 that revision must keep the corrected facts identical on both payloads.
@@ -69,7 +69,7 @@ target:
   source changes affect the case.
 
 For a general audit, exercise at least one concrete case per initial family,
-including both handoff entry points. Report branch coverage as the scenarios
+including both deferral entry points. Report branch coverage as the scenarios
 and routing distinctions actually exercised, with exclusions. This is not a
 claim to cover every Markdown file, every possible prompt, or every advisor
 phase question. A focused audit reports its narrower selection explicitly.

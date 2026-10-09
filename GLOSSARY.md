@@ -25,7 +25,7 @@ A path in a target project that the delivery helper takes one decision about. Ev
 A destination whose content the advisor defines and brings to the invoked release at every delivery: the mirrored scaffolds and catalogs, the root file, and the delivered skill directories. A project’s local edits to one are not preserved.
 
 **Project-owned destination**  
-A destination the advisor may create but whose content belongs to the project: the two instruction files and the handoff directory. Delivery ensures or creates it and never replaces what it holds. Legacy deferred directories are preserved without being mapped.
+A destination the advisor may create but whose content belongs to the project: the instruction file. Delivery ensures it and never replaces what it holds. Legacy deferred and handoff directories are preserved without being mapped.
 
 **Artifact**  
 A normative document recording a guided project’s decisions, with one owning authority, a scope, and a lifecycle status. It is the kind of document on whose accepted decisions other work can rely.
@@ -94,7 +94,7 @@ A recognized but unresolved choice owned by one authority. An artifact cannot be
 _Avoid_: TODO, question, loose end
 
 **Grill-with-docs session**  
-A structured, one-question-at-a-time exchange that extracts missing decisions and writes answers, resolved terms, and qualifying records as they settle. A session changing an accepted rule includes its propagation.
+A structured exchange, in rounds of numbered questions each with a recommended answer, that extracts missing decisions and writes answers, resolved terms, and qualifying records as they settle. A session changing an accepted rule includes its propagation.
 _Avoid_: interview, analysis session, review, grill session
 
 **Decision record**  
@@ -102,7 +102,7 @@ A document preserving a consequential decision, its reasons, and relevant altern
 _Avoid_: rationale, history
 
 **Handoff**  
-A record that preserves the conversation context needed for a fresh agent session to continue the same work. It is a temporary bridge closed and removed after that session uses it, or when the user explicitly closes it; it does not keep project history or queue work for an unspecified future.
+A temporary document that preserves the conversation context needed for a fresh agent session to continue the same work. It is kept outside the project, so no project file cites it; it does not keep project history or queue work for an unspecified future.
 _Avoid_: deferred item, checkpoint
 
 **Deferred item**

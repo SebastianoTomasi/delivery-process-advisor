@@ -32,7 +32,7 @@ checking whether it describes the same work.
 Accept a question, idea, or other future concern only when it is not an input
 needed by the current decision. It must identify what to revisit and either a
 possible outcome or a meaningful revisit condition. If unclear, invoke
-`advisor-grill-me` for the shortest one-question-at-a-time clarification that
+the separately installed `grilling` skill for the shortest clarification that
 establishes that minimum. Search open and closed issues for the same work and
 read plausible matches, including comments, before creating anything. Update
 an existing issue when it is the same work; link related but distinct work.
@@ -97,7 +97,7 @@ Before recommending work or starting or resuming an advisor session:
    authority boundary; ask only if routing changes intended scope. Advice-only
    work changes no issue. Consider relevant deferred work before dependent
    decisions, and re-evaluate waiting issues as inputs settle. Keep the
-   session's one-question-at-a-time procedure.
+   session's questioning procedure.
 
 ## Resume and close
 

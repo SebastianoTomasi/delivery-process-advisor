@@ -7,7 +7,7 @@
 This artifact governs the advisor product's goals, actors, capabilities,
 success criteria, and non-goals across guided projects, including this
 repository when it deliberately uses the advisor. The vocabulary is defined
-in [`CONTEXT.md`](../../CONTEXT.md). Architecture owns the persisted document
+in [`GLOSSARY.md`](../../GLOSSARY.md). Architecture owns the persisted document
 model and delivery contracts; Development owns the acceptance scenarios.
 
 ## The problem
@@ -63,14 +63,13 @@ not a tool that imposes it on them.
     retain an open/closed lifecycle and link to authoritative answers. A Product
     non-goal creates no deferred item unless there is also something to
     reconsider later.
-5.  **Transfers an active conversation.** On explicit request it compacts the
-    context needed to continue the current work into a handoff for a fresh
-    conversation. The user identifies the handoff to the new session. That
-    session closes and removes it at the end, after preserving decisions and
-    unfinished work; the user can also close an identified handoff explicitly.
-    The advisor does not discover or prioritize handoffs automatically.
-    [ADR-0041](../adr/0041-handoffs-close-by-removal-after-use.md) records why
-    closure removes the temporary file.
+5.  **Transfers an active conversation.** On explicit request, Matt Pocock's
+    separately installed `handoff` compacts the context needed to continue the
+    current work into a temporary file outside the project, which the user
+    identifies to a fresh conversation. No project file cites it, and the
+    advisor does not discover, prioritize, or close handoffs.
+    [ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md) records why
+    handoffs left the repository.
 6.  **Propagates corrections.** When an artifact changes, it identifies those
     that rested on the changed decision and updates them. Wording-only edits
     can be applied directly; substantive changes run a focused session that
@@ -102,7 +101,7 @@ specified in the
 [guided project documentation model](../architecture/documentation-model.md).
 
 **The foundation is Product and Architecture, project-scoped, over the language
-of `CONTEXT.md`.** Feature work may begin and its decisions may be accepted before
+of `GLOSSARY.md`.** Feature work may begin and its decisions may be accepted before
 the foundation is complete when their necessary inputs are accepted and
 compatible, and the remaining open foundation choices cannot invalidate them.
 The foundation still needs accepted coverage of all its catalog questions to
@@ -153,7 +152,10 @@ although an unresolved control can be a necessary input to a particular decision
 
 The system consists of **versioned scaffolds, question catalogs, templates,
 skills, and instruction files**, together with the helper that delivers them
-into a project. It works through the project's own repository.
+into a project. It works through the project's own repository. Its workflows
+also invoke general skills from Matt Pocock's set — `grilling`,
+`domain-modeling`, and `to-tickets` — installed separately rather than
+delivered.
 
 The division is between delivery and judgement:
 
@@ -219,10 +221,13 @@ accepted answers remain in the owning normative artifacts. What is not known
 from the conversation or project evidence is asked rather than invented.
 
 The representation and recovery contracts for
-[deferred items](../architecture/documentation-model.md#deferred-items) and
+[deferred items](../architecture/documentation-model.md#deferred-items) and the
+place of
 [session handoffs](../architecture/documentation-model.md#session-handoffs)
-belong to Architecture. Their separation and repository locations are recorded
-in [ADR-0030](../adr/0030-deferred-items-and-session-handoffs-are-distinct.md).
+belong to Architecture. Their separation is recorded in
+[ADR-0030](../adr/0030-deferred-items-and-session-handoffs-are-distinct.md), and
+the move of handoffs outside the project in
+[ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md).
 
 Among the project files are the **sources**: informative material retained in a
 `sources/` folder for a session to read — know-how, an external

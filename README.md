@@ -107,12 +107,13 @@ has no `/plugin`, so use the shell form there.
 Installing the plugin only makes the initialization helper available. It does
 not change a project yet.
 
-The advisor's workflows also invoke skills from
+The advisor works with skills from
 [Matt Pocock's set](https://github.com/mattpocock/skills), which you install
-separately for both hosts: `grilling` for the questions, `domain-modeling` for
-the glossary and decision records, and `to-tickets` for implementation tickets.
-Conversation transfers use his `handoff`. Without them, a workflow that invokes
-one cannot run that step.
+separately for both hosts: `grill-with-docs` for documentation sessions,
+`to-tickets` for implementation tickets, `implement` for building them, and
+`handoff` for conversation transfers, plus the `grilling` and
+`domain-modeling` that the advisor's own procedures use. Without them, the
+step that needs one cannot run.
 
 ### 2. Initialize a project
 
@@ -145,8 +146,9 @@ What should we work out next?
 
 The agent will follow the repository's advisor instructions, inspect only the
 relevant project documents, explain its evidence, and suggest a focused next
-step. You can also start directly with a project idea, a feature, an existing
-document to migrate, or a proposal you want pressure-tested.
+step. You can also start directly with an existing document to migrate, or run
+`/grill-with-docs` on a project idea, a feature, or a proposal you want
+pressure-tested.
 
 ## What initialization adds
 
@@ -161,9 +163,9 @@ repository.
 | `.claude/skills/` | Relative links to those same skills for Claude Code |
 | `AGENTS.md` | Seed file or appended references that activate the advisor for both hosts |
 
-Deferred work uses `advisor:deferred` issues in the project's configured tracker.
-Configure it through `docs/agents/issue-tracker.md` and
-`docs/agents/triage-labels.md`; these project-owned files are not delivered by
+Deferred work uses `deferred` issues in the project's configured tracker.
+Configure it through `docs/agents/issue-tracker.md`, which
+`/setup-matt-pocock-skills` writes; this project-owned file is not delivered by
 initialization. Existing `docs/deferred/` files remain an archive until an
 explicit migration is requested.
 
@@ -265,23 +267,19 @@ The installed skills provide a small set of deliberate interaction modes:
 
 - `advisor-next-work` assesses the current documentation and implementation and
   recommends one next action without starting it.
-- `advisor-grill-with-docs` asks rounds of numbered questions, each with a
-  recommended answer, and writes each settled answer into the project
-  documents.
 - `advisor-propagate-change` carries an agreed change to an accepted rule
   through every document that depends on it.
-- `advisor-defer` records and later recovers work that can safely wait.
-- `advisor-to-tickets` prepares the relevant documents and constraints, then
-  uses `to-tickets` to draft and publish implementation tickets.
 - `advisor-migrate-docs` moves selected existing documents into the advisor
   structure without keeping duplicate source copies.
 - `advisor-migrate-deferred` moves legacy `docs/deferred/` records into the
   configured tracker when you ask for that migration.
 
-General procedures come from Matt Pocock's separately installed skills. The
-workflows use `grilling` to ask their questions and `domain-modeling` to keep
-shared terminology in `GLOSSARY.md` and important decisions in ADRs. To move
-an active conversation into a fresh session, invoke his `handoff`.
+Matt Pocock's separately installed skills run the rest: `grill-with-docs` the
+documentation sessions, `to-tickets` the implementation tickets, `implement`
+the implementation, and `handoff` the move to a fresh session. The delivered
+`advisor-agents.md` states the advisor's rules for them, and the advisor's
+procedures use his `grilling` for questions and `domain-modeling` for
+`GLOSSARY.md` and ADRs.
 
 You do not need to memorize these names for ordinary use. Describe the outcome
 you want and the agent can select the applicable skill.
@@ -291,7 +289,7 @@ you want and the agent can select the applicable skill.
 These solve three different problems:
 
 - **Deferred work** is a durable idea, question, or concern for later. It keeps
-  its context and revisit condition in an `advisor:deferred` issue in the
+  its context and revisit condition in a `deferred` issue in the
   configured tracker, and resurfaces when it becomes relevant.
 - **A handoff** moves an active conversation into a fresh session. Matt
   Pocock's `handoff` writes it to your operating system's temporary directory,
@@ -307,7 +305,8 @@ in its own authoritative document.
 
 ### Delivery and ownership
 
-The helper is intentionally mechanical; all judgment lives in the skills.
+The helper is intentionally mechanical; all judgment is left to the agent
+following the delivered instructions and skills.
 
 - `src/target/` is the literal advisor scaffold delivered into a project.
 - `src/skills/` contains the delivered skills.
@@ -330,13 +329,15 @@ links. Files no longer shipped inside a canonical advisor skill directory are
 pruned. See the [skill-host contract](docs/architecture/initialization.md#skill-hosts)
 for the exact rules.
 
-A whole skill that an earlier release delivered and this one no longer ships
-stays in place. A project initialized before
-[ADR-0043](docs/adr/0043-general-skills-come-from-matt-pocock.md) removes the
-superseded `advisor-grill-me`, `advisor-domain-modeling`, `advisor-handoff`,
-and `advisor-close-handoff` from both skill directories, renames `CONTEXT.md`
-to `GLOSSARY.md`, and removes an empty `docs/handoffs/` by hand. A project
-initialized before
+A whole `advisor-` skill that an earlier release delivered and this one no
+longer ships is removed from both skill directories; skills without the prefix
+are never touched. Re-running initialization therefore cleans up the skills
+dropped by [ADR-0043](docs/adr/0043-general-skills-come-from-matt-pocock.md)
+and [ADR-0044](docs/adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md).
+A project initialized before ADR-0043 still renames `CONTEXT.md` to
+`GLOSSARY.md` and removes an empty `docs/handoffs/` by hand. A project whose
+tracker holds `advisor:deferred` issues renames that label to `deferred` and
+updates its mentions in `docs/agents/`. A project initialized before
 [ADR-0042](docs/adr/0042-agents-md-is-the-only-instruction-file.md) also moves
 its own instructions from a seeded `CLAUDE.md` into `AGENTS.md` and deletes
 that file; otherwise Claude Code loads `advisor-agents.md` twice.

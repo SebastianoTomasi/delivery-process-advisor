@@ -4,6 +4,12 @@ status: accepted
 
 # Skills declare their own applicability
 
+The rule below that no delivered instruction file names the skills was reversed
+by [ADR-0044](0044-the-advisor-states-its-rules-for-matt-pococks-skills.md) for
+skills the advisor does not own, which the root now names where their behavior
+in a guided project differs. The advisor's own skills still declare their
+applicability, and the rest of this decision stands for them.
+
 No delivered instruction file names the skills. Each skill states in its own
 delivered description when it applies, and both hosts load those declarations
 before the agent acts, so repeating that routing in `advisor-agents.md` would

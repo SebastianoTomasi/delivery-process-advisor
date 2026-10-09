@@ -19,10 +19,10 @@ The versioned advisor content delivered into a target project: scaffolds, questi
 The advisor component that resolves destinations, writes delivered assets, and reports the result. It is distinct from the skills that exercise judgement.
 
 **Destination**  
-A path in a target project that the delivery helper takes one decision about. Every destination comes from the fixed payload mapping; a path the mapping does not name is never inspected.
+A path in a target project that the delivery helper takes one decision about. Every destination comes from the fixed payload mapping, which names the advisor's skill entries in both skill hosts by their `advisor-` prefix; a path the mapping does not name is never inspected.
 
 **Advisor-owned destination**  
-A destination whose content the advisor defines and brings to the invoked release at every delivery: the mirrored scaffolds and catalogs, the root file, and the delivered skill directories. A project’s local edits to one are not preserved.
+A destination whose content the advisor defines and brings to the invoked release at every delivery: the mirrored scaffolds and catalogs, the root file, and the `advisor-` skill entries in both skill hosts, which the release either delivers or removes. A project’s local edits to one are not preserved.
 
 **Project-owned destination**  
 A destination the advisor may create but whose content belongs to the project: the instruction file. Delivery ensures it and never replaces what it holds. Legacy deferred and handoff directories are preserved without being mapped.
@@ -94,7 +94,7 @@ A recognized but unresolved choice owned by one authority. An artifact cannot be
 _Avoid_: TODO, question, loose end
 
 **Grill-with-docs session**  
-A structured exchange, in rounds of numbered questions each with a recommended answer, that extracts missing decisions and writes answers, resolved terms, and qualifying records as they settle. A session changing an accepted rule includes its propagation.
+A structured exchange, in rounds of numbered questions each with a recommended answer, that extracts missing decisions and writes answers, resolved terms, and qualifying records as they settle. It is started by Matt Pocock's `grill-with-docs` or by a request to write, fill in, or accept a document, and follows the session procedure in `docs/advisor-docs.md`. A session changing an accepted rule includes its propagation.
 _Avoid_: interview, analysis session, review, grill session
 
 **Decision record**  
@@ -106,11 +106,11 @@ A temporary document that preserves the conversation context needed for a fresh 
 _Avoid_: deferred item, checkpoint
 
 **Deferred item**
-A project-owned issue marked `advisor:deferred` for a question, idea, or other future work that is not needed by the current work, clarified enough to say what should be revisited and to name a possible outcome or a meaningful revisit condition. It is distinct from an unresolved current input and from a Product non-goal; a non-goal creates no deferred item unless there is also something to reconsider later.
+A project-owned issue labelled `deferred` for a question, idea, or other future work that can wait beyond the next session, stating what to revisit, why it can wait, and when to revisit it. It is distinct from an unresolved current input and from a Product non-goal; a non-goal creates no deferred item unless there is also something to reconsider later.
 _Avoid_: handoff, backlog, deferred idea
 
 **Ticket**  
-A self-contained unit of implementation work produced through `to-tickets` from a plan, specification, conversation, or feature documentation for a system outside the advisor to build, naming the tickets that must complete before it. Once written it belongs to that system; it is distinct from an artifact, a deferred item, and a handoff.
+A self-contained unit of implementation work produced through `to-tickets` from a plan, specification, conversation, or feature documentation for a system outside the advisor to build, naming the tickets that must complete before it. Once written it belongs to that system; it is distinct from an artifact and a handoff, and one published in a deferred breakdown, labelled `deferred`, is also a deferred item.
 _Avoid_: deferred issue, task
 
 **Feature**  

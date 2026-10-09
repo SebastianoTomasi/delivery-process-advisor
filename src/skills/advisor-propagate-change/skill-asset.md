@@ -9,13 +9,13 @@ artifact depending on it are coherent again. A wording-only correction is not
 this procedure and can be applied directly after checking that it changes no
 meaning, dependency, or scope.
 
-Before starting or resuming, recover relevant deferred items through
-`advisor-defer`. Read `docs/advisor-docs.md` for the status, dependency, Review
-block, and provenance rules, and use the shared reading guidance in
-`advisor-agents.md` to find the affected artifacts; read those files when they
-are not already read. Use the separately installed `grilling` skill for the questions this procedure
-raises and `advisor-grill-with-docs` for writing and accepting the artifacts it
-changes. Invoke the separately installed `domain-modeling` skill for a qualifying ADR.
+Read `docs/advisor-docs.md` for the status, dependency, Review block, and
+provenance rules, and use the shared reading guidance in `advisor-agents.md` to
+find the affected artifacts; read those files when they are not already read.
+Use the separately installed `grilling` skill for the questions this procedure
+raises, the writing and acceptance steps of the grill-with-docs session
+procedure in `docs/advisor-docs.md` for the artifacts it changes, and the
+separately installed `domain-modeling` skill for a qualifying ADR.
 
 ## Propagating the change
 

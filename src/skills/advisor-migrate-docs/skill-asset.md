@@ -1,6 +1,6 @@
 ---
 name: advisor-migrate-docs
-description: Migrate user-selected documentation into an initialized delivery-process-advisor project. Preserve its normative or informative role, resolve necessary transfer decisions, and replace originals without redundant copies. Use when adopting, migrating, or restructuring existing documentation, including unmarked project documents; the migration request is itself adoption into the advisor structure. This skill invokes advisor-grill-with-docs for writing and acceptance, and advisor-propagate-change when an accepted rule changes.
+description: Migrate user-selected documentation into an initialized delivery-process-advisor project. Preserve its normative or informative role, resolve necessary transfer decisions, and replace originals without redundant copies. Use when adopting, migrating, or restructuring existing documentation, including unmarked project documents; the migration request is itself adoption into the advisor structure.
 disable-model-invocation: false
 ---
 
@@ -41,11 +41,11 @@ without archived copies or replacement stubs for superseded specifications.
    Use it to check loss and duplication across all inputs. Keep this in the
    session, not a permanent migration or coverage registry.
 
-For a new feature, use the Starting a feature procedure in
-`advisor-grill-with-docs`, applying the identity and placement rules in
-`docs/features/advisor-features.md` to the supplied capability information. Ask for missing information only when needed to place
-the content. Do not invent Product decisions or complete the foundation just
-to file later-phase material; record unresolved inputs in proposed work.
+For a new feature, apply the identity and placement rules in
+`docs/features/advisor-features.md` to the supplied capability information.
+Ask for missing information only when needed to place the content. Do not
+invent Product decisions or complete the foundation just to file later-phase
+material; record unresolved inputs in proposed work.
 
 ## Resolve only necessary decisions
 
@@ -76,9 +76,10 @@ writing documents as decisions settle.
 
 ## Write and verify
 
-Use the writing and acceptance procedures in `advisor-grill-with-docs` within
-this migration's scope, and `advisor-propagate-change` when the migration
-changes a rule the project has already accepted. Use
+Use the writing and acceptance steps of the grill-with-docs session procedure
+in `docs/advisor-docs.md` within this migration's scope, and
+`advisor-propagate-change` when the migration changes a rule the project has
+already accepted. Use
 `domain-modeling` for resolved terminology and qualifying ADRs; preserve
 existing ADR locations, numbering, and decision history. Keep existing reasons
 and alternatives without inventing rationale or manufacturing an ADR for each
@@ -111,7 +112,7 @@ Accept sound artifacts without another approval round for decisions already
 settled. This checks migration fidelity, coherence, and dependencies; it is
 not a general audit of the project's design. A completed migration may contain
 proposed artifacts and leave phases incomplete. Claim phase completion only
-after the separate catalog coverage checks in `advisor-grill-with-docs`.
+after that procedure's phase completion check.
 
 ## Replace originals and close
 

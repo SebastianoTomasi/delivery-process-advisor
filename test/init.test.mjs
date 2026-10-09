@@ -273,6 +273,48 @@ test('a delivered skill directory loses the files the invoked release dropped', 
     readFileSync(join(f.plugin, 'src/skills', skill, 'skill-asset.md')));
 });
 
+test('advisor skills the invoked release dropped leave both hosts; other skills stay', t => {
+  const f = fixture(t);
+  success(run(f));
+  // An earlier release delivered this skill; the invoked one does not.
+  const dropped = join(f.target, '.agents/skills/advisor-dropped');
+  mkdirSync(dropped);
+  writeFileSync(join(dropped, 'SKILL.md'), 'an instruction the host would still load');
+  const droppedLink = join(f.target, '.claude/skills/advisor-dropped');
+  symlinkSync(relative(dirname(droppedLink), dropped), droppedLink, 'dir');
+  // A link whose skill directory was already removed by hand.
+  const dangling = join(f.target, '.claude/skills/advisor-gone');
+  symlinkSync(relative(dirname(dangling), join(f.target, '.agents/skills/advisor-gone')),
+    dangling, 'dir');
+  // A project skill, even one naming the advisor, is the project's own.
+  const own = join(f.target, '.agents/skills/audit-advisor-navigation');
+  mkdirSync(own);
+  writeFileSync(join(own, 'SKILL.md'), 'a project skill');
+  const ownLink = join(f.target, '.claude/skills/audit-advisor-navigation');
+  symlinkSync(relative(dirname(ownLink), own), ownLink, 'dir');
+  const result = run(f);
+  success(result);
+  for (const path of [dropped, droppedLink, dangling]) {
+    assert.throws(() => lstatSync(path), { code: 'ENOENT' }, path);
+  }
+  for (const path of ['.agents/skills/advisor-dropped', '.claude/skills/advisor-dropped',
+    '.claude/skills/advisor-gone']) {
+    assert.match(result.stdout, new RegExp(`removed\\s+${path.replaceAll('.', '\\.')}\\n`));
+  }
+  assert.match(result.stdout, / 3 removed\n/);
+  assert.equal(readFileSync(join(ownLink, 'SKILL.md'), 'utf8'), 'a project skill');
+  assert.ok(lstatSync(ownLink).isSymbolicLink());
+});
+
+test('a payload skill without the advisor prefix stops delivery before writing it', t => {
+  const f = fixture(t);
+  const unprefixed = join(f.plugin, 'src/skills/unprefixed');
+  mkdirSync(unprefixed);
+  writeFileSync(join(unprefixed, 'skill-asset.md'), 'a skill a later release could not retire');
+  operationalFailure(run(f), unprefixed);
+  assert.equal(existsSync(join(f.target, '.agents/skills/unprefixed')), false);
+});
+
 test('project files beside the delivered scaffolding are never touched', t => {
   const f = fixture(t);
   success(run(f));

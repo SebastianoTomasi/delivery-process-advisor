@@ -3,20 +3,22 @@
 This project follows the delivery process advisor: a project-local process for
 turning an idea into software that is clear enough to build. Its normative
 documentation lives under `docs/`. Catalogs define the decisions to address,
-their dependencies, and the usual order. Skills use them to conduct the work
-and declare when they apply. This file provides shared reading guidance and
-navigation.
+their dependencies, and the usual order. This file provides shared reading
+guidance and navigation, and says how sessions, tickets, handoffs, and deferred
+work fit the process.
 
 ## Using project documentation
 
 The code is the source of truth for what is implemented. Existing behavior may
 be undocumented; that alone creates no requirement to change it or document it.
-For work specified in documentation but not yet implemented, read and follow
-the relevant accepted decisions. Use the reading guidance below to find them.
+For work specified in documentation but not yet implemented, the relevant
+accepted decisions are part of its spec: read and follow them when planning,
+building, or reviewing it. Use the reading guidance below to find them.
 
-When code and documentation contradict each other, surface the discrepancy and
-preserve the implementation while clarifying the intended change with the user.
-The discrepancy alone establishes neither a bug nor outdated documentation.
+When code contradicts the documentation, or a ticket or request contradicts an
+accepted decision, surface the discrepancy before acting on it, and preserve
+the implementation while clarifying the intended change with the user. The
+discrepancy alone establishes neither a bug nor outdated documentation.
 
 Accepted artifacts record settled decisions; they do not prove that those
 decisions are implemented. Proposals and artifacts needing review do not
@@ -43,8 +45,31 @@ status, dependency, and acceptance rules are in
   defines feature structure and routes each phase to its boundary and catalog.
 - `GLOSSARY.md` holds the project's vocabulary; `docs/adr/` holds decision
   records explaining important choices. Neither is an artifact or phase.
-- Deferred work is tracked as `advisor:deferred` issues in the project's
-  configured issue tracker. Legacy `docs/deferred/` files are an archive.
+
+## Sessions, tickets, and handoffs
+
+- **Grill-with-docs sessions**, started by `/grill-with-docs` or by a request to
+  write, fill in, or accept a document under `docs/`, record decisions in the
+  advisor's artifacts as they settle. Before the first question, read
+  `docs/advisor-docs.md` and follow its
+  [session procedure](docs/advisor-docs.md#grill-with-docs-sessions).
+- **Ticket breakdowns and implementation.** Before drafting tickets or building,
+  put to the user, each with a recommended answer, the decisions the work
+  depends on that neither an accepted artifact, its ticket, nor the
+  conversation settles.
+- **Handoffs** name the decisions settled in the conversation but not yet
+  written to their artifacts, suggesting `/grill-with-docs` to record them, and
+  leave work that can wait beyond the next session to `deferred` issues.
+- **Deferred work**, a question, idea, or concern that can wait beyond the next
+  session, is an open `deferred` issue in the tracker configured by
+  `docs/agents/issue-tracker.md` (if it is missing, ask the user to run
+  `/setup-matt-pocock-skills`), stating what to revisit, why it can wait, and
+  when to revisit it. Open one directly, or publish a deferred breakdown through
+  `to-tickets` with `deferred` in place of `ready-for-agent`. Before a
+  grill-with-docs session, a ticket breakdown, a propagation, a migration, or
+  next-work advice, read the open `deferred` issues relevant to it. Close an
+  issue with a link to its answer once that answer is written in its artifact.
+  Legacy `docs/deferred/` files are an archive.
 
 ## Reading guidance
 

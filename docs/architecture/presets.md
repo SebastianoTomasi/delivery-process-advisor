@@ -103,20 +103,22 @@ is a shipping unit rather than an import unit.
 
 ## Where the catalog lives
 
-The skill knows how to choose a preset. The helper knows which presets exist.
+The grill-with-docs session knows how to choose a preset. The helper knows
+which presets exist.
 
-The skill holds the judgement — when a preset is worth proposing, how to match
-one to a stated need, that none is proposed before the phase that would use
-it — and it holds no preset names at all. The helper answers what can be
-imported, with a description, an owning authority, a scope, and a release, and
-the agent asks it every time rather than remembering.
+The session holds the judgement — when a preset is worth proposing, how to
+match one to a stated need, that none is proposed before the phase that would
+use it — and its procedure holds no preset names at all. The helper answers
+what can be imported, with a description, an owning authority, a scope, and a
+release, and the agent asks it every time rather than remembering.
 
 The split is forced by
 [ADR-0003](../adr/0003-skills-are-payload-the-helper-is-a-plugin.md). The
-skill is payload and stays at its installed revision until changed; the helper
-is a plugin whose invoked release can differ. The project's files need not
-share one release. A catalog written into skill text would describe the
-presets known when that skill was shipped and could not see ones added since.
+session procedure is payload and stays at its installed revision until
+changed; the helper is a plugin whose invoked release can differ. The
+project's files need not share one release. A catalog written into that
+procedure would describe the presets known when it was shipped and could not
+see ones added since.
 A description shipped beside the
 preset it describes cannot drift from it.
 

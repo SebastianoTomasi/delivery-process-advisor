@@ -28,9 +28,9 @@ self-application contract. This is not a complete branching or test strategy.
   release checks confirm that initialization creates no deferred or handoff
   directory.
 - [The root file](../architecture/documentation-model.md#the-root-file) — the
-  root and scaffolds do not name skills, so reaching them depends on each host
-  surfacing their declarations. Root-level reading guidance and workflow-specific
-  preparation and reporting also have distinct owners.
+  root and scaffolds do not name the advisor's own skills, so reaching them
+  depends on each host surfacing their declarations. Root-level reading guidance
+  and workflow-specific preparation and reporting also have distinct owners.
 - [Code and documentation](../product/overview.md#rules) — ordinary changes must
   distinguish implemented behavior from documented intent and surface conflicts
   instead of assuming which is wrong.
@@ -81,17 +81,24 @@ and still report success. The `.agents/skills/` destination therefore cannot
 be treated as verified merely because delivery succeeded.
 
 Verify as well that each host actually surfaces the delivered skill
-declarations to the model before it acts. Instruction routing rests on that
-behavior since
-[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), and since
-[ADR-0035](../adr/0035-deferred-recovery-belongs-to-the-workflows.md) no
-delivered document names a skill at all: a host that reads the skill files only
-on request, or ignores their metadata, leaves the skills installed and
-unreachable while every path check still passes.
+declarations to the model before it acts. Routing to the advisor's own skills
+rests on that behavior since
+[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md): no delivered
+document names them, and since
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
+the root names only the separately installed skills whose behavior differs in
+a guided project. A host that reads the skill files only on request, or ignores
+their metadata, leaves the skills installed and unreachable while every path
+check still passes.
 Check it per host, from the host's own documentation and from an observed
 session, at each release. In the same observed session, confirm that Claude
 Code loads `AGENTS.md` and expands its `@advisor-agents.md` import, which
 [ADR-0042](../adr/0042-agents-md-is-the-only-instruction-file.md) relies on.
+
+Check that a release retires what it drops: initializing a target that holds
+an `advisor-` skill the release no longer ships removes it from both skill
+directories and reports it as `removed`, while a skill without the prefix is
+left in place.
 
 Check that each host can reach the delivered skill through a newly created
 relative directory symlink. Inspect the filesystem to verify that a `linked`

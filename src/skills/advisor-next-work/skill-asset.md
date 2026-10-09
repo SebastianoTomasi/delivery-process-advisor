@@ -13,11 +13,9 @@ After reporting, stop and let the user's chosen action route as a new request.
 
 ## Establish the current state
 
-Invoke `advisor-defer` first to recover relevant deferred items. For a general
-request, consider every open `advisor:deferred` issue; for scoped work, include
-applicable shared and unclassified issues as well as those already routed to
-the scope. Let that skill own recovery and classification. Advice does not
-change the issues.
+For a general request, consider every open `deferred` issue; for scoped work,
+those that apply to the scope or to shared work. Advice leaves the issues
+unchanged.
 
 Use the shared reading guidance in `advisor-agents.md` and the common rules in
 `docs/advisor-docs.md`. For a general request, list project authority and feature

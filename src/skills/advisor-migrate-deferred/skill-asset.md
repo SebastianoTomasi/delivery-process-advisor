@@ -13,24 +13,21 @@ files untouched. Do not run this skill merely because an old directory exists.
 ## Establish the target and inventory
 
 1. Read the target project's `advisor-agents.md` and its relevant project
-   instructions. Read `docs/agents/issue-tracker.md` and
-   `docs/agents/triage-labels.md` before using the tracker. If either is
-   missing, ask for the tracker setup and stop; do not guess a destination.
-   Follow the configured tracker operations, not a hard-coded GitHub workflow.
-   Check that the installed advisor's normal deferred-work procedure already
-   recovers open `advisor:deferred` issues from that tracker. If it still reads
-   only `docs/deferred/`, stop: transferring and removing sources would make
-   the work disappear from ordinary advisor sessions.
+   instructions. Read `docs/agents/issue-tracker.md` before using the tracker;
+   if it is missing, ask the user to run `/setup-matt-pocock-skills` and stop
+   rather than guess a destination. Follow the configured tracker operations, not a hard-coded
+   GitHub workflow. Check that the installed `advisor-agents.md` already keeps
+   deferred work as `deferred` issues in that tracker. If it still points to
+   `docs/deferred/`, stop: transferring and removing sources would make the
+   work disappear from ordinary advisor sessions.
 2. Inventory the selected records by title and opening fields. Read every
    selected open record in full, including progress, questions, resolutions,
    and links. Treat an unreadable record or an unknown state as blocked, not
    empty. Read linked material needed to understand whether it describes the
    same work; a link alone is not another migration input.
-3. Check the tracker's `advisor:deferred` routing label. If absent, add it as
-   an advisor-specific axis in the project's label configuration and provision
-   it in the tracker, preserving the configured category and triage labels.
-   Stop if the configuration and tracker cannot be made consistent. Do not
-   apply `ready-for-agent` merely because a record is open or ready to revisit.
+3. Check that the tracker has the `deferred` label and create it if absent,
+   preserving the configured category and triage labels. Do not apply
+   `ready-for-agent` merely because a record is open or ready to revisit.
 
 ## Map each record to an issue
 
@@ -39,13 +36,13 @@ identifiers, and the stable `Migrated from: docs/deferred/<filename>` marker.
 Read candidate bodies, labels, and comments before choosing:
 
 - **Same work:** enrich the existing issue with missing deferred context and
-  add `advisor:deferred`. Preserve its current title, other labels, state,
+  add `deferred`. Preserve its current title, other labels, state,
   comments, and useful content. If it is closed while the source is open,
   resolve the conflict with the user before changing its state.
 - **Related but distinct work:** create a new issue and link the related issue.
   A record mentioning an issue does not prove they are the same work. When a
   record mentions several issues, assess each rather than merging them.
-- **No existing issue:** create one open issue with `advisor:deferred`.
+- **No existing issue:** create one open issue with `deferred`.
 - **Ambiguous match or conflicting instructions:** ask one focused question;
   continue independent records while that one waits.
 
@@ -61,13 +58,9 @@ created or enriched issue so a retry finds it after the file is removed. Do
 not turn an undecided field into an invented answer or add implementation
 acceptance criteria to a decision issue.
 
-For a local Markdown tracker, use one file per advisor issue under
-`.scratch/advisor-deferred/issues/`, apart from `to-tickets`'s numbered feature
-ticket sets. Represent the routing label, open state, Scope, Destination, and
-Revisit when in the file; use the configured tracker convention for comments.
-Do not use a triage `Status` value to stand for open/closed or inferred
-readiness. If the configured local convention conflicts with this layout,
-surface the conflict before writing.
+For a local Markdown tracker, follow the convention in
+`docs/agents/issue-tracker.md`, recording the `deferred` label and the open
+state in each issue file.
 
 ## Preserve links and finish one record at a time
 

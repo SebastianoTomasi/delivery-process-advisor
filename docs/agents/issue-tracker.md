@@ -13,7 +13,7 @@ Use the `gh` CLI from this checkout for issue operations.
 - Apply or remove labels with `gh issue edit <number>`.
 - Close an issue with `gh issue close <number>`, recording its resolution.
 
-The `advisor:deferred` label selects deferred work for advisor recovery.
+The `deferred` label selects deferred work for advisor recovery.
 Open and closed are GitHub issue states. The advisor reads open issues with
 that label; it does not treat other issue types or implementation tickets as
 deferred work.

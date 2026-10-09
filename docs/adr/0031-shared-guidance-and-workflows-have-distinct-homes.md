@@ -4,6 +4,13 @@ status: accepted
 
 # Shared guidance and workflows have distinct homes
 
+The session procedure this decision gave to `advisor-grill-with-docs` was moved
+by [ADR-0044](0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
+into `docs/advisor-docs.md`, and the root now names the cases where separately
+installed skills behave differently in a guided project, including when
+deferred work is recovered; `advisor-defer` no longer exists. The rest of the
+division of homes remains current.
+
 Keep shared document interpretation, navigation, selective reading, and concise
 evidence reporting in `advisor-agents.md`. Common documentation rules belong in
 `docs/advisor-docs.md`, local boundaries in authority scaffolds, and decisions,

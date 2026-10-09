@@ -4,6 +4,13 @@ status: accepted
 
 # A skill is one role with an independent trigger and a complete outcome
 
+[ADR-0044](0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
+removed `advisor-grill-with-docs`: its session procedure, including feature
+declaration, now lives in the delivered `docs/advisor-docs.md` and
+`docs/features/advisor-features.md`, the artifacts owning those subjects, as
+this test directs for a procedure whose skill the advisor does not deliver.
+The test itself stands.
+
 A procedure becomes its own skill when the user can state its occasion without
 first describing another procedure, and when what it produces stands on its own.
 A procedure that has an occasion of its own but whose outcome depends entirely

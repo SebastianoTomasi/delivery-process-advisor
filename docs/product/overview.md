@@ -53,23 +53,24 @@ not a tool that imposes it on them.
     sense, walking up the prerequisites to the first one that can be resolved  
     immediately.
 4.  **Defers and recovers future work.** Deferred work is kept as
-    `advisor:deferred` issues in the configured tracker and considered when
-    recommending work or starting or resuming a session. A clear question,
-    idea, or other future concern can be recorded
-    directly; an unclear one is first sharpened through a short grill. Relevant
-    issues resurface before decisions that depend on them, including issues whose
-    destination still needs classification. Recovery distinguishes work ready
-    now, work still waiting, and work already answered or superseded. Items
-    retain an open/closed lifecycle and link to authoritative answers. A Product
-    non-goal creates no deferred item unless there is also something to
-    reconsider later.
+    `deferred` issues in the configured tracker and considered when
+    recommending work, starting or resuming a session, or breaking work into
+    tickets. A question, idea, or other future concern is recorded directly,
+    stating what to revisit, why it can wait, and when. Relevant
+    issues resurface before decisions that depend on them. Recovery
+    distinguishes work ready now, work still waiting, and work already answered
+    or superseded. Items retain an open/closed lifecycle and link to
+    authoritative answers. A Product non-goal creates no deferred item unless
+    there is also something to reconsider later.
 5.  **Transfers an active conversation.** On explicit request, Matt Pocock's
     separately installed `handoff` compacts the context needed to continue the
     current work into a temporary file outside the project, which the user
-    identifies to a fresh conversation. No project file cites it, and the
-    advisor does not discover, prioritize, or close handoffs.
-    [ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md) records why
-    handoffs left the repository.
+    identifies to a fresh conversation. In a guided project it also names the
+    decisions settled in the conversation but not yet written to their
+    artifacts, and leaves work that can wait to deferred issues. No project
+    file cites it, and the advisor does not discover, prioritize, or close
+    handoffs. [ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md)
+    records why handoffs left the repository.
 6.  **Propagates corrections.** When an artifact changes, it identifies those
     that rested on the changed decision and updates them. Wording-only edits
     can be applied directly; substantive changes run a focused session that
@@ -152,10 +153,14 @@ although an unresolved control can be a necessary input to a particular decision
 
 The system consists of **versioned scaffolds, question catalogs, templates,
 skills, and instruction files**, together with the helper that delivers them
-into a project. It works through the project's own repository. Its workflows
-also invoke general skills from Matt Pocock's set — `grilling`,
-`domain-modeling`, and `to-tickets` — installed separately rather than
-delivered.
+into a project. It works through the project's own repository. Documentation
+sessions, tickets, implementation, and handoffs run through Matt Pocock's
+`grill-with-docs`, `to-tickets`, `implement`, and `handoff`, and the advisor's
+own procedures use his `grilling` and `domain-modeling`. These are installed
+separately rather than delivered; the delivered instructions state the
+advisor's rules for them, as
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
+records.
 
 The division is between delivery and judgement:
 
@@ -164,12 +169,13 @@ The division is between delivery and judgement:
     destination and reporting what it wrote, what it replaced, and what it  
     left alone. This has to be  
     exactly right, and it is small enough to be verified directly.
--   **Skills decide everything else.** They read the project’s artifacts and
-    implementation evidence, assess and recommend next work, place each feature
-    in the process, conduct advisor-grill-with-docs sessions, and complete
+-   **The agent decides everything else**, following the delivered
+    instructions and skills. It reads the project’s artifacts and
+    implementation evidence, assesses and recommends next work, places each
+    feature in the process, conducts grill-with-docs sessions, and completes
     propagations. This needs reading and judgement.
 
-A skill reads the project's state from folders and artifact envelopes, then
+The agent reads the project's state from folders and artifact envelopes, then
 from relevant dependency links, recovery blocks, and decision passages. It
 checks catalog coverage semantically before claiming a phase is complete.
 There is deliberately no command that returns the phase, the first unaccepted
@@ -182,7 +188,8 @@ Initialization is the helper alone. It writes the scaffolding whole and
 nothing else, so there is no selection to make and no judgement to exercise;
 a later session may import a useful template under the name it agrees on or
 create an artifact directly. The helper is a plugin, reachable by name from
-any project; the skills are payload and travel with the project they guide.
+any project; the advisor's own skills are payload and travel with the project
+they guide.
 Sessions use the catalogs actually present in that project. Delivering the
 skills locally does not guarantee that a later initialization leaves every
 installed file compatible. The delivery contract is specified in
@@ -191,11 +198,13 @@ installed file compatible. The delivery contract is specified in
 ## Delivery compatibility
 
 Initialization brings everything it delivers to the invoked release, replacing
-what occupies one of its own destinations, and preserves what the project owns.
-It may still leave files from an older release beside them, wherever a later
-payload no longer delivers to that path, and it promises no compatibility with
-what it did not touch. It neither verifies release uniformity nor removes that
-remainder. The per-destination behavior and its limits are owned by
+what occupies one of its own destinations, removes from both skill hosts every
+`advisor-` skill the release no longer delivers, and preserves what the project
+owns. Elsewhere it may still leave files from an older release beside them,
+wherever a later payload no longer delivers to that path, and it promises no
+compatibility with what it did not touch. It neither verifies release
+uniformity nor removes that remainder. The per-destination behavior and its
+limits are owned by
 [Initialization](../architecture/initialization.md#deliberate-exclusions).
 
 A project that edits a delivered scaffold in place loses that edit at the next
@@ -214,7 +223,7 @@ remains required by [Delivery rules](../architecture/initialization.md#delivery-
 
 The system knows the **project files and configured issue tracker**.
 Documentation establishes settled intent; code and focused verification
-establish what is implemented. Open `advisor:deferred` issues preserve future
+establish what is implemented. Open `deferred` issues preserve future
 work, its context, and when to revisit it. A session records an agreed deferral
 in the tracker shared with `to-tickets`. Deferred issues inform the work;
 accepted answers remain in the owning normative artifacts. What is not known
@@ -254,8 +263,9 @@ contract is in
     documentation creates no obligation to change or document it. Accepted
     documentation guides the work it specifies that is not yet implemented;
     acceptance records settled decisions, not evidence of implementation.
-    When code and documentation explicitly contradict one another, surface the
-    discrepancy and preserve the implementation while clarifying the intended
+    When code and documentation explicitly contradict one another, or a ticket
+    or request contradicts an accepted decision, surface the discrepancy before
+    acting on it and preserve the implementation while clarifying the intended
     change with the user. The mismatch alone establishes neither a bug nor
     outdated documentation. Apply the consequences once the direction is
     settled. [ADR-0032](../adr/0032-code-establishes-implemented-behavior.md)
@@ -316,7 +326,7 @@ contract is in
     or unavoidable steps.
 -   **It is not a project status dashboard.** It produces advice, not reporting.
 -   **It does not synchronize every task.** It reads and writes only
-    `advisor:deferred` issues for future-work recovery; implementation tickets
+    `deferred` issues for future-work recovery; implementation tickets
     remain owned by the configured tracker and `to-tickets`. Mail and meeting
     integrations are outside the product.
 -   **It does not model customers, engagements, or deliveries.** The domain is  

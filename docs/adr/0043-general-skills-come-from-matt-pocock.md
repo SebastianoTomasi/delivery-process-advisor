@@ -4,6 +4,13 @@ status: accepted
 
 # General skills come from Matt Pocock's set
 
+Three of the skills kept below — `advisor-grill-with-docs`, `advisor-defer`,
+and `advisor-to-tickets` — were removed by
+[ADR-0044](0044-the-advisor-states-its-rules-for-matt-pococks-skills.md), which
+also made initialization remove the advisor skills a release no longer
+delivers: re-running it removes the four skills that the Existing projects
+consequence below leaves to a maintainer. The rest remains current.
+
 The advisor no longer delivers its own interview, domain-modeling, and handoff
 skills. `advisor-grill-me`, `advisor-domain-modeling`, `advisor-handoff`, and
 `advisor-close-handoff` are removed from the payload. The advisor's workflows

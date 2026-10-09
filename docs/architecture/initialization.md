@@ -144,11 +144,14 @@ an earlier release converges on the current representation instead of keeping
 its own forever. The helper still never writes through the existing entry to
 reach what it points at; it replaces the entry itself.
 
-The general skills from Matt Pocock's set — `grilling`, `domain-modeling`, and
-`to-tickets`, which the advisor's workflows invoke, and `handoff` for
-conversation transfers — are installed separately on the user's machine and
-have no destination in the mapping, as
-[ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md) records.
+The general skills from Matt Pocock's set — `grilling` and `domain-modeling`,
+which the advisor's procedures use, and `grill-with-docs`, `to-tickets`,
+`implement`, and `handoff`, whose rules in a guided project the root file
+states — are installed separately on the user's machine and have no
+destination in the mapping, as
+[ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md) and
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
+record.
 
 Host-path verification at each release belongs to
 [Development](../development/repository-workflow.md#release-verification).
@@ -199,10 +202,11 @@ nothing yet to import and nothing to test it against. Until it exists a session
 names the import as the user's next action rather than performing it — an
 interim state, not the contract.
 
-The skills are the other half, and they go the other way: they are payload,
-released with the catalogs they interrogate and delivered into the project.
-Sessions use the catalogs present there. Later delivery can leave skills and
-catalogs from different releases together, as described in
+The skills are the other half, and they go the other way: the advisor's skills
+are payload, released with the catalogs they work through and delivered into
+the project, and so is the grill-with-docs session procedure in
+`docs/advisor-docs.md`. Sessions use the catalogs present there. Later delivery
+can leave skills and catalogs from different releases together, as described in
 [Deliberate exclusions](#deliberate-exclusions). The rationale for keeping
 skills in the project is recorded in
 [ADR-0003](../adr/0003-skills-are-payload-the-helper-is-a-plugin.md).
@@ -240,7 +244,8 @@ that file itself, where the project had none — and a report.
 
 The report is one line per file or skill-directory destination, saying
 `written`, `replaced`, `appended`, `skipped`, or `linked`, plus one `removed`
-line for each file a delivered skill directory no longer contains, followed by
+line for each file a delivered skill directory no longer contains and for each
+advisor skill entry the invoked release no longer delivers, followed by
 outcome counts.
 `linked` means a relative directory symlink was created. `replaced` means the
 destination was occupied and now holds the invoked release; it is kept distinct
@@ -301,9 +306,9 @@ project's first term is resolved, a record when a decision earns one. A new
 project has taken no decisions and fixed no language, so neither file exists
 at initialization.
 
-Initialization creates no record directory. It delivers the deferral procedure
-inside `advisor-defer`, but no record or second protocol file. Deferred issues
-use the configured tracker under the
+Initialization creates no record directory. The rules for deferred work are
+delivered in the root file, with no record or protocol file of their own.
+Deferred issues use the configured tracker under the
 [documentation model](documentation-model.md#deferred-items), and conversation
 handoffs are written outside the project by Matt Pocock's `handoff`, as
 [ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md) records.
@@ -316,13 +321,17 @@ entry itself, without following links: a symbolic link or junction occupies
 its name even when its referent is missing. What occupancy then means depends
 on who owns the destination, and the mapping fixes that before the target is
 ever inspected: the mirrored assets, the root file, and the skill directories
-are the advisor's, while the instruction file is the project's. Ordinary files
-use the rules below; [Skill hosts](#skill-hosts) defines directory-link
-occupancy and failure behavior. The reasons for treating links as occupied
-are recorded in
+are the advisor's, while the instruction file is the project's. Every skill the
+advisor delivers is named with the `advisor-` prefix, so in either skill host
+an entry carrying the prefix is the advisor's and an entry without it is the
+project's. Ordinary files use the rules below; [Skill hosts](#skill-hosts)
+defines directory-link occupancy and failure behavior. The reasons for treating
+links as occupied are recorded in
 [ADR-0024](../adr/0024-initialization-never-writes-through-an-occupied-link.md),
-and the reasons for replacing rather than preserving what the advisor owns in
-[ADR-0029](../adr/0029-initialization-replaces-advisor-owned-destinations.md).
+the reasons for replacing rather than preserving what the advisor owns in
+[ADR-0029](../adr/0029-initialization-replaces-advisor-owned-destinations.md),
+and the reasons for removing the skills a release drops in
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md).
 
 1. The destination does not exist — write the asset.
 2. The destination is the advisor's and a file or a link occupies it — write
@@ -331,7 +340,12 @@ and the reasons for replacing rather than preserving what the advisor owns in
    is. Inside a delivered skill directory, a file the invoked release does not
    contain is removed as part of the same decision: the advisor owns that
    directory whole, and a file left there is not dead weight but an instruction
-   the host still loads.
+   the host still loads. For the same reason, an entry in `.agents/skills/` or
+   `.claude/skills/` named with the prefix that the invoked release does not
+   deliver is removed as an entry and recorded as removed: a link is unlinked
+   and never followed, and a directory is removed whole. An entry without the
+   prefix is never touched, and a host directory that is itself a link is not
+   swept.
 3. The destination is the advisor's and a directory occupies a path where a
    file belongs — end delivery with a concise operational diagnostic. The
    advisor removes no directory it does not own whole, and it cannot know what
@@ -405,9 +419,8 @@ was empty is never asked.
   release. After a delivery, every destination it maps holds that release,
   whether the destination was absent or occupied. This still does not imply
   that the target holds a single release: a file an earlier release delivered
-  outside a skill directory this one delivers, and that this one no longer
-  maps, stays where it is. The helper remains a plugin outside the delivered
-  payload.
+  outside the skill hosts, and that this one no longer maps, stays where it is.
+  The helper remains a plugin outside the delivered payload.
 - No document state the advisor reasons from is kept outside the project's
   files. A
   phase's coverage, decision readiness, dependencies, review recovery notes, and
@@ -485,20 +498,20 @@ contract: the helper decides nothing about a project's own documents, and the
 destinations it does decide about are never any of them. See [the adoption flow](../development/interaction-flows.md#h-adopting-a-project-that-already-has-documents).
 
 Material supplied only as background may still be used through `sources/` and
-ordinary advisor-grill-with-docs sessions. Neither initialization nor the mere
+ordinary grill-with-docs sessions. Neither initialization nor the mere
 presence of old documentation implies adoption or accepted advisor decisions.
 
-Clearing what a later payload version no longer delivers is not performed. A
-later delivery brings every destination it maps to the invoked release, so the
-root file, scaffolds, catalogs, and skills are that release and no other. What
-it cannot do is remove a file an earlier release delivered and this one no
-longer maps, unless it sits inside a skill directory this one delivers: `docs/`
-holds the project's own artifacts beside the advisor's, and separating them
-would need the installation inventory rejected below. A whole skill directory
-an earlier release delivered and this one no longer maps therefore stays in
-both hosts;
-[ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md) names the four
-a maintainer removes by hand. Initialization neither detects nor reports that
+Clearing what a later payload version no longer delivers is performed only in
+the skill hosts. A later delivery brings every destination it maps to the
+invoked release, so the root file, scaffolds, catalogs, and skills are that
+release and no other. In the skill hosts the `advisor-` prefix identifies a
+whole entry as the advisor's without an inventory, so a skill an earlier
+release delivered and this one no longer does is removed under
+[rule 2](#delivery-rules). What delivery
+cannot do is remove a file an earlier release delivered outside the skill
+hosts and this one no longer maps: `docs/` holds the project's own artifacts
+beside the advisor's, and separating them would need the installation
+inventory rejected below. Initialization neither detects nor reports that
 remainder. A successful report describes the delivery outcomes and the release
 of what it wrote or replaced, not the absence of anything else.
 
@@ -514,7 +527,10 @@ the project owns, takes precedence over removing what neither rule reaches.
 Detecting a mixed installation and clearing that remainder remain outside
 initialization. The reasons for upgrading occupied advisor-owned destinations
 are in
-[ADR-0029](../adr/0029-initialization-replaces-advisor-owned-destinations.md).
+[ADR-0029](../adr/0029-initialization-replaces-advisor-owned-destinations.md),
+whose partial convergence
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
+narrows for the skill hosts.
 
 Holding each feature phase's questions once in its authority's feature catalog
 gives all features the same current file to consult, rather than a separate

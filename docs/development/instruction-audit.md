@@ -22,8 +22,9 @@ skill.
 - [Instruction ownership](../architecture/documentation-model.md#the-root-file)
   — placement and duplication findings must respect each file's operational
   role and the deliberately repeated summaries needed for interpretation and
-  routing. Shared reading guidance belongs to the root; detailed workflow
-  reporting belongs to the skill conducting that work.
+  routing. Shared reading guidance, and the advisor's rules for the separately
+  installed skills a guided project uses, belong to the root; detailed workflow
+  reporting belongs to the skill or delivered procedure conducting that work.
 
 ## Objective
 
@@ -36,13 +37,16 @@ The examination follows instruction paths from the user prompt and the target's
 and supporting Markdown files, and from the skill declarations the host loads
 before the request into the skills themselves. Different user requests expose
 different branches. The starting examples are a request for a new feature,
-which routes to an `advisor-grill-with-docs` session, and a request to choose
-next work, which routes to the read-only `advisor-next-work` skill. Under
-[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), workflow
-applicability belongs to skill descriptions. Neither the root nor the scaffolds
-names a workflow or routes requests by workflow name; a declaration that fails
-to claim its own case is therefore a navigation defect that following the file
-path cannot reveal.
+which routes to a grill-with-docs session through the root's "Sessions,
+tickets, and handoffs" section, and a request to choose next work, which
+routes to the read-only `advisor-next-work` skill. Under
+[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), the
+applicability of the advisor's own skills belongs to their descriptions, and no
+delivered document names them; the root names only the separately installed
+skills whose behavior differs in a guided project, under
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md).
+A declaration that fails to claim its own case is therefore a navigation defect
+that following the file path cannot reveal.
 
 The full navigation trace is evidence required by this audit method. Ordinary
 advisor work follows the root's narrower obligation to cite supporting passages

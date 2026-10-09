@@ -1,5 +1,6 @@
 ---
-status: accepted
+status: superseded
+superseded_by: ADR-0044
 ---
 
 # Deferred recovery belongs to the workflows that need it

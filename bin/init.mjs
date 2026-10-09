@@ -38,6 +38,11 @@ const MANIFEST = join(PLUGIN_ROOT, '.claude-plugin', 'plugin.json');
 const SKILL_FILE_HOST = join('.agents', 'skills');
 const SKILL_LINK_HOST = join('.claude', 'skills');
 
+// Every skill the advisor delivers is named with this prefix, which is what
+// marks an entry in either host as the advisor's own. Delivery refuses a payload
+// skill without it, because a later release could not retire it.
+const SKILL_PREFIX = 'advisor-';
+
 // Assets held under neutral names because their destination is
 // instruction-bearing.
 const SKILL_ENTRY_ASSET = 'skill-asset.md';
@@ -139,10 +144,15 @@ function mapping() {
   // the link host. A skill's link entry follows its files, so the files are
   // there by the time the link is made.
   const skills = join(PAYLOAD, 'skills');
+  const releaseSkills = [];
   if (occupied(skills)) {
     for (const skill of readdirSync(skills, { withFileTypes: true })) {
       if (!skill.isDirectory()) continue;
       const source = join(skills, skill.name);
+      if (!skill.name.startsWith(SKILL_PREFIX)) {
+        fail(`the payload skill ${source} is not named with the ${SKILL_PREFIX} prefix`);
+      }
+      releaseSkills.push(skill.name);
       const delivered = [];
       for (const path of filesUnder(source)) {
         const name = path === SKILL_ENTRY_ASSET ? SKILL_ENTRY_DESTINATION : path;
@@ -166,6 +176,7 @@ function mapping() {
       });
     }
   }
+  entries.push({ hosts: [SKILL_FILE_HOST, SKILL_LINK_HOST], delivered: releaseSkills, mode: 'retire' });
 
   // The instruction file is ensured rather than written.
   entries.push({ ...INSTRUCTION_FILE, asset: join(PAYLOAD, INSTRUCTION_FILE.asset), mode: 'ensure' });
@@ -217,7 +228,8 @@ function removeEntry(path, existing) {
 
 // Rule 2 for a delivered skill directory, which the advisor owns whole: a file
 // the invoked release does not contain is not dead weight but an instruction
-// the host still loads. Nothing outside such a directory is ever swept.
+// the host still loads. Outside the advisor's own skill entries nothing is
+// ever removed.
 function prune(entry, target) {
   const root = join(target, entry.destination);
   const current = entryAt(root);
@@ -227,6 +239,26 @@ function prune(entry, target) {
     if (entry.keep.includes(path)) continue;
     rmSync(join(root, path), { force: true });
     removed.push(join(entry.destination, path));
+  }
+  return removed;
+}
+
+// Rule 2 for a skill the invoked release no longer delivers: an advisor-owned
+// entry left in either host is an instruction the host still loads, so it is
+// removed as an entry, never followed. An entry without the prefix is the
+// project's own and is never touched, nor is a host that is itself a link.
+function retire(entry, target) {
+  const removed = [];
+  for (const host of entry.hosts) {
+    const root = join(target, host);
+    const current = entryAt(root);
+    if (current === null || !current.isDirectory()) continue;
+    for (const name of readdirSync(root)) {
+      if (!name.startsWith(SKILL_PREFIX) || entry.delivered.includes(name)) continue;
+      const path = join(root, name);
+      removeEntry(path, entryAt(path));
+      removed.push(join(host, name));
+    }
   }
   return removed;
 }
@@ -284,6 +316,7 @@ function ensure(entry, target) {
 }
 
 const DELIVER = { write, ensure, link };
+const REMOVE = { prune, retire };
 
 function main() {
   const options = parseArguments(process.argv.slice(2));
@@ -314,8 +347,8 @@ function main() {
   // safe because a rerun writes the advisor's own destinations again from the
   // invoked release and still never touches what the project owns.
   for (const entry of mapping()) {
-    if (entry.mode === 'prune') {
-      for (const stale of prune(entry, target)) {
+    if (entry.mode in REMOVE) {
+      for (const stale of REMOVE[entry.mode](entry, target)) {
         counts.removed += 1;
         process.stdout.write(`${'removed'.padEnd(8)} ${stale.split(sep).join('/')}\n`);
       }

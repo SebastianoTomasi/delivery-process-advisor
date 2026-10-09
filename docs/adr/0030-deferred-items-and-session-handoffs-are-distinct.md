@@ -10,8 +10,12 @@ The handoff no-lifecycle and manual-removal parts below were changed by
 [ADR-0041](0041-handoffs-close-by-removal-after-use.md), and the handoff
 location, skill, and initialization parts were superseded by
 [ADR-0043](0043-general-skills-come-from-matt-pocock.md): handoffs are now
-written outside the project by Matt Pocock's `handoff`. The separation of
-durable future work from temporary handoffs remains current.
+written outside the project by Matt Pocock's `handoff`. The `advisor-defer`
+skill named below was removed by
+[ADR-0044](0044-the-advisor-states-its-rules-for-matt-pococks-skills.md), and
+the root file now states the rules for deferred work and what a handoff leaves
+to it. The separation of durable future work from temporary handoffs remains
+current.
 
 Keep durable future work as deferred items under `docs/deferred/`, owned by an
 implicitly invocable `advisor-defer` skill, and keep explicitly requested

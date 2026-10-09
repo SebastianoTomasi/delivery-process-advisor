@@ -164,67 +164,48 @@ sources, decision records, and handoffs. It carries a question, idea, or other
 future work, not an accepted answer, and counts toward no phase. Its state is
 `open` or `closed`, separate from the artifact lifecycle.
 [ADR-0030](../adr/0030-deferred-items-and-session-handoffs-are-distinct.md)
-records why durable future work and conversation transfer use different names
-and skills. [ADR-0040](../adr/0040-deferred-work-uses-the-configured-issue-tracker.md)
-records the move to the shared issue tracker.
+records why durable future work and conversation transfer are kept apart.
+[ADR-0040](../adr/0040-deferred-work-uses-the-configured-issue-tracker.md)
+records the move to the shared issue tracker, and
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
+the `deferred` label and the rules the root file states for it.
 
-Each deferred item is an issue in the tracker configured by
-`docs/agents/issue-tracker.md` and `docs/agents/triage-labels.md`, shared
-with the separately installed `to-tickets` skill. The additional
-`advisor:deferred` label identifies the issues recovered by the advisor;
-type and triage labels remain independent. Missing configuration stops
-capture and recovery and prompts tracker setup. An unreachable configured
-tracker stops a session requiring recovery. For a local tracker, one issue
-occupies one stable file under `.scratch/advisor-deferred/issues/`, separate
-from `to-tickets` feature ticket sets.
+Each deferred item is an issue labelled `deferred` in the tracker
+configured by `docs/agents/issue-tracker.md`, the tracker the separately
+installed `to-tickets` skill also publishes to. The agent opens one directly,
+or publishes a whole deferred ticket breakdown through `to-tickets` with
+`deferred` in place of `ready-for-agent`. Missing configuration prompts tracker
+setup. A local tracker follows the convention its configuration describes.
 
-The issue records scope (`project`, `feature:<slug>`, or `undecided`),
-destination (one authority name or `undecided`), and the condition for
-revisiting it. Its body states what should be revisited, why it can wait,
-relevant context and links, and any established facts or remaining questions
-needed to resume. Unknown routing or conditions are explicit, not guessed. A
-deferral does not create a feature folder or give a proposed feature an accepted
-identity.
+The issue states what should be revisited, why it can wait, and when to
+revisit it; no routing field is required. A deferral does not create a feature
+folder or give a proposed feature an accepted identity. A Product non-goal
+creates no deferred item automatically; an item about reconsidering it links
+to the Product rule instead of duplicating it.
 
-An input that already identifies what should be revisited and gives either a
-possible outcome or a meaningful revisit condition can be recorded directly.
-When it does not, `advisor-defer` uses the separately installed `grilling` skill
-only until that minimum is clear. It does not preserve an unintelligible idea
-merely to avoid asking. A Product non-goal creates no deferred item
-automatically; an item about reconsidering it links to the Product rule instead
-of duplicating it.
+Before a grill-with-docs session, a ticket breakdown, a propagation, a
+migration, or next-work advice, the agent reads the open `deferred` issues
+relevant to it; [next-work advice](#next-work-advice) says which issues a
+general or scoped request considers. Issues without the label are outside this
+recovery.
 
-Before recommending work or starting or resuming a session, the agent queries
-open `advisor:deferred` issues and reads their routing fields. It reads
-relevant issues in full, including shared project work and undecided routing
-that may affect the work. Missing routing fields prompt classification rather
-than exclusion. On a general next-work request it considers all open
-`advisor:deferred` issues. It follows related subjects and references because
-destinations can be outdated. Ordinary issues and implementation tickets are
-outside this recovery query.
+Whether a relevant item is ready, still waiting, or already answered is judged
+from current artifacts and accepted inputs and is not saved as another set of
+status labels. A current necessary input stays an open decision in its owning
+artifact; calling it a deferred item does not make that artifact acceptable.
 
-The agent compares those items with current artifacts and accepted inputs,
-reports what is ready, still waiting, or apparently answered or superseded, and
-addresses relevant deferred items before decisions that depend on them. These
-judgements are not saved as another set of status labels. A current necessary
-input stays an open decision in its owning artifact; calling it a deferred item
-does not make that artifact acceptable.
-
-When an item is answered, the session writes and accepts its authoritative
-answer first, then adds the resolution link and closes the issue.
-Already-answered items require checking that the linked answer still applies. A
-deliberately dropped issue closes with the user's agreed reason; any change to
-accepted rules still follows normal propagation. Partial progress stays in the
-open issue, and closed issues remain consultable in the tracker. Closure alone
+An answered issue closes with a link to its answer once that answer is written
+in its owning artifact; any change to accepted rules still follows normal
+propagation. Closed issues remain consultable in the tracker. Closure alone
 never proves decision readiness.
 
-The operational format and capture, classification, recovery, and closure
-procedure have one home in the delivered `advisor-defer` skill.
-`advisor-next-work` and session workflows invoke it before the action requiring
-recovery. Legacy `docs/deferred/` records are an archive, even when marked
-`open`; they are not recovered or imported automatically. The explicitly
-invoked `advisor-migrate-deferred` skill can transfer selected open records
-after checking for duplicates, preserving context, and repairing references.
+The capture, recovery, and closure rules are delivered in one place, the
+[root file](#the-root-file)'s section on sessions, tickets, and handoffs, which
+every session reads.
+Legacy `docs/deferred/` records are an archive, even when marked `open`; they
+are not recovered or imported automatically. The explicitly invoked
+`advisor-migrate-deferred` skill can transfer selected open records after
+checking for duplicates, preserving context, and repairing references.
 
 ## Session handoffs
 
@@ -232,9 +213,12 @@ A handoff compacts the current conversation for a fresh session continuing the
 same work. It is not a project record: the user invokes Matt Pocock's
 separately installed `handoff`, which writes a temporary file to the operating
 system's temporary directory, outside the project. No project file can cite
-it, the advisor's payload carries no handoff procedure, and initialization
-creates no handoff directory. A `docs/handoffs/` left by an earlier release is
-project content that initialization leaves untouched.
+it, and initialization creates no handoff directory. The advisor's payload
+carries no handoff procedure; the root file states only what a handoff in a
+guided project names and what it leaves to deferred issues, as
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
+records. A `docs/handoffs/` left by an earlier release is project content that
+initialization leaves untouched.
 [ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md) records the
 move out of the repository; the separation from deferred work in
 [ADR-0030](../adr/0030-deferred-items-and-session-handoffs-are-distinct.md)
@@ -282,9 +266,9 @@ Proposed dependants remain proposed and record their unresolved changed inputs.
 The root agent instructions start with envelopes and markers, then read relevant
 dependency and review sections and decision passages. Marker lines expose
 artifact status; they cannot prove phase coverage or decision readiness.
-The exact delivered format lives in `docs/advisor-docs.md`, the writing and
-acceptance procedure in `advisor-grill-with-docs`, and the change-propagation
-procedure in `advisor-propagate-change`.
+The exact delivered format and the writing and acceptance procedure of
+grill-with-docs sessions live in `docs/advisor-docs.md`, and the
+change-propagation procedure in `advisor-propagate-change`.
 
 The glossary and ADRs keep the domain-modeling skill's format. They are read for
 language, rationale, provenance, and recovery, never counted as phases or
@@ -468,9 +452,10 @@ it. `docs/advisor-docs.md` carries the convention and is where a reader learns
 the position is available at all.
 
 Shared reading guidance in the root file locates relevant sources and guides
-selection by filename and opening lines. The skill owns when to perform that
-reading; session preparation completes the relevant reads before its first
-question. The source's informative role and placement remain documentation rules.
+selection by filename and opening lines. The procedure that needs the reading
+owns when to perform it; a grill-with-docs session completes the relevant reads
+before its first question. The source's informative role and placement remain
+documentation rules.
 
 A session judges what to open from each file's name and its opening lines,
 whatever those hold — a title, a description, a summary — and reads whole only
@@ -487,13 +472,22 @@ without it.
 files rather than replacing them.
 
 `advisor-agents.md` is the entry point for shared document interpretation,
-navigation, and selective reading. Its introduction explains the relationship
-between the advisor files, catalogs, and skills. Its sections are:
+navigation, and selective reading, and for the advisor's rules on the work
+separately installed skills perform. Its introduction explains the relationship
+between the advisor files and catalogs and what the file itself covers. Its
+sections are:
 
-- **Using project documentation:** the brief authority summary and the
-  [Product relationship between code and documentation](../product/overview.md#rules).
+- **Using project documentation:** the brief authority summary; the
+  [Product relationship between code and documentation](../product/overview.md#rules),
+  which also covers a ticket or request contradicting an accepted decision; and
+  that the accepted decisions are part of the spec of the work they specify
+  when planning, building, or reviewing it.
 - **Where things are:** the map to common rules, authority boundaries, catalogs,
-  feature artifacts, vocabulary, decision records, and deferred work.
+  feature artifacts, vocabulary, and decision records.
+- **Sessions, tickets, and handoffs:** the advisor's rules for grill-with-docs
+  sessions, ticket breakdowns and implementation, handoffs, and deferred work,
+  the cases where a
+  separately installed skill behaves differently in a guided project.
 - **Reading guidance:** selecting relevant material, following decision
   dependencies, finding sources, and citing supporting evidence.
 
@@ -514,71 +508,88 @@ delegation, and states that advice adds no permission step or deviation record.
 Full definitions remain in
 `docs/advisor-docs.md`. This lets direct reads start informed without forcing a
 read of the whole common contract or copying its detailed acceptance rules.
+Stating that accepted decisions are part of a change's spec is how separately
+installed skills that plan, build, or review the change apply them without a
+note of their own, as
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
+records.
 
 Root-level reporting cites documents and passages supporting conclusions and
 discloses unread material that could affect them. It does not require a full
-reading inventory or a report on coverage that the task did not assess. Skills
-own detailed reports such as question-to-answer mappings and phase coverage.
+reading inventory or a report on coverage that the task did not assess.
+Detailed reports such as question-to-answer mappings and phase coverage belong
+to the procedures that assess them: the advisor's skills and the grill-with-docs
+session procedure in `docs/advisor-docs.md`.
 
 The delivered files remain instructions for agents. Agents may explain the
 project's conventions from those local files. Broader advisor design and
 rationale belong in the advisor's repository, which the root points to rather
 than shipping a second account into every target.
 
-Skill descriptions declare when they apply, surfaced by the host under
-[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md). The root does
-not repeat them and names no skill at all. Every workflow that must consider
-deferred work invokes `advisor-defer` from its own procedure, as recorded in
-[ADR-0035](../adr/0035-deferred-recovery-belongs-to-the-workflows.md); advice
-given without entering such a workflow carries no documented obligation to
-recover them. The project's own instruction file gains a reference to the
-root for each host; Codex is told to read and follow it, while Claude Code
-uses its supported import syntax.
+The advisor's own skills declare when they apply in their descriptions,
+surfaced by the host under
+[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md); the root does
+not repeat them and names none of them. A skill the advisor does not deliver
+cannot carry the advisor's rules, so the root names it where its behavior in a
+guided project differs and states the rule there, including when deferred work
+is recovered, as recorded in
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md).
+The project's own instruction file gains a reference to the root for each host;
+Codex is told to read and follow it, while Claude Code uses its supported
+import syntax.
 
 Every instruction has a home reached before the action needing it. The division
 recorded in [ADR-0031](../adr/0031-shared-guidance-and-workflows-have-distinct-homes.md),
-revised for deferred recovery by
-[ADR-0035](../adr/0035-deferred-recovery-belongs-to-the-workflows.md), is:
+revised by
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
+for the work separately installed skills perform, is:
 
 - `advisor-agents.md` owns shared interpretation, navigation, and selective
-  reading. It names no skill and carries no workflow trigger.
+  reading, and the advisor's rules for grill-with-docs sessions, ticket
+  breakdowns and implementation, handoffs, and deferred work, including when
+  deferred work is
+  recovered. It names a separately installed skill where its behavior in a
+  guided project differs, and none of the advisor's own skills.
 - `docs/advisor-docs.md` owns the common documentation contract: authority
   routing, placement, source authority, artifact envelopes and statuses,
   dependencies, provenance, acceptance conditions, and decision readiness.
-  Its authority table summarizes enough to select a local boundary.
+  Its authority table summarizes enough to select a local boundary. It also
+  owns the grill-with-docs session procedure: preparation, including the
+  relevant source reads, before the first question; writing; acceptance; and
+  the check and report before a phase is claimed complete.
 - Authority scaffolds own their precise inclusion, exclusion, and scope rules.
 - Catalogs own subject-specific decisions, dependencies, and recommended order.
-  The next-work skill uses them to assess candidate decisions; session skills
-  use them to choose the next useful question within selected work. Catalog
+  The next-work skill uses them to assess candidate decisions; a grill-with-docs
+  session uses them to choose what to ask next within selected work. Catalog
   order is neither a global priority rule nor a session procedure.
 - `docs/features/advisor-features.md` owns feature identity, folder structure,
-  phase routes, and absence and completion conditions. The session workflow
-  performs feature creation and the checks that establish those conditions.
+  phase routes, and absence and completion conditions, with the step that
+  writes `absent.md`. The session procedure applies them when it declares a
+  feature or checks a phase.
 - `advisor-next-work` owns read-only assessment of the current position and
   implemented state, selection of one recommended action and useful alternatives,
   and the evidence and uncertainty reported with that advice.
-- `advisor-grill-with-docs` owns session preparation, feature creation, writing,
-  acceptance, phase checks, and their detailed reports. It uses the shared
-  reading guidance and completes relevant source reads before its first question.
 - `advisor-propagate-change` owns changes to accepted rules and restores
-  coherence across every affected dependant. It invokes the writing workflow
-  for the artifacts it changes.
-- `advisor-migrate-docs` owns full reads and transfer of selected inputs, invoking
-  the writing and propagation workflows for the decisions it needs.
-- `advisor-defer` owns deferred-item clarification, capture, classification,
-  recovery, and closure. `advisor-next-work`, `advisor-grill-with-docs`, and
-  `advisor-propagate-change` invoke its recovery from their own procedures, and
-  `advisor-migrate-docs` reaches it through the workflows it invokes.
+  coherence across every affected dependant. It applies the session
+  procedure's writing and acceptance steps to the artifacts it changes.
+- `advisor-migrate-docs` owns full reads and transfer of selected inputs,
+  applying the same writing and acceptance steps and invoking
+  `advisor-propagate-change` for the decisions it needs.
 - Separately installed skills from Matt Pocock's set own the general
-  procedures the workflows invoke: `grilling` the rounds of questions,
-  `domain-modeling` the glossary and decision records, and `to-tickets` ticket
-  slicing. Advisor-specific rules stay in the advisor's own skills and
-  documents rather than in a copy of a general skill, as recorded in
-  [ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md).
+  procedures: `grilling` the rounds of questions, `domain-modeling` the
+  glossary and decision records, `to-tickets` ticket slicing, `implement`
+  implementation, and `handoff` conversation transfer, while `grill-with-docs`
+  starts the sessions whose procedure `docs/advisor-docs.md` owns.
+  Advisor-specific rules stay in the advisor's own skills and delivered
+  documents rather than in a copy of a general skill or a wrapper around one,
+  as recorded in [ADR-0043](../adr/0043-general-skills-come-from-matt-pocock.md)
+  and [ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md).
 
-Documentation rules state what must hold. Skills define how to carry out and
-check the work. Brief summaries support interpretation and routing, while a
-repeatable procedure has one home in its owning skill.
+Documentation rules state what must hold. The advisor's skills and the
+grill-with-docs session procedure define how to carry out and check the work.
+Brief summaries support interpretation and routing, while a repeatable
+procedure has one home: the advisor skill that owns it, or the delivered
+document that states it for work a separately installed skill performs.
 
 The advisor repository's Product, Architecture, and ADR documents explain and
 test these rules but do not instruct an agent in a target. A behavior described
@@ -593,11 +604,12 @@ concrete task. The assessment is advice only: it changes no project file, starts
 no interview, and performs none of the work it recommends. The user's choice is
 a new request routed to the applicable workflow.
 
-Before assessing candidates, it invokes `advisor-defer` to recover relevant
-future work. An unscoped request inventories all authority and feature artifact
-envelopes before selecting bodies. A scoped request reads that scope, shared
-prerequisites, evidence affecting readiness, and relevant or unclassified
-deferred issues. Both routes use the root's selective reading guidance and the
+Before assessing candidates, it reads the open `deferred` issues: all of them
+for an unscoped request, and for a scoped request those that apply to the scope
+or to shared work. Advice leaves them unchanged. An unscoped request inventories
+all authority and feature artifact envelopes before selecting bodies. A scoped
+request reads that scope, shared prerequisites, and evidence affecting
+readiness. Both routes use the root's selective reading guidance and the
 common documentation rules; neither infers coverage or readiness from folders
 or markers.
 
@@ -810,7 +822,7 @@ name
 is cited so that a person can follow the answer back to what was asked, and
 nothing requires it to appear where a program could find it. The check is
 therefore judgement and can be wrong without saying so; what keeps the mistake
-visible is that a skill reporting completeness names each question, the
+visible is that a session reporting completeness names each question, the
 artifact, and the passage it takes to address it. That mapping is reported for
 review and not persisted. The rationale is recorded in
 [ADR-0002](../adr/0002-completeness-is-a-reading.md).
@@ -831,9 +843,10 @@ A deferred item records later work, never substitutes for a necessary current
 input.
 
 Changing an enumeration is a versioned product change. The catalog, its
-boundary scaffold, and the skill that conducts sessions against it advance in
-the same published payload release. This describes release authoring, not the
-versions installed in an existing target: later initialization can leave mixed
+boundary scaffold, and the session procedure in `docs/advisor-docs.md` that
+works through it advance in the same published payload release. This describes
+release authoring, not the versions installed in an existing target: later
+initialization can leave mixed
 releases, under the
 [delivery compatibility limits](initialization.md#deliberate-exclusions).
 

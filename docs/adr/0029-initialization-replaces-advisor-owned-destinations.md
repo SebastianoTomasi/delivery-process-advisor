@@ -4,6 +4,11 @@ status: accepted
 
 # Initialization replaces advisor-owned destinations
 
+The partial convergence described under Consequences was narrowed by
+[ADR-0044](0044-the-advisor-states-its-rules-for-matt-pococks-skills.md): an
+`advisor-`-prefixed skill entry that the invoked release no longer delivers is
+now removed from both skill hosts. The rest of this decision stands.
+
 Initialization brings every advisor-owned destination to the invoked release
 instead of preserving what occupies it: the mirrored scaffolds and catalogs,
 the root file, and the skill directories receive the release's bytes, and a

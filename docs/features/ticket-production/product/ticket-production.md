@@ -7,8 +7,8 @@
 This artifact governs what the Ticket production feature promises: using the
 external `to-tickets` skill to turn a plan, specification, conversation, or
 feature documentation into implementation tickets. It leaves tracker and label
-contracts to Architecture, how the user requests the work to Frontend, and
-composition with the external skill to Implementation.
+contracts, and how the advisor's rules reach the external skill, to
+Architecture, and how the user requests the work to Frontend.
 
 ## Dependencies
 
@@ -26,20 +26,23 @@ composition with the external skill to Implementation.
   A change there requires reviewing both answers.
 - [Non-goals](../../../product/overview.md#non-goals) — implementation tickets
   remain owned by the configured tracker and `to-tickets`; the advisor reads
-  and writes only `advisor:deferred` issues for future-work recovery. The same
+  and writes only `deferred` issues for future-work recovery. The same
   passage permits explicit delegation of choices left open by an input.
 - [Deferred items](../../../architecture/documentation-model.md#deferred-items)
-  — the advisor and `to-tickets` use one configured tracker, and the advisor
-  supplies the relevant documentation and settled constraints.
+  — deferred work and `to-tickets` use one configured tracker, and recovery
+  reads only the issues labelled `deferred`.
 
 ## Purpose
 
 Once this feature exists, a user can obtain from a plan, specification,
 conversation, or feature documentation a set of tickets that an implementing
-system can build without the advisor. The advisor supplies the relevant
-project documents and constraints; `to-tickets` breaks the work into
-tracer-bullet vertical slices, asks the user to review the breakdown, and
-publishes the approved tickets to the configured tracker.
+system can build without the advisor. In a guided project the relevant
+accepted decisions and constraints are part of the specification `to-tickets`
+works from; it breaks the work into tracer-bullet vertical slices, asks the
+user to review the breakdown, and publishes the approved tickets to the
+configured tracker. How the advisor's rules reach `to-tickets` without a skill
+of its own is recorded in
+[ADR-0044](../../../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md).
 
 The motivating consumer is sandcastle, the implementing system Antonio is
 building. The observed local and hosted forms of Matt Pocock's skill are
@@ -87,7 +90,7 @@ documentation process.
 **Written tickets belong to the implementing system.** Their status, claims,
 and comments are that system's record of delivery, consistent with delivery
 status living in the task system rather than in the documentation tree. The
-advisor's deferred-work recovery selects only `advisor:deferred` issues; it
+advisor's deferred-work recovery selects only `deferred` issues; it
 does not infer feature progress from implementation-ticket status.
 
 ## Participants
@@ -127,4 +130,5 @@ Data, beyond those the accepted Product description already declares.
   procedure alongside `to-tickets`.
 
 If tracker configuration or the external `to-tickets` skill is unavailable,
-the advisor names the missing prerequisite and stops ticket production.
+ticket production stops at that missing prerequisite: `to-tickets` asks for
+the tracker setup, and the advisor keeps no ticket procedure to fall back on.

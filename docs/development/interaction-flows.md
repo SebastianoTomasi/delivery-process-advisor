@@ -25,9 +25,12 @@ below remain proposals and do not change those current rules.
   [failure behavior](../architecture/initialization.md#failure-behavior) —
   initialization and adoption scenarios rely on the helper's file guarantees.
 - [The root file](../architecture/documentation-model.md#the-root-file) — the
-  root supplies shared interpretation, navigation, and reading guidance; the
-  skill is reached from its own declaration and owns workflow-specific steps
-  and reports. Flow E distinguishes those responsibilities.
+  root supplies shared interpretation, navigation, and reading guidance, and
+  the advisor's rules for grill-with-docs sessions, ticket breakdowns and
+  implementation,
+  handoffs, and deferred work; an advisor skill is reached from its own
+  declaration and owns its workflow-specific steps and reports. Flows D and E
+  distinguish those responsibilities.
 - [Code and documentation](../product/overview.md#rules) — ordinary code work
   distinguishes implemented behavior from documented intent, as in flow Y.
 - [Payload content](../architecture/initialization.md#the-payload) — flow M
@@ -139,8 +142,9 @@ links. Scenario U covers interruption before that result is reached.
 - Before writing, it follows the feature scaffold to the Product authority
   boundary and the separate Product feature catalog. It does not load the
   Product project catalog.
-- The skill owns the starting procedure; the feature scaffold supplies identity,
-  placement, and phase rules. The root does not repeat the procedure or its trigger.
+- The session procedure in `docs/advisor-docs.md` owns the starting step; the
+  feature scaffold supplies identity, placement, and phase rules. The root
+  names the session's trigger and links that procedure without repeating it.
 - Product is the usual first session; later work becomes a deferred item when it
   cannot yet be settled. An independently ready decision can be proposed with
   its accepted basis, without pretending the whole preceding phase is complete.
@@ -166,20 +170,21 @@ links. Scenario U covers interruption before that result is reached.
    questions, dependencies, and recommended decision order;
 7. accepted prerequisites, related artifacts, and sources.
 
-The relevant skill is not a hop on that path. Its declaration reaches the agent
-from the host before the request, under
-[ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), and no file
-on the path names it. Each hop above is disclosed by the previous file. The
-routing page repeats only
+No skill is a hop on that path. The root treats the request as a
+grill-with-docs session and links its procedure in `docs/advisor-docs.md`,
+read at step 3, under
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md).
+Each hop above is disclosed by the previous file. The routing page repeats only
 enough ownership detail to choose an authority; the local scaffold supplies the
 precise boundary and resolves close cases; its catalog links expose only the
 selected scope.
 
-The root provides shared reading guidance, while the selected workflow specifies
-the preparation and checks required for this action. It completes the relevant
-source reads before the first question and uses the catalog with settled answers
-to choose the next useful question. Its detailed coverage report is not a general
-requirement to list every file read during any task.
+The root provides shared reading guidance, while the session procedure specifies
+the preparation and checks required for this action. The agent completes the
+relevant source reads before the first question and uses the catalog with
+settled answers to choose the next useful question. The procedure's detailed
+coverage report is not a general requirement to list every file read during any
+task.
 
 When an artifact is already known and the action only needs to read it, the agent
 may open it directly using the root's authority summary. Placement and session
@@ -197,28 +202,25 @@ of the chain inside an existing guided project remains part of the proposal.
 
 ## F. A postponed decision comes back
 
-**Given.** The configured tracker contains open `advisor:deferred` issues for
-a feature, shared project work, and a question whose destination is undecided.
-One issue holds partial progress from an earlier session.
+**Given.** The configured tracker contains open `deferred` issues for a
+feature, shared project work, and a question that does not say which authority
+owns its answer.
 
 **When.** The user asks what to do next, or starts or resumes relevant work.
 
 **Expect.**
 
-- The agent queries open `advisor:deferred` issues and reads relevant issues in
-  full, including applicable shared work and undecided routing. A general
-  next-work request considers every open advisor-deferred issue. An incomplete routing
-  field or outdated destination does not silently hide related work.
+- The agent queries open `deferred` issues and reads relevant issues in full,
+  including applicable shared work. A general next-work request considers every
+  open `deferred` issue. An issue that does not say where its answer belongs is
+  not silently excluded from related work.
 - It distinguishes ready work, questions still waiting on specific inputs, and
   apparently answered or superseded questions against current documents.
 - Relevant deferred items are addressed before dependent decisions. A prerequisite
   needed now cannot be deferred merely to accept the current artifact.
-- Prior progress is read before questioning; unresolved matters remain in the
-  same open issue, without repeating settled questions.
-- A resolved deferred issue closes with a link to its accepted answer. A
-  deliberately dropped question closes with the agreed reason. The closed issue
-  remains consultable; there is no parallel readiness index or duplicate
-  normative answer.
+- A resolved deferred issue closes with a link to its answer once that answer
+  is written in its artifact. The closed issue remains consultable; there is no
+  parallel readiness index or duplicate normative answer.
 - Initialization creates no deferred-item directory or sample issue. New issues
   use the configured tracker and create no feature folder.
 
@@ -295,12 +297,12 @@ verified primary journey yet, or it may already contain a working product.
 
 **Expect.**
 
-- The request selects the read-only `advisor-next-work` skill, which recovers
-  deferred items through `advisor-defer` and changes no project file.
+- The request selects the read-only `advisor-next-work` skill, which reads the
+  relevant open `deferred` issues and changes no project file.
 - For a general request it inventories every feature and project authority from
   routing envelopes. For a scoped request it limits the assessment to that scope,
-  shared prerequisites, relevant evidence, and relevant or unclassified deferred
-  items.
+  shared prerequisites, relevant evidence, and the deferred issues that apply to
+  the scope or to shared work.
 - It reports ready decisions separately from phase coverage, with supporting
   passages and anything not verified. It inspects relevant code and tests and
   runs a safe focused check when practical before claiming the primary journey
@@ -607,6 +609,11 @@ now includes a client-visible surface.
   directory.
 - It links to persisted information instead of copying it and redacts
   sensitive data.
+- In a guided project it names the decisions settled in the conversation but
+  not yet written to their artifacts, suggesting a grill-with-docs session to
+  record them, and leaves work that can wait to `deferred` issues, as
+  [ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
+  records.
 - No advisor skill or delivered document creates, discovers, or closes a
   handoff, and `advisor-agents.md` names no handoff location.
 - No project file cites the handoff. A fresh conversation reads only the

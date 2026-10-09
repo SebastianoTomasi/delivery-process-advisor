@@ -11,6 +11,6 @@ strings:
 | `ready-for-human` | `ready-for-human` | Requires human implementation |
 | `wontfix` | `wontfix` | Will not be actioned |
 
-`advisor:deferred` identifies issues holding deferred advisor work. It is a
-separate routing label, not an issue type or readiness state. Existing type
+`deferred` marks work that waits: deferred questions and ideas, and ticket
+breakdowns published with it in place of `ready-for-agent`. Existing type
 labels such as `bug` and `enhancement` may be used alongside it.

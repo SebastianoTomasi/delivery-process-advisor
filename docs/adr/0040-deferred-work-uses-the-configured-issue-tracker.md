@@ -4,6 +4,15 @@ status: accepted
 
 # Deferred work uses the configured issue tracker
 
+The `advisor:deferred` label below was renamed `deferred` by
+[ADR-0044](0044-the-advisor-states-its-rules-for-matt-pococks-skills.md), and a
+deferred ticket breakdown carries it in place of `ready-for-agent`. That
+decision also dropped the required routing fields, the
+`.scratch/advisor-deferred/` layout, and the stop on an unreachable tracker
+below, and removed `advisor-defer`; the root file now states the rules for
+deferred work. The shared configured tracker
+remains current.
+
 On 2026-09-27 the user chose one tracker for advisor deferrals and
 `to-tickets`, configured through `docs/agents/issue-tracker.md` and
 `docs/agents/triage-labels.md`. Open `advisor:deferred` issues are the

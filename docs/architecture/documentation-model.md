@@ -203,9 +203,9 @@ The capture, recovery, and closure rules are delivered in one place, the
 [root file](#the-root-file)'s section on sessions, tickets, and handoffs, which
 every session reads.
 Legacy `docs/deferred/` records are an archive, even when marked `open`; they
-are not recovered or imported automatically. The explicitly invoked
-`advisor-migrate-deferred` skill can transfer selected open records after
-checking for duplicates, preserving context, and repairing references.
+are not recovered or imported automatically. The advisor no longer ships a
+dedicated migration skill for them, as recorded in
+[ADR-0045](../adr/0045-advisor-skills-use-unprefixed-names.md).
 
 ## Session handoffs
 
@@ -268,7 +268,7 @@ dependency and review sections and decision passages. Marker lines expose
 artifact status; they cannot prove phase coverage or decision readiness.
 The exact delivered format and the writing and acceptance procedure of
 grill-with-docs sessions live in `docs/advisor-docs.md`, and the
-change-propagation procedure in `advisor-propagate-change`.
+change-propagation procedure in `propagate-change`.
 
 The glossary and ADRs keep the domain-modeling skill's format. They are read for
 language, rationale, provenance, and recovery, never counted as phases or
@@ -361,7 +361,7 @@ elsewhere and may mention them for context without restating their rule. If the
 document discovers a new decision owned by another authority, that decision is
 written in that authority's artifact instead.
 
-**Every advisor-owned file carries the `advisor-` prefix.** A folder's scaffold
+**Advisor-owned documentation carries the `advisor-` prefix.** A folder's scaffold
 is `advisor-<folder>.md`, and the file at the project root is
 `advisor-agents.md`. The prefix says who owns the file
 before it is opened, and keeps advisor-owned files sorted together in any
@@ -369,6 +369,10 @@ listing. It states ownership; fixed names distinguish advisor scaffolds and
 catalogs, while an artifact's marker declares its status. A separate catalog is named
 `advisor-<authority>-project.md` or `advisor-<authority>-feature.md`, so its
 scope is visible before it is opened.
+
+Skills live outside this documentation tree and use unprefixed names. Their
+ownership and legacy cleanup follow
+[Initialization](initialization.md#delivery-rules).
 
 Inside this tree, a template is the one shipped asset without the prefix. It
 is imported under a name the project chooses, because it is on its way to
@@ -566,15 +570,15 @@ for the work separately installed skills perform, is:
   phase routes, and absence and completion conditions, with the step that
   writes `absent.md`. The session procedure applies them when it declares a
   feature or checks a phase.
-- `advisor-next-work` owns read-only assessment of the current position and
+- `next-work` owns read-only assessment of the current position and
   implemented state, selection of one recommended action and useful alternatives,
   and the evidence and uncertainty reported with that advice.
-- `advisor-propagate-change` owns changes to accepted rules and restores
+- `propagate-change` owns changes to accepted rules and restores
   coherence across every affected dependant. It applies the session
   procedure's writing and acceptance steps to the artifacts it changes.
-- `advisor-migrate-docs` owns full reads and transfer of selected inputs,
+- `migrate-docs` owns full reads and transfer of selected inputs,
   applying the same writing and acceptance steps and invoking
-  `advisor-propagate-change` for the decisions it needs.
+  `propagate-change` for the decisions it needs.
 - Separately installed skills from Matt Pocock's set own the general
   procedures: `grilling` the rounds of questions, `domain-modeling` the
   glossary and decision records, `to-tickets` ticket slicing, `implement`
@@ -597,7 +601,7 @@ only there is missing from the delivered product.
 
 ## Next-work advice
 
-`advisor-next-work` applies when the user asks for the current position or what
+`next-work` applies when the user asks for the current position or what
 product, decision, design, implementation, or other delivery work is worth doing
 next. It does not replace ordinary routing when the user has already chosen a
 concrete task. The assessment is advice only: it changes no project file, starts

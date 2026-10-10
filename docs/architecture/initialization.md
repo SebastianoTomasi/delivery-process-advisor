@@ -321,17 +321,23 @@ entry itself, without following links: a symbolic link or junction occupies
 its name even when its referent is missing. What occupancy then means depends
 on who owns the destination, and the mapping fixes that before the target is
 ever inspected: the mirrored assets, the root file, and the skill directories
-are the advisor's, while the instruction file is the project's. Every skill the
-advisor delivers is named with the `advisor-` prefix, so in either skill host
-an entry carrying the prefix is the advisor's and an entry without it is the
-project's. Ordinary files use the rules below; [Skill hosts](#skill-hosts)
+are the advisor's, while the instruction file is the project's. Skill names
+are unprefixed: `next-work`, `propagate-change`, and `migrate-docs`. The helper
+registers every name the advisor has delivered without a prefix, retaining
+retired names so later releases can remove them. A payload skill whose name
+is not registered fails before delivery writes. Legacy `advisor-` entries
+remain advisor-owned for cleanup; all other skill names are the project's.
+No target-side installation inventory is needed. Ordinary files use the
+rules below; [Skill hosts](#skill-hosts)
 defines directory-link occupancy and failure behavior. The reasons for treating
 links as occupied are recorded in
 [ADR-0024](../adr/0024-initialization-never-writes-through-an-occupied-link.md),
 the reasons for replacing rather than preserving what the advisor owns in
 [ADR-0029](../adr/0029-initialization-replaces-advisor-owned-destinations.md),
 and the reasons for removing the skills a release drops in
-[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md).
+[ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md),
+with unprefixed ownership recorded in
+[ADR-0045](../adr/0045-advisor-skills-use-unprefixed-names.md).
 
 1. The destination does not exist — write the asset.
 2. The destination is the advisor's and a file or a link occupies it — write
@@ -341,11 +347,12 @@ and the reasons for removing the skills a release drops in
    contain is removed as part of the same decision: the advisor owns that
    directory whole, and a file left there is not dead weight but an instruction
    the host still loads. For the same reason, an entry in `.agents/skills/` or
-   `.claude/skills/` named with the prefix that the invoked release does not
-   deliver is removed as an entry and recorded as removed: a link is unlinked
-   and never followed, and a directory is removed whole. An entry without the
-   prefix is never touched, and a host directory that is itself a link is not
-   swept.
+   `.claude/skills/` identified by a registered name or the legacy prefix that
+   the invoked release does not deliver is removed as an entry and recorded as
+   removed: a link is unlinked
+   and never followed, and a directory is removed whole. An entry outside those
+   owned names is never touched, and a host directory that is itself a link
+   is not swept.
 3. The destination is the advisor's and a directory occupies a path where a
    file belongs — end delivery with a concise operational diagnostic. The
    advisor removes no directory it does not own whole, and it cannot know what
@@ -491,7 +498,7 @@ reconsidered later without changing the ordinary per-destination behavior.
 
 Reading a project's existing documentation and placing it into the ontology
 is not performed by initialization. After delivery, the user can request
-`advisor-migrate-docs` to migrate selected documents. That skill makes placement
+`migrate-docs` to migrate selected documents. That skill makes placement
 decisions, resolves necessary choices, verifies the new documents, and replaces
 the in-scope originals. It is separate from the helper's per-destination
 contract: the helper decides nothing about a project's own documents, and the
@@ -504,9 +511,9 @@ presence of old documentation implies adoption or accepted advisor decisions.
 Clearing what a later payload version no longer delivers is performed only in
 the skill hosts. A later delivery brings every destination it maps to the
 invoked release, so the root file, scaffolds, catalogs, and skills are that
-release and no other. In the skill hosts the `advisor-` prefix identifies a
-whole entry as the advisor's without an inventory, so a skill an earlier
-release delivered and this one no longer does is removed under
+release and no other. In the skill hosts registered names and the legacy
+`advisor-` prefix identify whole entries as the advisor's without an inventory,
+so a skill an earlier release delivered and this one no longer does is removed under
 [rule 2](#delivery-rules). What delivery
 cannot do is remove a file an earlier release delivered outside the skill
 hosts and this one no longer maps: `docs/` holds the project's own artifacts

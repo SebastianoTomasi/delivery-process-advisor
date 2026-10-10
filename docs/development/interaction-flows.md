@@ -257,7 +257,7 @@ existing documents.
 - Initialization brings its own destinations to the invoked release and leaves
   the project's documents and unrelated paths untouched, reporting what it
   replaced and what it skipped.
-- The request selects `advisor-migrate-docs`. The agent reads the selected
+- The request selects `migrate-docs`. The agent reads the selected
   inputs in full, splits or merges their contents by authority and scope, and
   reuses suitable existing artifacts. Existing ADR locations, numbering, and
   decision history are preserved.
@@ -297,7 +297,7 @@ verified primary journey yet, or it may already contain a working product.
 
 **Expect.**
 
-- The request selects the read-only `advisor-next-work` skill, which reads the
+- The request selects the read-only `next-work` skill, which reads the
   relevant open `deferred` issues and changes no project file.
 - For a general request it inventories every feature and project authority from
   routing envelopes. For a scoped request it limits the assessment to that scope,
@@ -503,7 +503,7 @@ guarantees. Architecture's export-file contract is not yet written.
 
 **Expect.**
 
-- `advisor-next-work` can recommend the file contract now, naming accepted
+- `next-work` can recommend the file contract now, naming accepted
   passages and explaining why the open screen choice cannot invalidate it.
 - The resulting artifact records those Dependencies. Frontend remains incomplete;
   one accepted contract does not complete all Architecture questions either.

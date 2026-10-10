@@ -19,10 +19,10 @@ The versioned advisor content delivered into a target project: scaffolds, questi
 The advisor component that resolves destinations, writes delivered assets, and reports the result. It is distinct from the skills that exercise judgement.
 
 **Destination**  
-A path in a target project that the delivery helper takes one decision about. Every destination comes from the fixed payload mapping, which names the advisor's skill entries in both skill hosts by their `advisor-` prefix; a path the mapping does not name is never inspected.
+A path in a target project that the delivery helper takes one decision about. Every destination comes from the fixed payload mapping, which identifies owned skill entries in both hosts through registered names and the legacy `advisor-` prefix; a path the mapping does not name is never inspected.
 
 **Advisor-owned destination**  
-A destination whose content the advisor defines and brings to the invoked release at every delivery: the mirrored scaffolds and catalogs, the root file, and the `advisor-` skill entries in both skill hosts, which the release either delivers or removes. A project’s local edits to one are not preserved.
+A destination whose content the advisor defines and brings to the invoked release at every delivery: the mirrored scaffolds and catalogs, the root file, and the skill entries identified by registered names or the legacy `advisor-` prefix in both hosts, which the release either delivers or removes. A project’s local edits to one are not preserved.
 
 **Project-owned destination**  
 A destination the advisor may create but whose content belongs to the project: the instruction file. Delivery ensures it and never replaces what it holds. Legacy deferred and handoff directories are preserved without being mapped.

@@ -265,14 +265,12 @@ does not apply” from “we forgot to discuss it.”
 
 The installed skills provide a small set of deliberate interaction modes:
 
-- `advisor-next-work` assesses the current documentation and implementation and
+- `next-work` assesses the current documentation and implementation and
   recommends one next action without starting it.
-- `advisor-propagate-change` carries an agreed change to an accepted rule
+- `propagate-change` carries an agreed change to an accepted rule
   through every document that depends on it.
-- `advisor-migrate-docs` moves selected existing documents into the advisor
+- `migrate-docs` moves selected existing documents into the advisor
   structure without keeping duplicate source copies.
-- `advisor-migrate-deferred` moves legacy `docs/deferred/` records into the
-  configured tracker when you ask for that migration.
 
 Matt Pocock's separately installed skills run the rest: `grill-with-docs` the
 documentation sessions, `to-tickets` the implementation tickets, `implement`
@@ -329,11 +327,12 @@ links. Files no longer shipped inside a canonical advisor skill directory are
 pruned. See the [skill-host contract](docs/architecture/initialization.md#skill-hosts)
 for the exact rules.
 
-A whole `advisor-` skill that an earlier release delivered and this one no
-longer ships is removed from both skill directories; skills without the prefix
-are never touched. Re-running initialization therefore cleans up the skills
-dropped by [ADR-0043](docs/adr/0043-general-skills-come-from-matt-pocock.md)
-and [ADR-0044](docs/adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md).
+A skill registered as advisor-owned that this release no longer ships is
+removed from both skill directories. Old `advisor-` entries are also removed;
+other skill names are preserved. Re-running initialization replaces the old
+names with `next-work`, `propagate-change`, and `migrate-docs`, and removes
+`advisor-migrate-deferred`, as recorded in
+[ADR-0045](docs/adr/0045-advisor-skills-use-unprefixed-names.md).
 A project initialized before ADR-0043 still renames `CONTEXT.md` to
 `GLOSSARY.md` and removes an empty `docs/handoffs/` by hand. A project whose
 tracker holds `advisor:deferred` issues renames that label to `deferred` and

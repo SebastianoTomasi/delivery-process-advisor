@@ -39,7 +39,7 @@ before the request into the skills themselves. Different user requests expose
 different branches. The starting examples are a request for a new feature,
 which routes to a grill-with-docs session through the root's "Sessions,
 tickets, and handoffs" section, and a request to choose next work, which
-routes to the read-only `advisor-next-work` skill. Under
+routes to the read-only `next-work` skill. Under
 [ADR-0028](../adr/0028-skills-declare-their-own-applicability.md), the
 applicability of the advisor's own skills belongs to their descriptions, and no
 delivered document names them; the root names only the separately installed

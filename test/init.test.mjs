@@ -306,13 +306,58 @@ test('advisor skills the invoked release dropped leave both hosts; other skills 
   assert.ok(lstatSync(ownLink).isSymbolicLink());
 });
 
-test('a payload skill without the advisor prefix stops delivery before writing it', t => {
+test('an unregistered payload skill stops delivery before any writes', t => {
   const f = fixture(t);
   const unprefixed = join(f.plugin, 'src/skills/unprefixed');
   mkdirSync(unprefixed);
   writeFileSync(join(unprefixed, 'skill-asset.md'), 'a skill a later release could not retire');
   operationalFailure(run(f), unprefixed);
   assert.equal(existsSync(join(f.target, '.agents/skills/unprefixed')), false);
+  assert.equal(existsSync(join(f.target, 'advisor-agents.md')), false);
+});
+
+test('prefixed skills migrate to unprefixed names and deferred migration is retired', t => {
+  const f = fixture(t);
+  const skills = ['next-work', 'propagate-change', 'migrate-docs'];
+  for (const name of [...skills, 'migrate-deferred']) {
+    const old = join(f.target, '.agents/skills', `advisor-${name}`);
+    mkdirSync(old, { recursive: true });
+    writeFileSync(join(old, 'SKILL.md'), 'old skill');
+    const link = join(f.target, '.claude/skills', `advisor-${name}`);
+    mkdirSync(dirname(link), { recursive: true });
+    symlinkSync(relative(dirname(link), old), link, 'dir');
+  }
+  success(run(f));
+  for (const name of [...skills, 'migrate-deferred']) {
+    for (const host of ['.agents/skills', '.claude/skills']) {
+      assert.throws(() => lstatSync(join(f.target, host, `advisor-${name}`)), { code: 'ENOENT' });
+    }
+  }
+  for (const name of skills) {
+    const canonical = join(f.target, '.agents/skills', name);
+    assert.match(readFileSync(join(canonical, 'SKILL.md'), 'utf8'), new RegExp(`name: ${name}\\r?\\n`));
+    assert.equal(realpathSync(join(f.target, '.claude/skills', name)), realpathSync(canonical));
+  }
+  assert.equal(existsSync(join(f.target, '.agents/skills/migrate-deferred')), false);
+  assert.match(run(f).stdout, / 0 removed\n/);
+});
+
+test('a registered unprefixed skill dropped from the payload leaves both hosts', t => {
+  const f = fixture(t);
+  success(run(f));
+  const removedSource = resolve(f.plugin, 'src/skills/next-work');
+  assert.equal(dirname(removedSource), resolve(f.plugin, 'src/skills'));
+  rmSync(removedSource, { recursive: true });
+  const unrelated = join(f.target, '.agents/skills/personal-skill');
+  mkdirSync(unrelated);
+  writeFileSync(join(unrelated, 'SKILL.md'), 'keep this');
+  const result = run(f);
+  success(result);
+  for (const host of ['.agents/skills', '.claude/skills']) {
+    assert.throws(() => lstatSync(join(f.target, host, 'next-work')), { code: 'ENOENT' });
+  }
+  assert.match(result.stdout, / 2 removed\n/);
+  assert.equal(readFileSync(join(unrelated, 'SKILL.md'), 'utf8'), 'keep this');
 });
 
 test('project files beside the delivered scaffolding are never touched', t => {

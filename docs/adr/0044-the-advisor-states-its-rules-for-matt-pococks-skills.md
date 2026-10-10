@@ -4,6 +4,12 @@ status: accepted
 
 # The advisor states its rules for Matt Pocock's skills
 
+[ADR-0045](0045-advisor-skills-use-unprefixed-names.md) later removed
+`advisor-migrate-deferred`, renamed the three remaining skills without the
+`advisor-` prefix, and replaced prefix-only ownership with a registry of
+unprefixed names plus legacy-prefix cleanup. Those parts below are historical;
+the remaining rules stand.
+
 The advisor no longer delivers `advisor-grill-with-docs`, `advisor-to-tickets`,
 or `advisor-defer`. Documentation sessions run through Matt Pocock's
 `grill-with-docs`, tickets through his `to-tickets`, implementation through his

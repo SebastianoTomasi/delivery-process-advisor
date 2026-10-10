@@ -1,5 +1,5 @@
 ---
-name: advisor-migrate-docs
+name: migrate-docs
 description: Migrate user-selected documentation into an initialized delivery-process-advisor project. Preserve its normative or informative role, resolve necessary transfer decisions, and replace originals without redundant copies. Use when adopting, migrating, or restructuring existing documentation, including unmarked project documents; the migration request is itself adoption into the advisor structure.
 disable-model-invocation: false
 ---
@@ -68,7 +68,7 @@ writing documents as decisions settle.
 - A conflict with an accepted artifact requires a decision under
   `docs/advisor-docs.md`. Preserve
   the current rule while its replacement is only a proposal. Apply an agreed
-  change through `advisor-propagate-change`, including affected dependants.
+  change through `propagate-change`, including affected dependants.
 - Report catalog questions the inputs do not answer as gaps. Do not turn them
   into a general design interview, invent answers, or infer inapplicability
   from silence. An unresolved necessary input keeps the affected work proposed;
@@ -78,7 +78,7 @@ writing documents as decisions settle.
 
 Use the writing and acceptance steps of the grill-with-docs session procedure
 in `docs/advisor-docs.md` within this migration's scope, and
-`advisor-propagate-change` when the migration changes a rule the project has
+`propagate-change` when the migration changes a rule the project has
 already accepted. Use
 `domain-modeling` for resolved terminology and qualifying ADRs; preserve
 existing ADR locations, numbering, and decision history. Keep existing reasons

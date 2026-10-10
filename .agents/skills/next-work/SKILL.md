@@ -1,5 +1,5 @@
 ---
-name: advisor-next-work
+name: next-work
 description: Assess a guided project's current state and recommend what product, decision, design, implementation, or other delivery work is worth doing next. Use when the user asks for the current position, what to decide or work out next, or which work to prioritize; do not use when the user has already chosen a concrete task or asks to conduct a documentation session.
 disable-model-invocation: false
 ---

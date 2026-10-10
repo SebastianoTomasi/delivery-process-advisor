@@ -77,7 +77,7 @@ not a tool that imposes it on them.
     settles new choices and completes propagation. Important decisions preserve
     their reasons and sources in ADRs. `needs-review` with cause, changed passage,
     relevant ADR, and remaining work supports interruption, not normal closure.
-7.  **Migrates existing documents.** On request, `advisor-migrate-docs` transfers
+7.  **Migrates existing documents.** On request, `migrate-docs` transfers
     selected documents into the advisor structure, resolving only choices
     needed for the migration. It verifies fidelity, coherence, and dependencies,
     reports missing decisions as later work, and replaces the in-scope originals
@@ -199,7 +199,8 @@ installed file compatible. The delivery contract is specified in
 
 Initialization brings everything it delivers to the invoked release, replacing
 what occupies one of its own destinations, removes from both skill hosts every
-`advisor-` skill the release no longer delivers, and preserves what the project
+registered advisor-owned skill or legacy `advisor-` entry the release no
+longer delivers, and preserves what the project
 owns. Elsewhere it may still leave files from an older release beside them,
 wherever a later payload no longer delivers to that path, and it promises no
 compatibility with what it did not touch. It neither verifies release

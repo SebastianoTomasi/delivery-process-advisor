@@ -96,9 +96,11 @@ Code loads `AGENTS.md` and expands its `@advisor-agents.md` import, which
 [ADR-0042](../adr/0042-agents-md-is-the-only-instruction-file.md) relies on.
 
 Check that a release retires what it drops: initializing a target that holds
-an `advisor-` skill the release no longer ships removes it from both skill
-directories and reports it as `removed`, while a skill without the prefix is
-left in place.
+a skill with a registered advisor-owned name, or a legacy `advisor-` entry,
+that the release no longer ships removes it from both skill directories and
+reports it as `removed`. Unrelated skills stay in place. Also verify that the
+three old prefixed names and `advisor-migrate-deferred` leave both hosts while
+the unprefixed replacements are reachable.
 
 Check that each host can reach the delivered skill through a newly created
 relative directory symlink. Inspect the filesystem to verify that a `linked`

@@ -1,5 +1,5 @@
 ---
-name: advisor-propagate-change
+name: propagate-change
 description: Propagate an agreed change to an accepted rule through every artifact that depends on it. Use when a term, capability, contract, prerequisite, or other accepted decision under docs/ must change, when a changed source may have invalidated an accepted decision, or when resuming an interrupted propagation left behind as needs-review.
 disable-model-invocation: false
 ---

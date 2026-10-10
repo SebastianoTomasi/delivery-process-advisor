@@ -38,10 +38,11 @@ const MANIFEST = join(PLUGIN_ROOT, '.claude-plugin', 'plugin.json');
 const SKILL_FILE_HOST = join('.agents', 'skills');
 const SKILL_LINK_HOST = join('.claude', 'skills');
 
-// Every skill the advisor delivers is named with this prefix, which is what
-// marks an entry in either host as the advisor's own. Delivery refuses a payload
-// skill without it, because a later release could not retire it.
-const SKILL_PREFIX = 'advisor-';
+// Keep every unprefixed name ever delivered here, including retired names,
+// so later releases can remove their entries without claiming unrelated skills.
+// The legacy prefix remains reserved for cleaning up older installations.
+const OWNED_SKILLS = new Set(['next-work', 'propagate-change', 'migrate-docs']);
+const LEGACY_SKILL_PREFIX = 'advisor-';
 
 // Assets held under neutral names because their destination is
 // instruction-bearing.
@@ -149,8 +150,8 @@ function mapping() {
     for (const skill of readdirSync(skills, { withFileTypes: true })) {
       if (!skill.isDirectory()) continue;
       const source = join(skills, skill.name);
-      if (!skill.name.startsWith(SKILL_PREFIX)) {
-        fail(`the payload skill ${source} is not named with the ${SKILL_PREFIX} prefix`);
+      if (!OWNED_SKILLS.has(skill.name)) {
+        fail(`the payload skill ${source} is not registered as advisor-owned`);
       }
       releaseSkills.push(skill.name);
       const delivered = [];
@@ -245,8 +246,8 @@ function prune(entry, target) {
 
 // Rule 2 for a skill the invoked release no longer delivers: an advisor-owned
 // entry left in either host is an instruction the host still loads, so it is
-// removed as an entry, never followed. An entry without the prefix is the
-// project's own and is never touched, nor is a host that is itself a link.
+// removed as an entry, never followed. Only registered names and the legacy
+// prefix are owned; other entries and hosts that are themselves links stay.
 function retire(entry, target) {
   const removed = [];
   for (const host of entry.hosts) {
@@ -254,7 +255,8 @@ function retire(entry, target) {
     const current = entryAt(root);
     if (current === null || !current.isDirectory()) continue;
     for (const name of readdirSync(root)) {
-      if (!name.startsWith(SKILL_PREFIX) || entry.delivered.includes(name)) continue;
+      if ((!OWNED_SKILLS.has(name) && !name.startsWith(LEGACY_SKILL_PREFIX))
+        || entry.delivered.includes(name)) continue;
       const path = join(root, name);
       removeEntry(path, entryAt(path));
       removed.push(join(host, name));

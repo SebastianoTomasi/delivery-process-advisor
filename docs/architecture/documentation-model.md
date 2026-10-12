@@ -608,29 +608,42 @@ concrete task. The assessment is advice only: it changes no project file, starts
 no interview, and performs none of the work it recommends. The user's choice is
 a new request routed to the applicable workflow.
 
-Before assessing candidates, it reads the open `deferred` issues: all of them
-for an unscoped request, and for a scoped request those that apply to the scope
-or to shared work. Advice leaves them unchanged. An unscoped request inventories
-all authority and feature artifact envelopes before selecting bodies. A scoped
-request reads that scope, shared prerequisites, and evidence affecting
-readiness. Both routes use the root's selective reading guidance and the
-common documentation rules; neither infers coverage or readiness from folders
-or markers.
+The assessment starts from the user's current goal, active issues, pull requests,
+and work in progress, using the configured tracker guidance. It reads open
+`deferred` issues: all of them for an unscoped request, and for a scoped request
+those relevant to the scope or shared prerequisites. Advice leaves tracker
+state unchanged. It checks whether candidate work is already delivered or
+underway before recommending it.
 
-The workflow considers both settled intent and implemented state. It inspects
-relevant code and existing tests and runs safe, focused verification when
-practical. It reports what remains unverified. A material contradiction between
-code and documentation becomes a prerequisite to clarify under the common rule;
-the advice workflow neither resolves the conflict nor changes either side.
+Both routes use the root's selective reading guidance and common documentation
+rules. Reads of artifacts, dependencies, code, tests, and delivery evidence deepen
+where they can change the choice, including shared prerequisites for scoped work.
+Discovery expands when candidates are unclear; a general recommendation does not
+require an inventory of every artifact envelope. This keeps assessment focused
+on choosing useful work. Full phase coverage is assessed only when requested;
+folders or markers alone establish neither coverage nor readiness.
+
+Exploration stops when evidence supports a choice over plausible alternatives
+and remaining uncertainty would not change it. Safe, focused verification is
+used when it can resolve a deciding uncertainty. If that uncertainty cannot be
+resolved, the report identifies it and verification may itself be the next
+action. A material contradiction between code and documentation becomes a
+prerequisite to clarify under the common rule; the advice workflow neither
+resolves the conflict nor changes either side.
 
 Candidate work may be a decision, the smallest ready end-to-end implementation
-slice, a repair, a ready deferred goal, or a later improvement. Readiness for an
+slice, a repair, verification, a ready deferred goal, or a later improvement.
+Absent, broken, and unverified behavior are distinct: missing documentation or
+verification alone does not establish missing implementation. Readiness for an
 implementation slice requires only the accepted decisions that could invalidate
 it, not whole-phase completion. Ranking applies the Product rule that a working
 primary journey precedes optional polish. The workflow recommends one action,
-names materially useful ready alternatives, explains blockers through the
-nearest actionable prerequisite, and uses usual phase order only to break
-otherwise equivalent choices.
+states why now, its first concrete step and smallest observable completion
+condition, and cites its evidence and applicable accepted decisions. It names
+uncertainty or unread material that could change the choice, includes alternatives
+when they clarify the ranking, explains blockers through the nearest actionable
+prerequisite, and uses usual phase order only to break otherwise equivalent
+choices.
 
 ## Scope and prerequisites
 

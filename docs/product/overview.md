@@ -46,8 +46,9 @@ not a tool that imposes it on them.
 2.  **Prescribes the next action.** A dedicated read-only workflow states the
     work that makes sense now and why. It can recommend the nearest decision
     that unblocks useful work, the smallest end-to-end implementation slice once
-    its necessary constraints are settled, or a focused improvement once the
-    primary product journey is verified. If several actions are ready it
+    its necessary constraints are settled, a repair for demonstrated failure,
+    verification when uncertainty changes the choice, or a focused improvement
+    once the primary product journey is verified. If several actions are ready it
     recommends one and explains useful alternatives.
 3.  **Explains blockers.** It says what a piece of work lacks in order to make  
     sense, walking up the prerequisites to the first one that can be resolved  
@@ -175,9 +176,12 @@ The division is between delivery and judgement:
     feature in the process, conducts grill-with-docs sessions, and completes
     propagations. This needs reading and judgement.
 
-The agent reads the project's state from folders and artifact envelopes, then
-from relevant dependency links, recovery blocks, and decision passages. It
-checks catalog coverage semantically before claiming a phase is complete.
+The agent reads documented state through relevant artifact envelopes,
+dependency links, recovery blocks, and decision passages. Next-work advice
+starts from current goals and delivery evidence, deepening discovery where it
+can change the recommendation. It does not require a complete documentation
+inventory. The agent checks catalog coverage semantically before claiming a
+phase is complete.
 There is deliberately no command that returns the phase, the first unaccepted
 prerequisite, or the authority that
 owns it: placing a feature in the process is a reading like any other, and it  

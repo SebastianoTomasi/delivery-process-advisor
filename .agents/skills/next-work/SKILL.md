@@ -1,70 +1,58 @@
 ---
 name: next-work
-description: Assess a guided project's current state and recommend what product, decision, design, implementation, or other delivery work is worth doing next. Use when the user asks for the current position, what to decide or work out next, or which work to prioritize; do not use when the user has already chosen a concrete task or asks to conduct a documentation session.
+description: Recommend the next useful work in an advisor-guided project. Use when the user asks where the project stands or what to prioritize, not when they have chosen a concrete task or requested a documentation session.
 disable-model-invocation: false
 ---
 
 # Next-work advice
 
-Choose and explain one useful next action without performing it. This is a
-read-only assessment: do not write project files, start an interview, implement
-the recommendation, create a flag or reminder, or treat the advice as permission.
-After reporting, stop and let the user's chosen action route as a new request.
+Recommend one useful next action. Keep the assessment read-only: do not start an
+interview, change files or tracker state, or create reminders. Stop after the
+recommendation; the user's selection is a new request.
 
 ## Establish the current state
 
-For a general request, consider every open `deferred` issue; for scoped work,
-those that apply to the scope or to shared work. Advice leaves the issues
-unchanged.
+Read `advisor-agents.md` and `docs/advisor-docs.md` if not already read; apply
+their reading, readiness, and conflict rules.
 
-Use the shared reading guidance in `advisor-agents.md` and the common rules in
-`docs/advisor-docs.md`. For a general request, list project authority and feature
-folders and inspect every artifact's routing envelope before selecting bodies.
-For a scoped request, inspect that scope, shared prerequisites, and other evidence
-that can change its readiness. Read relevant Dependencies, Review blocks,
-decision passages, and catalog questions. Use the feature router for phase routes.
-Do not infer readiness or coverage from folders, filenames, or markers.
+Start from the user's current goal, active issues, pull requests, and work in
+progress. Use the configured tracker guidance. For a general request, consider
+every open `deferred` issue; for scoped work, those relevant to the scope or
+shared prerequisites. Check candidates' current state: an open issue or an old
+plan may describe work already delivered or underway.
 
-Assess implemented state when it can change the recommendation. Inspect relevant
-code and existing tests, and run a safe focused verification when practical.
-Code establishes what is implemented; accepted documentation establishes settled
-intent, not implementation. Name the evidence and disclose checks or coverage
-that remain unverified. If code and documentation materially contradict one
-another, preserve both, explain the discrepancy, and recommend clarification as
-a prerequisite when it blocks a sound choice. This skill does not resolve it.
+Deepen the assessment where evidence can change the choice. Read relevant
+artifacts and dependencies, code, existing tests, and delivery evidence; run a
+safe focused check when it can resolve a deciding uncertainty. Expand discovery
+if candidates are unclear. A general recommendation does not require inspecting
+every artifact; assess full phase coverage only when requested.
+
+Stop exploring when evidence supports a choice over plausible alternatives and
+remaining uncertainty would not change it. If a deciding uncertainty cannot be
+resolved, report it and consider verification as the next action.
 
 ## Select the recommendation
 
-Consider ready decisions, implementation slices, repairs, explicit user goals,
-relevant deferred work, and focused improvements. A candidate is ready when its
-necessary accepted decision inputs suffice and remaining open choices cannot
-invalidate it. An implementation slice does not require a complete earlier phase;
-require only the accepted decisions and applicable constraints that could change
-or invalidate that slice.
+Distinguish absent behavior, broken behavior, and unverified behavior. Missing
+documentation or verification does not establish missing implementation.
 
-Prioritize a working product before optional polish:
+Prioritize a working primary journey: build the smallest missing end-to-end
+slice, repair a demonstrated failure, or verify uncertain behavior when the
+result changes the choice. Once it works, prefer explicit goals, observable
+problems, and ready deferred work over minor polish. Material security, safety,
+or operational risk may take priority throughout; cleanup needs a concrete
+benefit.
 
-1. If the primary user journey is not supported by concrete implementation
-   evidence, recommend the smallest end-to-end slice that makes it work while
-   satisfying established Product behavior and applicable constraints.
-2. If that slice lacks a necessary decision, recommend the nearest decision that
-   can be settled now and explain what it unlocks.
-3. Once the primary journey works, prefer explicit user goals, broken or
-   incomplete observable behavior, and ready deferred work over minor improvements.
-4. Let a material security, safety, or operational risk take priority at either
-   stage. Do not recommend speculative cleanup without an observable, reliability,
-   safety, or delivery benefit.
-
-Recommend exactly one action and state why it outranks the other ready candidates.
-Name materially useful alternatives and why they are secondary. Use the usual
-phase order only to break otherwise equivalent choices. If no actionable work is
-supported by the evidence, say so instead of inventing a recommendation.
+Require only the chosen work's necessary decision inputs, not completed earlier
+phases. If blocked, recommend the nearest decision that can be settled and name
+what it unlocks. Surface material code/documentation conflicts without resolving
+them. Use phase order only to break ties. If evidence supports no actionable
+work, say so.
 
 ## Report
 
-State the recommended outcome, its accepted basis, relevant implementation
-evidence, unresolved uncertainty, and the smallest concrete boundary of the
-work. When relevant, distinguish a ready decision from whole-phase coverage and
-identify the nearest blocker separately from the work it blocks. Cite the files
-and passages supporting documentation-derived conclusions and disclose relevant
-material left unread.
+State the action, why now, the first concrete step, and the smallest observable
+completion condition. Cite supporting evidence and applicable accepted decisions;
+name uncertainty, unavailable evidence, or unread material that could change the
+choice. Mention alternatives only when they clarify why this action wins. Keep
+any prerequisite decision distinct from the work it blocks.

@@ -45,9 +45,10 @@ The scenarios test the [Product description](../product/overview.md),
 
 Quoted requests are illustrative. In the scenarios below:
 
-- **derive the position** means starting with folders and artifact envelopes,
-  then reading relevant dependencies, review notes, decision passages, and
-  catalog coverage as required by the documentation model;
+- **derive the position** means reading relevant artifact envelopes,
+  dependencies, review notes, and decision passages, checking catalog coverage
+  when assessing phase completion. Next-work advice selects evidence as flow I
+  describes, without requiring a complete documentation inventory;
 - **run a session** means the file-backed exchange in rounds of numbered
   questions defined in [`GLOSSARY.md`](../../GLOSSARY.md);
 - **initialized** means the helper has delivered the fixed scaffolding,
@@ -299,25 +300,28 @@ verified primary journey yet, or it may already contain a working product.
 
 - The request selects the read-only `next-work` skill, which reads the
   relevant open `deferred` issues and changes no project file.
-- For a general request it inventories every feature and project authority from
-  routing envelopes. For a scoped request it limits the assessment to that scope,
-  shared prerequisites, relevant evidence, and the deferred issues that apply to
-  the scope or to shared work.
-- It reports ready decisions separately from phase coverage, with supporting
-  passages and anything not verified. It inspects relevant code and tests and
-  runs a safe focused check when practical before claiming the primary journey
-  works.
-- If the primary journey is not verified, it recommends either the nearest
-  decision blocking useful implementation or the smallest ready end-to-end slice
-  that satisfies the established behavior and constraints. Whole-phase completion
-  is not required when the slice's necessary inputs are accepted.
+- It starts from the user's current goal, active issues, pull requests, and work
+  in progress, checking whether candidates are already delivered or underway.
+  A general request considers every open `deferred` issue without requiring a
+  scan of every artifact. A scoped request includes relevant shared prerequisites.
+- It deepens document and implementation reads where evidence can change the
+  choice, expanding discovery if candidates are unclear. It stops once evidence
+  supports the choice over plausible alternatives and remaining uncertainty
+  would not change it. Full phase coverage is assessed only when requested.
+- It distinguishes absent, broken, and unverified behavior. A missing primary
+  journey calls for the smallest ready end-to-end slice; a demonstrated failure
+  calls for repair; uncertain behavior calls for verification when the result
+  changes the choice. Missing documentation alone creates no implementation task.
+  If a necessary decision blocks the work, it recommends the nearest ready
+  decision and names what it unlocks, without requiring whole-phase completion.
 - Once the primary journey works, explicit user goals, broken or incomplete
   observable behavior, and ready deferred work outrank minor improvements.
   Material security, safety, or operational risk may take priority at either
   stage.
-- It recommends one action, states its evidence and uncertainty, names materially
-  useful ready alternatives, and stops. The user's selection is routed as a new
-  request; no interview or implementation starts automatically.
+- It recommends one action with its reason, first concrete step, completion
+  condition, evidence, and material uncertainty. Alternatives appear only when
+  they clarify the choice. The user's selection is routed as a new request;
+  no interview or implementation starts automatically.
 
 ## J. The user contradicts an accepted artifact
 

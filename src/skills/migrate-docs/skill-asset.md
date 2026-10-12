@@ -1,150 +1,114 @@
 ---
 name: migrate-docs
-description: Migrate user-selected documentation into an initialized delivery-process-advisor project. Preserve its normative or informative role, resolve necessary transfer decisions, and replace originals without redundant copies. Use when adopting, migrating, or restructuring existing documentation, including unmarked project documents; the migration request is itself adoption into the advisor structure.
+description: Adopt or migrate user-selected documentation into an initialized delivery-process-advisor project, preserving meaning and replacing superseded originals. Use for migration into the advisor structure, including reorganization of existing artifacts; ordinary document edits do not require this skill.
 disable-model-invocation: false
 ---
 
 # Migrate documents into the advisor
 
-Transfer the supplied content faithfully into the project's advisor structure.
-Resolve only choices needed for that transfer; report missing design decisions
-as later work. Completed migration leaves one home for each input's content,
-without archived copies or replacement stubs for superseded specifications.
+Give the selected content one appropriate home without redesigning the project.
+Preserve decisions, proposals, informative material, and unresolved design as
+distinct things. Migration completion does not imply design or phase completion.
 
-## Read and map
+## Establish the transfer
 
-1. Identify the target project and the input documents from the request and
-   conversation. Read `advisor-agents.md` and `docs/advisor-docs.md` in that
-   project. If required advisor instructions are missing, name what is needed
-   before writing dependent documents; do not invent the scaffold or treat
-   initialization as migration.
-2. Read every input in full, using tools appropriate to its format. Include
-   meaningful tables, diagrams, notes, and linked material needed to interpret
-   it. A linked document is context, not automatically another migration input.
-   Identify unreadable or unavailable portions and pause the affected transfer;
-   never treat an extraction failure as empty content.
-   Establish each input's role from its content and the user's scope. An
-   existing informative reference that remains informative may stay in, or move
-   to, a permitted `sources/` location as the sole copy. Preserve its historical
-   or external context; moving it establishes no project rule. This is not
-   permission to keep a replaced specification as an archival source or to
-   import copies of external documents. Split mixed inputs by role without
-   losing their meaningful passages.
-3. Follow the advisor's reading path to inspect relevant existing artifacts,
-   authority boundaries, and only the catalogs for the scopes being migrated.
-   Choose authority and project or feature scope from the decisions expressed,
-   not the original filename or layout. Shared rules belong at project scope;
-   feature-specific rules link to them. Reuse a document whose Scope owns the
-   content; otherwise create the minimum documents its subjects require.
-4. Keep a compact working map from meaningful input passages to destination
-   documents and sections, including unresolved items and agreed exclusions.
-   Use it to check loss and duplication across all inputs. Keep this in the
-   session, not a permanent migration or coverage registry.
+Read `advisor-agents.md` and `docs/advisor-docs.md` unless already read. Follow
+their reading guidance, relevant deferred-work lookup, and documentation rules.
+If required advisor instructions are missing, report what is needed before
+writing dependent documents; initialization is separate work.
 
-For a new feature, apply the identity and placement rules in
-`docs/features/advisor-features.md` to the supplied capability information.
-Ask for missing information only when needed to place the content. Do not
-invent Product decisions or complete the foundation just to file later-phase
-material; record unresolved inputs in proposed work.
+Identify the target project and selected inputs from the request and conversation.
+Read each input fully, including meaningful tables, diagrams, notes, attachments,
+and linked context needed to interpret it. Linked documents are not automatically
+migration inputs. Unreadable content blocks only the affected transfer.
 
-## Resolve only necessary decisions
+For each meaningful passage, identify its role and destination:
 
-Resolve explicitly delegated choices under `docs/advisor-docs.md`. Use the
-separately installed `grilling` skill for remaining choices that change the
-migration: explain each consequence, suggest a default, and wait for the answer
-before applying that choice.
-Continue independent transfers where useful. The migration request authorizes
-writing documents as decisions settle.
+- Current project decisions: reuse the artifact whose Scope owns them.
+- Equivalent existing content: merge without duplicating the rule.
+- Content with no suitable owner: create the minimum necessary artifacts.
+- Informative material: preserve its context in one permitted `sources/` location.
+- Proposals and unresolved choices: preserve them explicitly as proposed work.
 
-- Treat explicit decisions in documents the user identifies as current project
-  specifications as already settled. Do not ask the user to approve them again.
-  For notes, alternatives, or descriptions of another system, establish their
-  intended role only when it affects what becomes a project rule. Neither
-  confident wording nor an old status alone establishes advisor acceptance.
-- Ask about conflicting decisions, ambiguous terms or scope that change
-  meaning, and substantive content that cannot be placed without changing or
-  discarding it. Show the relevant passages. Resolve routine filenames,
-  organization, and wording autonomously within the advisor's rules.
-- A conflict with an accepted artifact requires a decision under
-  `docs/advisor-docs.md`. Preserve
-  the current rule while its replacement is only a proposal. Apply an agreed
-  change through `propagate-change`, including affected dependants.
-- Report catalog questions the inputs do not answer as gaps. Do not turn them
-  into a general design interview, invent answers, or infer inapplicability
-  from silence. An unresolved necessary input keeps the affected work proposed;
-  an unrelated gap does not prevent acceptance of a sound artifact.
+Split mixed inputs by role and ownership. Choose authority and project or feature
+scope by meaning, not by the old layout. Follow relevant authority boundaries
+and catalogs. For a new feature, apply `docs/features/advisor-features.md`;
+ask only for information needed to place the supplied content.
+
+Keep a compact passage-to-destination map in the session, including unresolved
+transfers and agreed exclusions. Use it to check coverage across all inputs;
+do not create a permanent migration registry.
+
+## Resolve transfer decisions
+
+The migration request authorizes adoption and writing as decisions settle.
+Explicit decisions in documents the user identifies as current specifications
+are already settled; old status labels or confident wording alone do not
+establish acceptance.
+
+Handle filenames, organization, wording, and explicitly delegated choices
+autonomously. Use `grilling` only for unresolved choices affecting the transfer:
+conflicting decisions, meaning or scope, normative versus informative role,
+or substantive exclusions. Show the relevant passages, recommend an answer,
+and await it before applying that choice. Continue independent transfers.
+
+Preserve accepted rules while replacements remain proposals. Use
+`propagate-change` when an agreed transfer changes an accepted rule.
+
+Report unanswered relevant catalog questions as gaps. Do not invent answers,
+infer inapplicability from silence, or expand migration into a design interview.
+Missing design may remain proposed; missing transfer decisions block the
+affected transfer.
 
 ## Write and verify
 
-Use the writing and acceptance steps of the grill-with-docs session procedure
-in `docs/advisor-docs.md` within this migration's scope, and
-`propagate-change` when the migration changes a rule the project has
-already accepted. Use
-`domain-modeling` for resolved terminology and qualifying ADRs; preserve
-existing ADR locations, numbering, and decision history. Keep existing reasons
-and alternatives without inventing rationale or manufacturing an ADR for each
-moved paragraph.
+Use the writing and acceptance steps in `docs/advisor-docs.md`. Reuse existing
+owners before creating documents. Keep current rules distinct from proposals.
 
-Split mixed documents by ownership and merge overlapping content where its
-meaning is equivalent. Each rule has one authoritative home. Preserve
-conditions, exceptions, examples that explain behavior, and the distinction
-between current decisions, proposals, and historical alternatives. Artifact
-structure follows its subject, with the required status, Scope, and decision
-Dependencies; glossary entries and ADRs keep their own formats. Keep proposals
-distinct from current rules, with their unresolved assumptions visible.
+Preserve conditions, exceptions, behavior-explaining examples, reasons,
+alternatives, and unresolved assumptions. Use `domain-modeling` for resolved
+terms and qualifying ADRs, preserving existing formats, locations, numbering,
+and decision history. Do not invent rationale or an ADR for every moved passage.
 
-Check the replacements against the inputs and relevant project documents:
+Verify each replacement against the inputs and relevant existing artifacts:
 
-- Every meaningful passage is represented or its substantive exclusion was
-  settled; constraints change only where a change was settled with the user
-  or within their explicit delegation during migration.
-- Authority, scope, terminology, and cross-document decisions are coherent.
-- Dependencies point to the decisions actually relied on, explain why, and
-  have compatible accepted inputs before the dependent artifact is accepted.
-  Follow the existing joint-acceptance procedure for coupled decisions.
-- Moved paths, headings, and references resolve to the new owning passages.
-  Preserve useful provenance in ADRs or beside smaller decisions: use an
-  existing stable version link when available, otherwise a factual citation
-  identifying the original document and passage. Do not create a retained copy
-  or a link to a file about to be removed just to preserve provenance.
+- Every meaningful passage is represented or its exclusion was settled.
+- Meaning changes were agreed or explicitly delegated.
+- Ownership, terminology, and cross-document decisions are coherent.
+- Dependencies and acceptance satisfy the common documentation rules.
+- Useful provenance identifies the original passage through an existing stable
+  version link or factual citation, never a link to an original being removed.
 
-Accept sound artifacts without another approval round for decisions already
-settled. This checks migration fidelity, coherence, and dependencies; it is
-not a general audit of the project's design. A completed migration may contain
-proposed artifacts and leave phases incomplete. Claim phase completion only
-after that procedure's phase completion check.
+Accept eligible artifacts without reconfirming settled decisions. Unrelated
+design gaps do not block acceptance. Claim phase completion only after the
+common phase-completion check.
 
-## Replace originals and close
+## Replace originals and report
 
-Write and verify replacements before removing an original. Search the target
-project for references to its old path and headings and update affected links,
-including entry points and Dependencies. Inspect related passages for textual
-references that a path search may miss. For an in-place replacement, prepare
-and compare the new text before overwriting, then reread and keep the rewritten
-file. Retain needed attachments as part of the new
-documentation or reproduce their content; do not leave them linked only
-through a discarded original.
+Before removing an input:
 
-Remove only input files inside the target project that this migration replaces.
-Do not retain replaced specifications as sources, archives, or redirect
-documents. Informative inputs follow the single-copy placement rule above.
-External input
-files and remote documents are read without importing copies into the advisor;
-deleting those external originals requires that scope in the user's request.
-Resolve actual deletion paths within the target and remove only checked input
-files, never whole folders. Do not delete unrelated sources or existing advisor
-instructions, scaffolds, catalogs, or skill files.
+1. Save and read its verified replacement.
+2. Repair references across the target project, including entry points,
+   Dependencies, old headings, and relevant textual mentions.
+3. Preserve needed attachments at their new home or reproduce their content.
+4. Confirm that no unreadable content, unresolved transfer, or undecided
+   exclusion remains.
 
-Before removal, verify that each input's content is accounted for, its output
-is saved and readable, and its references are repaired. Proposed output can
-preserve an unresolved decision faithfully; unresolved transfer, unreadable
-content, or an undecided exclusion prevents removal of that input. On an
-interruption, retain unverified originals temporarily and report the migration
-as incomplete, with remaining files and work. Use the advisor's Review blocks
-for interrupted changes to accepted rules. Resume by inspecting existing output
-and remaining inputs rather than creating duplicate artifacts.
+For an in-place replacement, compare the prepared text before overwriting,
+then reread and retain the rewritten file.
 
-Finish with a concise account of input-to-output destinations, originals
-replaced or removed, decisions resolved, resulting statuses, and remaining gaps
-or incomplete transfers. Distinguish migration completion from design or phase
-completion; do not persist another status register.
+Remove only superseded input files whose resolved paths are inside the target
+project. Never remove whole folders, unrelated sources, advisor instructions,
+scaffolds, catalogs, or skills. Keep no archival copies or redirect stubs for
+replaced specifications. Informative inputs retain one appropriate copy.
+
+Read external inputs without importing copies. Deleting external originals
+requires explicit scope in the user's request.
+
+Proposed output may faithfully preserve unresolved design and still replace its
+input. If transfer or verification is incomplete, retain the affected original
+and report the remaining work. Follow the common Review rules for interrupted
+changes to accepted decisions. Resume from existing outputs and remaining inputs.
+
+Finish with destinations, originals replaced or retained, resolved choices,
+resulting statuses, and remaining gaps. State whether migration itself is complete.

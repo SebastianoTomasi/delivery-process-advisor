@@ -1,75 +1,77 @@
 ---
 name: propagate-change
-description: Propagate an agreed change to an accepted rule through every artifact that depends on it. Use when a term, capability, contract, prerequisite, or other accepted decision under docs/ must change, when a changed source may have invalidated an accepted decision, or when resuming an interrupted propagation left behind as needs-review.
+description: Propagate a change to an accepted decision through its dependent artifacts. Use for substantive rule changes, assessing whether a changed source requires one, or resuming an interrupted propagation marked needs-review.
 disable-model-invocation: false
 ---
 
-Changing an accepted rule is one procedure with one outcome: the rule and every
-artifact depending on it are coherent again. A wording-only correction is not
-this procedure and can be applied directly after checking that it changes no
-meaning, dependency, or scope.
+Finish with one authoritative current rule and coherent dependent artifacts.
+Apply wording-only corrections directly when meaning, dependencies, and scope
+are unchanged. A changed source prompts assessment of the current rule and its
+ADRs; it does not authorize a replacement. Propagate only an agreed change.
 
-Read `docs/advisor-docs.md` for the status, dependency, Review block, and
-provenance rules, and use the shared reading guidance in `advisor-agents.md` to
-find the affected artifacts; read those files when they are not already read.
-Use the separately installed `grilling` skill for the questions this procedure
-raises, the writing and acceptance steps of the grill-with-docs session
-procedure in `docs/advisor-docs.md` for the artifacts it changes, and the
-separately installed `domain-modeling` skill for a qualifying ADR.
+Follow `advisor-agents.md` for selective reading and relevant deferred work,
+and `docs/advisor-docs.md` for writing, statuses, Review blocks, dependencies,
+and acceptance, including coupled decisions. Read them if not already in
+context. Use `grilling` only for unresolved choices and `domain-modeling` for
+changed terminology or qualifying ADRs.
 
-## Propagating the change
+## Establish the change
 
-A change to a term, capability, contract, prerequisite, or other accepted rule
-starts a focused session:
+Identify the owning passage, the old and replacement decisions, the reason,
+and which clauses remain valid. Recover settled answers and delegation from
+the conversation and artifacts; apply determined consequences without another
+approval. Explain and ask only new choices. Discover impact while a choice or
+reason is pending, but settle both before accepting its replacement. Keep the
+current rule in force while a replacement is proposed; any draft names the
+passage it would replace.
 
-1. Identify the owning decision and passage, the reason for the change, and the
-   proposed replacement. While the replacement is only a proposal, preserve the
-   accepted rule; a separate draft names the passage it proposes to replace.
-   A missing reason does not delay independently knowable impact discovery in
-   step 2; obtain it before accepting the replacement.
-2. Trace direct and transitive dependants by reading Dependencies and searching
-   artifact references to the changed path, headings, and terms. Inspect likely
-   related routing envelopes as well: missing links are possible, so search
-   results are candidates for semantic review, not a complete dependency graph.
-   Include shared rules, affected features, screening answers, and dismissals.
-   Read each affected authority boundary and relevant catalog as the work reaches
-   it, using the root file's selective reading guidance.
-   Do not reopen unrelated phases merely because the change is upstream.
-3. Explain consequences, resolve explicitly delegated choices under
-   `docs/advisor-docs.md`, and ask only the remaining new choices, through
-   `grilling`.
-   Apply consequences already determined by the answers without
-   seeking approval for each document edit. If more decisions are coupled,
-   resolve their compatible replacement together; do not accept drafts using
-   each other as their only evidence of readiness.
-4. When the change is agreed, use `domain-modeling` for the qualifying
-   ADR, including reasons and sources, and supersede an incompatible old ADR
-   through its existing format. Before replacing a current rule, mark affected
-   accepted artifacts whose compatibility is not yet checked `needs-review`
-   and write the Review block required by `docs/advisor-docs.md`. Link the
-   changed decision and ADR when present, with concrete remaining work. If an
-   interruption occurs before the rule replacement, say that applying the
-   agreed replacement is still pending and link its draft or ADR. Existing
-   proposed dependants stay proposed and record the changed input and work left.
-5. Update the owning rule and every affected artifact, dependency link, and
-   dismissal. A checked-compatible artifact may return to accepted unchanged;
-   an incompatible one is amended from settled answers and then accepted. When
-   more effects emerge, trace them in turn. Update or remove a replaced proposal
-   or blanket `absent.md` so there is still one authoritative current rule.
-6. Review the affected documents together for contradictions and unresolved
-   dependencies. Recheck affected catalog coverage when an answer or dismissal
-   changed. Close the session only when propagation is complete and the affected
-   documents are coherent; summarize the changed rule, updated or confirmed
-   documents, ADR, and resulting advice.
+## Trace the effects
 
-`needs-review` supports recovery from interruption or a user pause, not the
-normal outcome. If work must stop, update each Review block with cause, changed
-passage, relevant ADR, and remaining checks or decisions; report the work as
-incomplete. On resumption, read those blocks and the changed decisions, finish
-the propagation, then remove the recovery blocks when acceptance is justified.
-Do not create another change or rationale registry.
+Trace direct and transitive dependants through their Dependencies links, and
+search paths, headings, terms, old formulations, and ADR references.
+Inspect likely related artifact scopes
+for missing links, including shared rules, features, screening answers, and
+dismissals. Read affected authority boundaries and relevant catalogs as needed;
+do not reopen unrelated phases. Search matches are candidates for semantic
+review, not a complete dependency graph or automatic replacements.
 
-A changed source only identifies decisions that may deserve reconsideration.
-Read their ADRs and current rules, raise any substantive conflict, and use this
-procedure only when an accepted decision is actually changed. Neither a source
-nor an ADR status overrides a normative artifact automatically.
+Keep a compact working map in the session: candidate passage, consequence,
+and disposition (amend, checked-compatible, unaffected, or unresolved choice).
+Extend it as new effects emerge; do not persist another registry.
+
+## Apply settled decisions
+
+Before replacing the rule, mark affected accepted artifacts whose compatibility
+is unchecked `needs-review` with the required Review blocks. Existing proposals
+stay proposed and record their changed input and remaining work.
+
+Write the rule in its owning artifact. Elsewhere update consequences and links
+without duplicating its definition or rationale. Update affected dependency
+links and dismissals, and integrate or remove replaced proposals and `absent.md`.
+Record qualifying ADRs with reasons and sources. For an older ADR, distinguish
+full supersession from replacement of specific clauses; identify what still
+stands using its existing format. An ADR status never overrides the owning rule.
+
+Check compatibility before restoring acceptance, even when the body needs no
+edit. Settle and accept coupled decisions together under the common rules.
+
+## Verify and close
+
+Review the affected documents together against the agreed change:
+
+- Every candidate has a resolved disposition and each affected dependency is
+  compatible; revisit catalog coverage where an answer or dismissal changed.
+- Old formulations no longer state the current rule; paths and anchors resolve.
+- Current rationale links reflect full or partial ADR replacement. Preserve
+  historical accounts and source evidence instead of rewriting them as current.
+- Each rule has one owner, with no contradictory or duplicated definitions or
+  rationale introduced by the propagation.
+
+Finish only when propagation is complete. Summarize the changed rule, amended
+or confirmed documents, relevant ADRs, and any resulting advice.
+
+If interrupted, leave actionable Review blocks and report incomplete work. If
+the owning rule has not yet been replaced, say so and link the agreed draft or
+ADR. Resume from those blocks and decisions, complete the remaining work, and
+remove Review blocks only when acceptance is justified. `needs-review` is
+recovery state, not successful closure.

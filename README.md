@@ -426,3 +426,7 @@ for the complete contributor rules.
 - [Interaction flows](docs/development/interaction-flows.md) — acceptance
   scenarios and open product decisions.
 - [Presets](docs/architecture/presets.md) — the proposed shared-preset design.
+
+## License
+
+[MIT](LICENSE)

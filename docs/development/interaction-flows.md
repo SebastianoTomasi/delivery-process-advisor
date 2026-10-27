@@ -637,9 +637,13 @@ be absent, may specify a new CSV capability, or may contradict the implementatio
 - For a documented capability that is not implemented, the agent uses the
   relevant accepted decisions to guide the requested implementation. Acceptance
   establishes settled intent, not evidence that the capability already exists.
+- Before answering or changing, the agent reads the export code first, then
+  the documentation, and answers from both.
 - An explicit discrepancy whose intended resolution is not established is
-  surfaced to the user. The agent preserves the implementation while clarifying
-  the intended change and assumes neither a bug nor outdated documentation.
+  surfaced to the user. The agent preserves the implementation, proposes
+  bringing the documentation in line with the code, changes no document on its
+  own, and assumes no bug; the user may instead confirm the documentation as
+  the intended direction.
 - Reading applicable documentation alone triggers neither a session nor a phase
   assessment. An already-settled request does not need a second approval.
 - Documentation-derived conclusions cite supporting passages and disclose unread

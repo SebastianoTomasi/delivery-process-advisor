@@ -268,13 +268,20 @@ contract is in
     documentation creates no obligation to change or document it. Accepted
     documentation guides the work it specifies that is not yet implemented;
     acceptance records settled decisions, not evidence of implementation.
-    When code and documentation explicitly contradict one another, or a ticket
-    or request contradicts an accepted decision, surface the discrepancy before
-    acting on it and preserve the implementation while clarifying the intended
-    change with the user. The mismatch alone establishes neither a bug nor
-    outdated documentation. Apply the consequences once the direction is
-    settled. [ADR-0032](../adr/0032-code-establishes-implemented-behavior.md)
-    records this distinction.
+    Before explaining, planning, or changing behavior the project may already
+    have, the agent reads the code first, then the documentation, and answers
+    from both: where they agree it explains the implementation through the
+    documents; where they contradict each other it says so, preserves the
+    implementation, and proposes bringing the documentation in line with the
+    code. The contradiction alone changes no document and establishes no bug;
+    the user may instead confirm the documentation as the intended direction,
+    and the accepted decision then guides the change. A ticket or request that
+    contradicts an accepted decision is likewise surfaced before acting on it.
+    Apply the consequences once the direction is settled.
+    [ADR-0032](../adr/0032-code-establishes-implemented-behavior.md) records
+    the distinction and
+    [ADR-0047](../adr/0047-code-is-read-before-documentation.md) the reading
+    order and the default direction of repair.
 -   **A working product comes before optional polish.** Until the primary user
     journey is supported by concrete implementation evidence, advice favors the
     smallest end-to-end slice that satisfies the established Product behavior

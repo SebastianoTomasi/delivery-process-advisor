@@ -15,10 +15,16 @@ For work specified in documentation but not yet implemented, the relevant
 accepted decisions are part of its spec: read and follow them when planning,
 building, or reviewing it. Use the reading guidance below to find them.
 
-When code contradicts the documentation, or a ticket or request contradicts an
-accepted decision, surface the discrepancy before acting on it, and preserve
-the implementation while clarifying the intended change with the user. The
-discrepancy alone establishes neither a bug nor outdated documentation.
+Before explaining, planning, or changing behavior the project may already
+have, read the code first, then the documentation, and answer from both,
+because documentation read alone can describe a behavior the code has since
+replaced. Where the two agree, explain the implementation through the
+documents. Where they contradict each other, say so, keep the implementation,
+and propose bringing the documentation in line with the code; the
+contradiction alone changes no document and proves no bug, and the user may
+instead confirm the documentation as the intended direction. A ticket or
+request that contradicts an accepted decision is likewise raised before acting
+on it.
 
 Accepted artifacts record settled decisions; they do not prove that those
 decisions are implemented. Proposals and artifacts needing review do not

@@ -575,7 +575,8 @@ for the work separately installed skills perform, is:
   dependencies, provenance, acceptance conditions, and decision readiness.
   Its authority table summarizes enough to select a local boundary. It also
   owns the grill-with-docs session procedure: preparation, including the
-  relevant source reads, before the first question; writing; acceptance; and
+  relevant source reads and the code of behavior the project already has,
+  before the first question; writing; acceptance; and
   the check and report before a phase is claimed complete.
 - Authority scaffolds own their precise inclusion, exclusion, and scope rules.
 - Catalogs own subject-specific decisions, dependencies, and recommended order.

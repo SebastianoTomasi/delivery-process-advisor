@@ -10,7 +10,7 @@ for sid in sys.argv[2:]:
         if a[0] == "skill":
             print("skill ", a[1])
         if a[0] in ("read", "search", "list") and (a[1] or "").startswith(("docs", "GLOSS", "advisor")):
-            d = re.sub(r"[A-Za-z]:[/\\]Users[/\\][^/\\]+[/\\]Documents[/\\]Code[/\\]Claror[/\\]Clari[/\\]?", "", a[3].replace("\n", " "))
+            d = re.sub(r"[A-Za-z]:[/\\]Users[/\\][^/\\]+[/\\](?:[^/\\\s]+[/\\])*?(?=docs[/\\]|backend[/\\]|frontend[/\\]|src[/\\])", "", a[3].replace("\n", " "))
             print(f"{a[0]:6s} {a[2]:5s} {d[:170]}")
             n += 1
             if n > limit:

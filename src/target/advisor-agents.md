@@ -88,16 +88,18 @@ status, dependency, and acceptance rules are in
 ## Reading guidance
 
 Open a known relevant artifact directly. To find what the project decided on a
-subject, search inside the folder that holds it: `docs/<authority>/` for a
-shared rule, `docs/features/<feature-slug>/` for a feature, `docs/adr/` for the
-reasons behind a decision; then follow the links those documents carry. The
-folders already name subject and owner, so this reaches the passage at a
-fraction of the cost of reading the common rules first. When a search finds
-nothing, the subject may be documented in other words: open the authority's
-boundary file or the authority table in `docs/advisor-docs.md`. Use that same
-route to place a document or to learn which decisions an action must cover,
-reading only the catalog the action needs. Do not load the documentation tree
-as general context.
+subject, search inside the folders that hold it: `docs/<authority>/` for shared
+rules, `docs/features/<feature-slug>/` for a feature, `docs/adr/` for the
+reasons behind a decision; then follow the links those documents carry. For
+feature work, search the authority folders as well as the feature's, because
+shared rules bind every feature. The folders already name subject and owner,
+so this reaches the passage at a fraction of the cost of reading the common
+rules first. When a search finds nothing, the subject may be documented in
+other words: open the authority's boundary file or the authority table in
+`docs/advisor-docs.md`. To place a document, select its authority in that table
+and read the authority's boundary; to learn which decisions an action must
+cover, read only the catalog the action needs. Do not load the documentation
+tree as general context.
 
 Follow relevant Dependencies, Review blocks, and linked decision passages.
 Treat filenames and markers as routing information, not evidence of what a

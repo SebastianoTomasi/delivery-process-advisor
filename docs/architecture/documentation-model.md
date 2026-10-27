@@ -498,14 +498,15 @@ sections are:
   finding sources, and citing supporting evidence.
 
 An agent may open a known relevant artifact directly. To find what the project
-decided on a subject, it searches inside the folder that holds it, an authority
-folder, a feature folder, or `docs/adr/`, and follows the links the documents
-found carry; when a search finds nothing, it opens the authority's boundary or
-the authority table in the common rules, since the subject may be documented in
-other words. To place a document, or to learn which decisions an action must
-cover, it uses the common rules to select the authority, reads its boundary,
-and reads a catalog only when the action needs those decisions or coverage
-questions. It follows pertinent Dependencies, Review blocks, and decision
+decided on a subject, it searches inside the folders that hold it, authority
+folders, a feature folder, or `docs/adr/`, and follows the links the documents
+found carry. It considers both project and feature scopes: feature work also
+searches the authority folders, since shared rules bind every feature. When a
+search finds nothing, it opens the authority's boundary or the authority table
+in the common rules, since the subject may be documented in other words. To
+place a document, it selects the authority in that table and reads its
+boundary; to learn which decisions an action must cover, it reads a catalog
+only when the action needs those decisions or coverage questions. It follows pertinent Dependencies, Review blocks, and decision
 passages. The root does not require a documentation-tree inventory, a phase
 assessment, or a session merely to use project documentation during ordinary
 code work.

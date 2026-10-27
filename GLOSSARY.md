@@ -83,6 +83,10 @@ _Avoid_: baseline, core documents, common layer
 An artifact’s lifecycle position: proposed for a draft, accepted for settled compatible decisions, or needs-review for previously accepted work whose compatibility with a change remains unchecked. A later proposal does not itself withdraw existing acceptance.
 _Avoid_: artifact phase, state
 
+**Routing envelope**  
+The opening of an artifact by which an agent judges its relevance without reading the body: filename, title, status marker, and Scope. Dependencies follow the envelope and are not part of it.
+_Avoid_: header, preamble, frontmatter
+
 **Decision dependency**  
 A link to a decision in another artifact together with the reason a local rule relies on it. Navigation and provenance links alone are not decision dependencies.
 

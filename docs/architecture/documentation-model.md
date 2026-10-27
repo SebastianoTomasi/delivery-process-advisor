@@ -485,24 +485,40 @@ sections are:
   [Product relationship between code and documentation](../product/overview.md#rules),
   which also covers a ticket or request contradicting an accepted decision; and
   that the accepted decisions are part of the spec of the work they specify
-  when planning, building, or reviewing it.
+  when planning, building, or reviewing it; and that a passage becomes an
+  input only once its routing envelope has been read.
 - **Where things are:** the map to common rules, authority boundaries, catalogs,
   feature artifacts, vocabulary, and decision records.
 - **Sessions, tickets, and handoffs:** the advisor's rules for grill-with-docs
-  sessions, ticket breakdowns and implementation, handoffs, and deferred work,
-  the cases where a
+  sessions, ticket breakdowns and implementation, delegation briefs, handoffs,
+  and deferred work, the cases where a
   separately installed skill behaves differently in a guided project.
-- **Reading guidance:** selecting relevant material, following decision
-  dependencies, finding sources, and citing supporting evidence.
+- **Reading guidance:** finding documents by subject through the folders,
+  placing them through the common rules, following decision dependencies,
+  finding sources, and citing supporting evidence.
 
-An agent may open a known relevant artifact directly. When locating or placing
-documentation, it uses the common rules to select the authority and reads its
-boundary. It considers relevant project and feature scopes, selects artifacts
-by their opening envelopes, and follows pertinent Dependencies, Review blocks,
-and decision passages. It reads a catalog only when the action needs those
-decisions or coverage questions. The root does not require a documentation-tree
-inventory, a phase assessment, or a session merely to use project documentation
-during ordinary code work.
+An agent may open a known relevant artifact directly. To find what the project
+decided on a subject, it searches inside the folder that holds it, an authority
+folder, a feature folder, or `docs/adr/`, and follows the links the documents
+found carry; when a search finds nothing, it opens the authority's boundary or
+the authority table in the common rules, since the subject may be documented in
+other words. To place a document, or to learn which decisions an action must
+cover, it uses the common rules to select the authority, reads its boundary,
+and reads a catalog only when the action needs those decisions or coverage
+questions. It follows pertinent Dependencies, Review blocks, and decision
+passages. The root does not require a documentation-tree inventory, a phase
+assessment, or a session merely to use project documentation during ordinary
+code work.
+[ADR-0046](../adr/0046-finding-goes-through-folders-the-map-serves-placement.md)
+records why finding goes through the folders while the common rules serve
+placement.
+
+A passage read without its routing envelope is not yet an input: before an
+agent plans, builds, or reviews on it, or tells the user what the project
+decided, it has read the document's title, status line, and Scope, and its
+Dependencies when the passage is a decision that relies on others. A brief
+that delegates work names the documents owning its subject, with their status,
+since a delegate finds documents through its brief first.
 
 The root's short interpretation summary is deliberately repeated at entry
 depth: accepted means settled, not proven implemented; proposals and artifacts

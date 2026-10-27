@@ -23,6 +23,11 @@ discrepancy alone establishes neither a bug nor outdated documentation.
 Accepted artifacts record settled decisions; they do not prove that those
 decisions are implemented. Proposals and artifacts needing review do not
 establish accepted inputs; sources inform decisions without establishing rules.
+A passage read without its routing envelope is not yet an input, since a slice
+of a proposal reads like a slice of an accepted rule: before planning, building,
+reviewing, or telling the user what the project decided on it, read the
+document's title, status line, and Scope, and its Dependencies when the passage
+is a decision that relies on others.
 An artifact records decisions established with the user, including choices made
 within their explicit delegation. Choices made without that agreement or
 delegation remain proposed. The user may change direction; the advisor's advice
@@ -57,6 +62,9 @@ status, dependency, and acceptance rules are in
   put to the user, each with a recommended answer, the decisions the work
   depends on that neither an accepted artifact, its ticket, nor the
   conversation settles.
+- **Delegation.** A brief that delegates work names the documents that own its
+  subject, with their status, because a delegate finds documents through its
+  brief before anything else.
 - **Handoffs** name the decisions settled in the conversation but not yet
   written to their artifacts, suggesting `/grill-with-docs` to record them, and
   leave work that can wait beyond the next session to `deferred` issues.
@@ -73,17 +81,21 @@ status, dependency, and acceptance rules are in
 
 ## Reading guidance
 
-Open a known relevant artifact directly. When locating or placing documentation,
-use `docs/advisor-docs.md` to select the owning authority, then read its boundary.
-Consider both shared project rules and relevant feature artifacts. Select
-artifacts by filenames and opening passages containing the title, status, and
-Scope; read bodies whose scope can affect the work. Do not load the documentation
-tree as general context.
+Open a known relevant artifact directly. To find what the project decided on a
+subject, search inside the folder that holds it: `docs/<authority>/` for a
+shared rule, `docs/features/<feature-slug>/` for a feature, `docs/adr/` for the
+reasons behind a decision; then follow the links those documents carry. The
+folders already name subject and owner, so this reaches the passage at a
+fraction of the cost of reading the common rules first. When a search finds
+nothing, the subject may be documented in other words: open the authority's
+boundary file or the authority table in `docs/advisor-docs.md`. Use that same
+route to place a document or to learn which decisions an action must cover,
+reading only the catalog the action needs. Do not load the documentation tree
+as general context.
 
 Follow relevant Dependencies, Review blocks, and linked decision passages.
 Treat filenames and markers as routing information, not evidence of what a
-document establishes. Read a catalog when the action needs its decisions or
-coverage questions, selecting only the relevant scope and phase.
+document establishes.
 
 Look for sources in `docs/sources/` and `docs/<authority>/sources/`. For feature
 work, also inspect `docs/features/<feature-slug>/sources/` and

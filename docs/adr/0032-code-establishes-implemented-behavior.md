@@ -4,6 +4,12 @@ status: accepted
 
 # Code establishes implemented behavior
 
+[ADR-0047](0047-code-is-read-before-documentation.md) later replaced the
+neutral default below: for behavior that may already exist the agent now reads
+the code before the documentation, and when the two contradict each other it
+proposes bringing the documentation in line with the code unless the user
+confirms the documentation as the intended direction. The rest stands.
+
 Code is the source of truth for what is implemented. Accepted documentation
 guides the work it specifies that is not yet implemented; acceptance establishes
 settled intent, not implementation. Undocumented existing behavior creates no

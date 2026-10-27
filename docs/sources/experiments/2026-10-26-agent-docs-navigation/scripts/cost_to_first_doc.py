@@ -1,4 +1,7 @@
-"""Cost to reach the first artifact: map-first vs grep-first sessions (Clari main, no advisor skill)."""
+"""Cost to reach the first artifact: map-first vs grep-first sessions (main sessions, no advisor skill).
+Usage: cost_to_first_doc.py PROJECT_FOLDER_PREFIX SINCE  (e.g. c--Users-<user>-Documents-Code-Claror-Clari 2026-09-14)
+"""
+import sys
 import json, re, glob, os, statistics, collections
 ROOT = os.path.expanduser("~/.claude/projects")
 MAPFILE = re.compile(r"(docs/advisor-docs\.md|docs/features/advisor-features\.md|advisor-[a-z]+(-project|-feature)?\.md)$")
@@ -22,7 +25,7 @@ def docs_in(name, inp):
     return [m.group(0) for m in DOC.finditer(s)] if name in ("Read","Bash","PowerShell","Grep") else []
 
 rows = []
-for fp in glob.glob(f"{ROOT}/c--Users-<user>-Documents-Code-Claror-Clari*/*.jsonl"):
+for fp in glob.glob(f"{ROOT}/{sys.argv[1]}*/*.jsonl"):
     calls = {}; start=None; seq=[]; skills=set(); first=None
     for line in open(fp, encoding="utf-8", errors="replace"):
         try: d = json.loads(line)
@@ -47,7 +50,7 @@ for fp in glob.glob(f"{ROOT}/c--Users-<user>-Documents-Code-Claror-Clari*/*.json
             elif first is None:
                 t = c if isinstance(c, str) else "\n".join(x.get("text","") for x in c if isinstance(x, dict) and x.get("type")=="text")
                 if t.strip() and not t.lstrip().startswith("<"): first = t.strip()[:200]
-    if not start or start < "2026-09-14" or not first: continue
+    if not start or start < sys.argv[2] or not first: continue
     if "subagents" in fp.replace("\\","/"): continue
     if skills & ADV: continue
     idx = next((i for i,(k,_) in enumerate(seq) if k == "art"), None)

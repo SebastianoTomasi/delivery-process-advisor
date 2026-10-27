@@ -4,6 +4,13 @@
 
 Before doing any work, read and follow [advisor-agents.md](advisor-agents.md).
 
+## This repository is public
+
+Everything committed here is visible to anyone. Keep personal data out of the
+repository: no local user paths, e-mail addresses, credentials, or private
+conversations. Analysis outputs that contain such material stay outside the
+repository; refer to them by a placeholder path such as `%USERPROFILE%`.
+
 ## Regenerating the installed advisor
 
 When committing or pushing a change that touches `src/`, run

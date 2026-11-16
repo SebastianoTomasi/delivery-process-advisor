@@ -614,8 +614,8 @@ now includes a client-visible surface.
 - It links to persisted information instead of copying it and redacts
   sensitive data.
 - In a guided project it names the decisions settled in the conversation but
-  not yet written to their artifacts, suggesting a grill-with-docs session to
-  record them, and leaves work that can wait to `deferred` issues, as
+  not yet written to their artifacts, so the next conversation can write them,
+  and leaves work that can wait to `deferred` issues, as
   [ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
   records.
 - No advisor skill or delivered document creates, discovers, or closes a

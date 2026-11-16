@@ -72,8 +72,8 @@ status, dependency, and acceptance rules are in
   subject, with their status, because a delegate finds documents through its
   brief before anything else.
 - **Handoffs** name the decisions settled in the conversation but not yet
-  written to their artifacts, suggesting `/grill-with-docs` to record them, and
-  leave work that can wait beyond the next session to `deferred` issues.
+  written to their artifacts, so the next session can write them, and leave
+  work that can wait beyond the next session to `deferred` issues.
 - **Deferred work**, a question, idea, or concern that can wait beyond the next
   session, is an open `deferred` issue in the tracker configured by
   `docs/agents/issue-tracker.md` (if it is missing, ask the user to run

@@ -350,11 +350,15 @@ contract is in
     delegates to the agent. A choice within that delegation is settled and can
     be accepted without subsequent user ratification once the usual acceptance
     conditions hold. A choice made without the user's agreement or outside
-    their delegation remains proposed. A session is the ordinary way to
-    establish decisions and the one the advisor recommends; the same acceptance
-    rules apply to a document written another way.
+    their delegation remains proposed. A decision already settled in
+    conversation can be written into its artifact right away, propagating the
+    change when it replaces an accepted rule; the advisor recommends a session
+    only for work whose decisions are still open, such as a new feature or
+    phase. The same acceptance rules apply however a document is written.
     [ADR-0036](../adr/0036-explicit-delegation-can-settle-decisions.md) records
-    the delegation decision.
+    the delegation decision, and
+    [ADR-0048](../adr/0048-settled-decisions-need-no-session.md) why a session
+    is recommended only for open decisions.
 
 ## Provenance
 

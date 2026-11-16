@@ -10,10 +10,14 @@ An artifact records decisions established with the user, including choices the
 user explicitly delegates to the agent. Within that delegation, the agent's
 choice is settled and can be accepted without further user confirmation when
 the usual acceptance conditions hold. A choice made without the user's
-agreement or outside their delegation remains proposed. A grill-with-docs
-session is the ordinary way to establish decisions and the one to recommend; a
-document written another way is held to the same acceptance rules. Acceptance
-records a settled decision, not evidence that it has been implemented.
+agreement or outside their delegation remains proposed. A decision already
+settled in the conversation can be written into the artifact that owns it right
+away, propagating the change when it replaces an accepted rule; the user need
+not open a grill-with-docs session for it. Recommend a session only when the
+work still has decisions to settle, such as a new feature or phase, because a
+session's value lies in asking those questions. A document is held to the same
+acceptance rules however it was written. Acceptance records a settled decision,
+not evidence that it has been implemented.
 
 Code establishes what is implemented. Existing behavior absent from the docs  
 creates no obligation to change or document it. Accepted documentation guides  

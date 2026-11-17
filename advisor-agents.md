@@ -4,8 +4,8 @@ This project follows the delivery process advisor: a project-local process for
 turning an idea into software that is clear enough to build. Its normative
 documentation lives under `docs/`. Catalogs define the decisions to address,
 their dependencies, and the usual order. This file provides shared reading
-guidance and navigation, and says how sessions, tickets, handoffs, and deferred
-work fit the process.
+guidance and navigation, says what a decision rests on, and says how sessions,
+tickets, handoffs, and deferred work fit the process.
 
 ## Using project documentation
 
@@ -40,6 +40,24 @@ delegation remain proposed. The user may change direction; the advisor's advice
 creates no additional permission step or deviation record. The full document,
 status, dependency, and acceptance rules are in
 [`docs/advisor-docs.md`](docs/advisor-docs.md).
+
+## Decisions rest on data
+
+A decision that turns on a fact, such as a number, a limit, a cost, or how an
+external system or library behaves, rests on that fact, not on a guess. A
+choice that depends only on what the user wants needs no research. Before
+recommending an answer, look in the code, the documents, and the sources for
+the facts that could change it. When one is missing or has no source behind
+it, research it thoroughly in primary sources first, in a subagent where the
+host offers one, to keep this session's context for the decision. Do so even
+when the fact seems too specific to this project to be found, because that is
+known only after looking, and stop when further searching is unlikely to
+change the answer. Save the findings, with where the research looked, as a
+[source](docs/advisor-docs.md#where-material-that-is-not-a-document-sits) and
+cite it from the artifact that records the decision. A fact the research does
+not find, or derives only from similar cases, stays uncertain: the artifact
+states it as an estimate or an assumption, never as a fact, and says what
+would verify it.
 
 ## Where things are
 

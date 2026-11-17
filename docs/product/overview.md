@@ -232,7 +232,9 @@ establish what is implemented. Open `deferred` issues preserve future
 work, its context, and when to revisit it. A session records an agreed deferral
 in the tracker shared with `to-tickets`. Deferred issues inform the work;
 accepted answers remain in the owning normative artifacts. What is not known
-from the conversation or project evidence is asked rather than invented.
+from the conversation or project evidence is asked rather than invented; a
+fact that a decision turns on is researched first, under the
+[rule on data](#rules).
 
 The representation and recovery contracts for
 [deferred items](../architecture/documentation-model.md#deferred-items) and the
@@ -245,8 +247,8 @@ the move of handoffs outside the project in
 
 Among the project files are the **sources**: informative material retained in a
 `sources/` folder for a session to read — know-how, an external
-specification, a description of a system being replaced, or an experiment's
-report and results. Where the folder sits is what states which work the
+specification, a description of a system being replaced, the findings of a
+research, or an experiment's report and results. Where the folder sits is what states which work the
 material is relevant to, and a session
 reads the folders on the path to what it is doing, judging from each file's
 name and opening lines whether to read it whole. A source carries no accepted
@@ -313,6 +315,22 @@ contract is in
     informative source links for important decisions; current artifacts link to
     them. A source correction can prompt reconsideration without automatically
     changing an accepted rule.
+-   **A decision that turns on a fact rests on that fact.** Before recommending
+    an answer that a number, a limit, a cost, or the behavior of an external
+    system or library could change, the agent looks for that fact in the code,
+    the documents, and the sources. A fact that is missing, or stated without a
+    source, is researched thoroughly in primary sources before the
+    recommendation, even when it seems too specific to the project to be
+    found, since that is known only after looking; the research stops when
+    further searching is unlikely to change the answer. Its findings are kept
+    as a source, with where the research looked, and the artifact recording
+    the decision cites it. A fact the research does not find, or derives only
+    from similar cases, stays uncertain: the artifact states it as an estimate
+    or an assumption, never as a fact, and says what would verify it. A choice
+    that depends only on what the user wants needs no research. The rule is
+    advice like any other: the user may decide before or without the research,
+    and the artifact then records the assumption the decision rests on.
+    [ADR-0049](../adr/0049-decisions-rest-on-data.md) records the reasons.
 -   **A proposal leaves current decisions in force.** Initial foundation work
     needs accepted catalog coverage. Later drafts do not reopen that foundation
     globally. An agreed change reviews and updates affected decisions and their

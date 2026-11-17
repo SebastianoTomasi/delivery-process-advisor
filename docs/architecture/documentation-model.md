@@ -476,8 +476,8 @@ without it.
 files rather than replacing them.
 
 `advisor-agents.md` is the entry point for shared document interpretation,
-navigation, and selective reading, and for the advisor's rules on the work
-separately installed skills perform. Its introduction explains the relationship
+navigation, and selective reading, for the rule that decisions rest on data,
+and for the advisor's rules on the work separately installed skills perform. Its introduction explains the relationship
 between the advisor files and catalogs and what the file itself covers. Its
 sections are:
 
@@ -487,6 +487,13 @@ sections are:
   that the accepted decisions are part of the spec of the work they specify
   when planning, building, or reviewing it; and that a passage becomes an
   input only once its routing envelope has been read.
+- **Decisions rest on data:** the
+  [Product rule on data](../product/overview.md#rules): the facts a
+  recommendation depends on are looked for, researched when missing or
+  unsourced, kept as a source, and written as an estimate or an assumption
+  when not found. The root states the rule in full because a recommendation
+  can be made in any session, as
+  [ADR-0049](../adr/0049-decisions-rest-on-data.md) records.
 - **Where things are:** the map to common rules, authority boundaries, catalogs,
   feature artifacts, vocabulary, and decision records.
 - **Sessions, tickets, and handoffs:** the advisor's rules for grill-with-docs
@@ -566,7 +573,9 @@ revised by
 for the work separately installed skills perform, is:
 
 - `advisor-agents.md` owns shared interpretation, navigation, and selective
-  reading, and the advisor's rules for grill-with-docs sessions, ticket
+  reading, the rule that decisions rest on data
+  ([ADR-0049](../adr/0049-decisions-rest-on-data.md)), and the advisor's rules
+  for grill-with-docs sessions, ticket
   breakdowns and implementation, handoffs, and deferred work, including when
   deferred work is
   recovered. It names a separately installed skill where its behavior in a

@@ -31,6 +31,10 @@ A destination the advisor may create but whose content belongs to the project: t
 A normative document recording a guided project’s decisions, with one owning authority, a scope, and a lifecycle status. It is the kind of document on whose accepted decisions other work can rely.
 _Avoid_: file, note, deliverable
 
+**Coding standards**  
+The project-scoped Development artifact at `docs/development/CODING_STANDARDS.md` stating what is particular to a repository's code: the stage of the project, its own conventions, and reminders of rules other accepted documents own. Standards a team keeps for all its repositories are distinct from it and are not repeated in it.
+_Avoid_: style guide, coding guidelines, conventions file
+
 **Template**  
 A shipped starting structure for a recurring kind of artifact, containing no project decision. It is optional and distinct from the artifact a session writes using it.
 _Avoid_: form, blueprint, boilerplate

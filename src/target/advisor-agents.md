@@ -85,26 +85,46 @@ would verify it.
 - **Ticket breakdowns and implementation.** Before drafting tickets or building,
   put to the user, each with a recommended answer, the decisions the work
   depends on that neither an accepted artifact, its ticket, nor the
-  conversation settles.
+  conversation settles. The pull request that delivers a ticket closes it,
+  through a closing keyword in its description. When a plan or breakdown is
+  replaced, close its remaining tickets as not planned, each with a link to
+  what replaces it. A ticket left open after its work is later taken for work
+  still to do.
+- **Opening an issue.** Before opening any issue, search the open and closed
+  ones for its subject. Where one exists, comment on it, reopening it if
+  closed, in place of opening another.
 - **Delegation.** A brief that delegates work names the documents that own its
   subject, with their status, because a delegate finds documents through its
   brief before anything else.
 - **Handoffs** name the decisions settled in the conversation but not yet
   written to their artifacts, so the next session can write them, and leave
   work that can wait beyond the next session to deferred issues.
-- **Deferred work**, a question, idea, or concern that can wait beyond the next
-  session, is an open issue carrying the deferred label in the tracker
-  configured by `docs/agents/issue-tracker.md` (if it is missing, ask the user
-  to run `/setup-matt-pocock-skills`). The deferred label is the one
+- **Deferred work** is something an artifact, a ticket, or a release will need
+  that can wait beyond the next session. An idea nothing depends on is not
+  deferred work: mention it to the user and file it only if they ask. Deferred
+  work is an open issue carrying the deferred label in the tracker configured
+  by `docs/agents/issue-tracker.md` (if it is missing, ask the user to run
+  `/setup-matt-pocock-skills`). The deferred label is the one
   `docs/agents/triage-labels.md` assigns to deferred work, or `deferred` where
-  it assigns none. The issue states what to revisit, why it can wait, and when
-  to revisit it. Open one directly, or publish a deferred breakdown through
-  `to-tickets` with the deferred label in place of `ready-for-agent`, so no
-  agent starts its tickets before their time. Before a grill-with-docs session,
-  a ticket breakdown, a propagation, a migration, or next-work advice, read the
-  open deferred issues relevant to it. Close an
-  issue with a link to its answer once that answer is written in its artifact.
-  Legacy `docs/deferred/` files are an archive.
+  it assigns none. The issue states what to revisit, why it can wait, and the
+  date or event that makes it due. The event is one a later session can verify
+  from the repository or the tracker, such as an issue closing, a document
+  being accepted, or a release. Open one directly, or publish a deferred
+  breakdown through `to-tickets` with the deferred label in place of
+  `ready-for-agent`, so no agent starts its tickets before their time.
+  Before a grill-with-docs session, a ticket breakdown, a propagation, a
+  migration, or next-work advice, read the open deferred issues relevant to it
+  and check each against its due condition, the code, and the documents:
+  - Due: take it up in the work at hand, or tell the user it is due. Work that
+    starts from it keeps the issue, with the deferred label replaced by its
+    triage label, rather than opening a new ticket.
+  - Answered or delivered: close it with a link to the artifact or pull
+    request.
+  - Apparently dropped or overtaken: ask the user, then close it as not planned
+    with the reason.
+
+  Next-work advice reports these findings and changes nothing. Legacy
+  `docs/deferred/` files are an archive.
 
 ## Reading guidance
 

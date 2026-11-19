@@ -54,7 +54,7 @@ not a tool that imposes it on them.
     sense, walking up the prerequisites to the first one that can be resolved  
     immediately.
 4.  **Defers and recovers future work.** Deferred work is kept as
-    `deferred` issues in the configured tracker and considered when
+    deferred issues in the configured tracker and considered when
     recommending work, starting or resuming a session, or breaking work into
     tickets. A question, idea, or other future concern is recorded directly,
     stating what to revisit, why it can wait, and when. Relevant
@@ -228,7 +228,7 @@ remains required by [Delivery rules](../architecture/initialization.md#delivery-
 
 The system knows the **project files and configured issue tracker**.
 Documentation establishes settled intent; code and focused verification
-establish what is implemented. Open `deferred` issues preserve future
+establish what is implemented. Open deferred issues preserve future
 work, its context, and when to revisit it. A session records an agreed deferral
 in the tracker shared with `to-tickets`. Deferred issues inform the work;
 accepted answers remain in the owning normative artifacts. What is not known
@@ -356,7 +356,7 @@ contract is in
     or unavoidable steps.
 -   **It is not a project status dashboard.** It produces advice, not reporting.
 -   **It does not synchronize every task.** It reads and writes only
-    `deferred` issues for future-work recovery; implementation tickets
+    deferred issues for future-work recovery; implementation tickets
     remain owned by the configured tracker and `to-tickets`. Mail and meeting
     integrations are outside the product.
 -   **It does not model customers, engagements, or deliveries.** The domain is  

@@ -26,11 +26,11 @@ Architecture, and how the user requests the work to Frontend.
   A change there requires reviewing both answers.
 - [Non-goals](../../../product/overview.md#non-goals) — implementation tickets
   remain owned by the configured tracker and `to-tickets`; the advisor reads
-  and writes only `deferred` issues for future-work recovery. The same
+  and writes only deferred issues for future-work recovery. The same
   passage permits explicit delegation of choices left open by an input.
 - [Deferred items](../../../architecture/documentation-model.md#deferred-items)
   — deferred work and `to-tickets` use one configured tracker, and recovery
-  reads only the issues labelled `deferred`.
+  reads only the issues carrying the project's deferred label.
 
 ## Purpose
 
@@ -90,7 +90,7 @@ documentation process.
 **Written tickets belong to the implementing system.** Their status, claims,
 and comments are that system's record of delivery, consistent with delivery
 status living in the task system rather than in the documentation tree. The
-advisor's deferred-work recovery selects only `deferred` issues; it
+advisor's deferred-work recovery selects only deferred issues; it
 does not infer feature progress from implementation-ticket status.
 
 ## Participants

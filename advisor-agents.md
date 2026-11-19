@@ -91,15 +91,18 @@ would verify it.
   brief before anything else.
 - **Handoffs** name the decisions settled in the conversation but not yet
   written to their artifacts, so the next session can write them, and leave
-  work that can wait beyond the next session to `deferred` issues.
+  work that can wait beyond the next session to deferred issues.
 - **Deferred work**, a question, idea, or concern that can wait beyond the next
-  session, is an open `deferred` issue in the tracker configured by
-  `docs/agents/issue-tracker.md` (if it is missing, ask the user to run
-  `/setup-matt-pocock-skills`), stating what to revisit, why it can wait, and
-  when to revisit it. Open one directly, or publish a deferred breakdown through
-  `to-tickets` with `deferred` in place of `ready-for-agent`. Before a
-  grill-with-docs session, a ticket breakdown, a propagation, a migration, or
-  next-work advice, read the open `deferred` issues relevant to it. Close an
+  session, is an open issue carrying the deferred label in the tracker
+  configured by `docs/agents/issue-tracker.md` (if it is missing, ask the user
+  to run `/setup-matt-pocock-skills`). The deferred label is the one
+  `docs/agents/triage-labels.md` assigns to deferred work, or `deferred` where
+  it assigns none. The issue states what to revisit, why it can wait, and when
+  to revisit it. Open one directly, or publish a deferred breakdown through
+  `to-tickets` with the deferred label in place of `ready-for-agent`, so no
+  agent starts its tickets before their time. Before a grill-with-docs session,
+  a ticket breakdown, a propagation, a migration, or next-work advice, read the
+  open deferred issues relevant to it. Close an
   issue with a link to its answer once that answer is written in its artifact.
   Legacy `docs/deferred/` files are an archive.
 

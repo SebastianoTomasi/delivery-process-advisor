@@ -110,11 +110,11 @@ A temporary document that preserves the conversation context needed for a fresh 
 _Avoid_: deferred item, checkpoint
 
 **Deferred item**
-A project-owned issue labelled `deferred` for a question, idea, or other future work that can wait beyond the next session, stating what to revisit, why it can wait, and when to revisit it. It is distinct from an unresolved current input and from a Product non-goal; a non-goal creates no deferred item unless there is also something to reconsider later.
+A project-owned issue carrying the deferred label, `deferred` unless `docs/agents/triage-labels.md` assigns another, for a question, idea, or other future work that can wait beyond the next session, stating what to revisit, why it can wait, and when to revisit it. It is distinct from an unresolved current input and from a Product non-goal; a non-goal creates no deferred item unless there is also something to reconsider later.
 _Avoid_: handoff, backlog, deferred idea
 
 **Ticket**  
-A self-contained unit of implementation work produced through `to-tickets` from a plan, specification, conversation, or feature documentation for a system outside the advisor to build, naming the tickets that must complete before it. Once written it belongs to that system; it is distinct from an artifact and a handoff, and one published in a deferred breakdown, labelled `deferred`, is also a deferred item.
+A self-contained unit of implementation work produced through `to-tickets` from a plan, specification, conversation, or feature documentation for a system outside the advisor to build, naming the tickets that must complete before it. Once written it belongs to that system; it is distinct from an artifact and a handoff, and one published in a deferred breakdown, carrying the deferred label, is also a deferred item.
 _Avoid_: deferred issue, task
 
 **Feature**  

@@ -203,7 +203,7 @@ of the chain inside an existing guided project remains part of the proposal.
 
 ## F. A postponed decision comes back
 
-**Given.** The configured tracker contains open `deferred` issues for a
+**Given.** The configured tracker contains open deferred issues for a
 feature, shared project work, and a question that does not say which authority
 owns its answer.
 
@@ -211,10 +211,13 @@ owns its answer.
 
 **Expect.**
 
-- The agent queries open `deferred` issues and reads relevant issues in full,
+- The agent queries open deferred issues and reads relevant issues in full,
   including applicable shared work. A general next-work request considers every
-  open `deferred` issue. An issue that does not say where its answer belongs is
+  open deferred issue. An issue that does not say where its answer belongs is
   not silently excluded from related work.
+- Where `docs/agents/triage-labels.md` assigns deferred work a label other than
+  `deferred`, such as `priority:3`, the agent reads and writes that label and
+  creates no `deferred` label.
 - It distinguishes ready work, questions still waiting on specific inputs, and
   apparently answered or superseded questions against current documents.
 - Relevant deferred items are addressed before dependent decisions. A prerequisite
@@ -299,10 +302,10 @@ verified primary journey yet, or it may already contain a working product.
 **Expect.**
 
 - The request selects the read-only `next-work` skill, which reads the
-  relevant open `deferred` issues and changes no project file.
+  relevant open deferred issues and changes no project file.
 - It starts from the user's current goal, active issues, pull requests, and work
   in progress, checking whether candidates are already delivered or underway.
-  A general request considers every open `deferred` issue without requiring a
+  A general request considers every open deferred issue without requiring a
   scan of every artifact. A scoped request includes relevant shared prerequisites.
 - It deepens document and implementation reads where evidence can change the
   choice, expanding discovery if candidates are unclear. It stops once evidence
@@ -615,7 +618,7 @@ now includes a client-visible surface.
   sensitive data.
 - In a guided project it names the decisions settled in the conversation but
   not yet written to their artifacts, so the next conversation can write them,
-  and leaves work that can wait to `deferred` issues, as
+  and leaves work that can wait to deferred issues, as
   [ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
   records.
 - No advisor skill or delivered document creates, discovers, or closes a

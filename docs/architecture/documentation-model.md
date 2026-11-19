@@ -166,16 +166,21 @@ future work, not an accepted answer, and counts toward no phase. Its state is
 [ADR-0030](../adr/0030-deferred-items-and-session-handoffs-are-distinct.md)
 records why durable future work and conversation transfer are kept apart.
 [ADR-0040](../adr/0040-deferred-work-uses-the-configured-issue-tracker.md)
-records the move to the shared issue tracker, and
+records the move to the shared issue tracker,
 [ADR-0044](../adr/0044-the-advisor-states-its-rules-for-matt-pococks-skills.md)
-the `deferred` label and the rules the root file states for it.
+the rules the root file states for it, and
+[ADR-0050](../adr/0050-each-project-names-its-deferred-label.md) the
+project's choice of label.
 
-Each deferred item is an issue labelled `deferred` in the tracker
+Each deferred item is an issue carrying the deferred label in the tracker
 configured by `docs/agents/issue-tracker.md`, the tracker the separately
-installed `to-tickets` skill also publishes to. The agent opens one directly,
-or publishes a whole deferred ticket breakdown through `to-tickets` with
-`deferred` in place of `ready-for-agent`. Missing configuration prompts tracker
-setup. A local tracker follows the convention its configuration describes.
+installed `to-tickets` skill also publishes to. The deferred label is the one
+`docs/agents/triage-labels.md` assigns to deferred work, or `deferred` where it
+assigns none. The agent opens one directly, or publishes a whole deferred ticket
+breakdown through `to-tickets` with the deferred label in place of
+`ready-for-agent`, so no agent starts those tickets early. Missing configuration
+prompts tracker setup. A local tracker follows the convention its configuration
+describes.
 
 The issue states what should be revisited, why it can wait, and when to
 revisit it; no routing field is required. A deferral does not create a feature
@@ -184,7 +189,7 @@ creates no deferred item automatically; an item about reconsidering it links
 to the Product rule instead of duplicating it.
 
 Before a grill-with-docs session, a ticket breakdown, a propagation, a
-migration, or next-work advice, the agent reads the open `deferred` issues
+migration, or next-work advice, the agent reads the open deferred issues
 relevant to it; [next-work advice](#next-work-advice) says which issues a
 general or scoped request considers. Issues without the label are outside this
 recovery.
@@ -637,7 +642,7 @@ a new request routed to the applicable workflow.
 
 The assessment starts from the user's current goal, active issues, pull requests,
 and work in progress, using the configured tracker guidance. It reads open
-`deferred` issues: all of them for an unscoped request, and for a scoped request
+deferred issues: all of them for an unscoped request, and for a scoped request
 those relevant to the scope or shared prerequisites. Advice leaves tracker
 state unchanged. It checks whether candidate work is already delivered or
 underway before recommending it.

@@ -365,11 +365,16 @@ test('project files beside the delivered scaffolding are never touched', t => {
   success(run(f));
   const artifact = join(f.target, 'docs/product/overview.md');
   writeFileSync(artifact, 'a project artifact the payload does not map');
+  // The coding standards have a fixed path, yet the project writes and owns them.
+  const standards = join(f.target, 'docs/development/CODING_STANDARDS.md');
+  assert.equal(existsSync(standards), false);
+  writeFileSync(standards, 'coding standards the project wrote');
   const record = join(f.target, 'docs/deferred/0001-deferred-question.md');
   mkdirSync(dirname(record), { recursive: true });
   writeFileSync(record, 'a deferred item');
   success(run(f));
   assert.equal(readFileSync(artifact, 'utf8'), 'a project artifact the payload does not map');
+  assert.equal(readFileSync(standards, 'utf8'), 'coding standards the project wrote');
   assert.equal(readFileSync(record, 'utf8'), 'a deferred item');
 });
 

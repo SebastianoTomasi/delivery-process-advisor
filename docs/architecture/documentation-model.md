@@ -48,7 +48,7 @@ link across authority boundaries instead of copying rules.
 | Security | Security policy and control requirements |
 | Deployment | Procedures for delivering and deploying the system |
 | Operations | Procedures for operating the system in production |
-| Development | Development and test guidance |
+| Development | Development and test guidance, and the repository's coding standards |
 | Stack | The selected technology inventory, versions, and shared defaults |
 
 Architecture defines components and meaningful submodules, responsibilities,
@@ -398,15 +398,31 @@ A pre-existing `docs/deferred/` directory is preserved as an archive, and a
 pre-existing `docs/handoffs/` is left as found; neither is an output of a fresh
 initialization.
 
-**Artifacts are not named by this model,** with one exception. A file's
+**Artifacts are not named by this model,** with two exceptions. A file's
 authority is the folder it sits in and its status is its marker line, so its name
 is free and is chosen when it is written, and an authority folder holds as many
 artifacts as its work needs. Free means project-chosen, not opaque: the filename
 and title identify the artifact's subject well enough to support relevance
 judgement before its body is read, and its opening `Scope` section resolves
-what the name alone cannot. The exception is `absent.md`, the artifact that
-closes a phase a feature has no substance for: its name is fixed so that the
-dismissal is visible in a listing, at the same cost as the folder's existence.
+what the name alone cannot. The first exception is `absent.md`, the artifact
+that closes a phase a feature has no substance for: its name is fixed so that
+the dismissal is visible in a listing, at the same cost as the folder's
+existence.
+
+The second is `docs/development/CODING_STANDARDS.md`, the Development artifact
+that answers `development-coding-standards` with the
+[project's coding standards](../product/overview.md#the-shape-of-the-process).
+Its name and place are fixed because review tools look for a file of that
+name, so a freely named one would be left out of the reviews it exists for. It
+is otherwise an artifact like any other: the project owns it, it carries a
+status line, Scope, and Dependencies, and it takes no `advisor-` prefix because
+no release delivers or replaces it. It exists at project scope only, since it
+holds for every change, and comes into existence with its first settled
+convention. Each rule it recalls from another accepted artifact links to the
+owning passage, which is listed under Dependencies and remains the one
+authoritative statement.
+[ADR-0051](../adr/0051-each-project-states-its-own-coding-standards.md)
+records the reasons.
 
 Two positions of the advisor's process are not delivered with the scaffold.
 `GLOSSARY.md` sits at the project root and `docs/adr/` beside the authority
@@ -502,8 +518,8 @@ sections are:
 - **Where things are:** the map to common rules, authority boundaries, catalogs,
   feature artifacts, vocabulary, and decision records.
 - **Sessions, tickets, and handoffs:** the advisor's rules for grill-with-docs
-  sessions, ticket breakdowns and implementation, delegation briefs, handoffs,
-  and deferred work, the cases where a
+  sessions, ticket breakdowns and implementation, coding standards, delegation
+  briefs, handoffs, and deferred work, the cases where a
   separately installed skill behaves differently in a guided project.
 - **Reading guidance:** finding documents by subject through the folders,
   placing them through the common rules, following decision dependencies,
@@ -584,7 +600,12 @@ for the work separately installed skills perform, is:
   breakdowns and implementation, handoffs, and deferred work, including when
   deferred work is
   recovered. It names a separately installed skill where its behavior in a
-  guided project differs, and none of the advisor's own skills.
+  guided project differs, and none of the advisor's own skills. It also states
+  that a change is written and reviewed against the project's coding
+  standards, and when a convention is proposed for them: a session writing or
+  reviewing code reads the root and not the Development scaffold, so a trigger
+  stated only there would not be met
+  ([ADR-0051](../adr/0051-each-project-states-its-own-coding-standards.md)).
 - `docs/advisor-docs.md` owns the common documentation contract: authority
   routing, placement, source authority, artifact envelopes and statuses,
   dependencies, provenance, acceptance conditions, and decision readiness.
@@ -594,6 +615,8 @@ for the work separately installed skills perform, is:
   before the first question; writing; acceptance; and
   the check and report before a phase is claimed complete.
 - Authority scaffolds own their precise inclusion, exclusion, and scope rules.
+  The Development scaffold also describes the coding standards document: what
+  it holds, what it leaves out, and when it is written.
 - Catalogs own subject-specific decisions, dependencies, and recommended order.
   The next-work skill uses them to assess candidate decisions; a grill-with-docs
   session uses them to choose what to ask next within selected work. Catalog
@@ -890,6 +913,14 @@ the relevant shared artifact is absent. The owning authority's demand-driven
 catalog guides the triggered decisions at either scope and introduces no phase.
 A deferred item records later work, never substitutes for a necessary current
 input.
+
+`development-coding-standards` has no screening question and one scope. Its
+triggers are a convention settled in a session and a point a review raises
+again; neither is a moment of a feature phase, so a screening question would
+add a dismissal to every feature for a need that arises elsewhere. The
+Development scaffold and the root file state the triggers instead, and the
+answer is always the one project-scoped document named in the
+[directory layout](#directory-layout).
 
 Changing an enumeration is a versioned product change. The catalog, its
 boundary scaffold, and the session procedure in `docs/advisor-docs.md` that

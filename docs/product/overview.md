@@ -150,6 +150,23 @@ Architecture owns trust boundaries and enforcement placement, and Security owns
 control requirements at their actual scope. It introduces no additional phase,
 although an unresolved control can be a necessary input to a particular decision.
 
+**One document speaks about the code itself.** The other artifacts say what to
+build. The project's coding standards, a Development artifact, say what the
+code of its repository is held to, for whoever writes a change and whoever
+reviews one. They hold only what is particular to that repository: the stage
+of the project and whether backward compatibility is kept, the repository's
+own conventions, and a one-line reminder of each rule another accepted
+document owns that shows in a diff, linked to the passage that owns it and
+yielding to it where the two differ. Standards a team keeps for all its
+repositories are not repeated there, and neither is what tooling already
+checks or what the product must do. The document is project-scoped only, since
+it holds for every change, and it is written when a session settles a
+convention or a review raises the same point again, not at project start. Its
+fixed name and place are specified in the
+[documentation model](../architecture/documentation-model.md#directory-layout),
+and [ADR-0051](../adr/0051-each-project-states-its-own-coding-standards.md)
+records the reasons.
+
 ## Form
 
 The system consists of **versioned scaffolds, question catalogs, templates,
@@ -348,7 +365,10 @@ contract is in
     the final accepted documents for the same not-yet-implemented scope produce
     functionally equivalent systems:
     the same entities, boundaries, and observable behavior. Residual
-    differences in signatures, names, and style remain the concern of the code.
+    differences in signatures, names, and style remain the concern of the
+    code. The project's coding standards narrow them only where the project
+    chose to state a convention; the criterion is equivalent behavior, not
+    code that reads alike.
 
 ## Non-goals
 
@@ -362,6 +382,10 @@ contract is in
 -   **It does not model customers, engagements, or deliveries.** The domain is  
     the process by which the project matures, not the commercial relationship  
     surrounding it.
+-   **It does not say how code should be written.** It delivers no coding
+    standards of its own. It asks a project only for a document of what is
+    particular to its repository; standards a team keeps for all its
+    repositories stay where the team keeps them.
 -   **It does not invent artifacts in the user’s place.** It writes only to
     propagate confirmed corrections or to record the decisions, requirements,
     and intent established with the user, including choices the user explicitly

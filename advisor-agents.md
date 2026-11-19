@@ -5,7 +5,7 @@ turning an idea into software that is clear enough to build. Its normative
 documentation lives under `docs/`. Catalogs define the decisions to address,
 their dependencies, and the usual order. This file provides shared reading
 guidance and navigation, says what a decision rests on, and says how sessions,
-tickets, handoffs, and deferred work fit the process.
+tickets, coding standards, handoffs, and deferred work fit the process.
 
 ## Using project documentation
 
@@ -90,6 +90,14 @@ would verify it.
   replaced, close its remaining tickets as not planned, each with a link to
   what replaces it. A ticket left open after its work is later taken for work
   still to do.
+- **Coding standards.** Where the project has
+  `docs/development/CODING_STANDARDS.md`, it states what is particular to this
+  repository's code, and a change is written and reviewed against it. When a
+  session settles a convention for the code, or a review raises a point an
+  earlier review already raised and that document does not state, propose
+  recording it there, as
+  [its description](docs/development/advisor-development.md#the-coding-standards-document)
+  says; a project without the document starts it then.
 - **Opening an issue.** Before opening any issue, search the open and closed
   ones for its subject. Where one exists, comment on it, reopening it if
   closed, in place of opening another.

@@ -33,6 +33,9 @@ below remain proposals and do not change those current rules.
   distinguish those responsibilities.
 - [Code and documentation](../product/overview.md#rules) — ordinary code work
   distinguishes implemented behavior from documented intent, as in flow Y.
+- [Artifact names](../architecture/documentation-model.md#directory-layout) —
+  flow Z relies on the fixed name, single scope, and project ownership of the
+  coding standards document.
 - [Payload content](../architecture/initialization.md#the-payload) — flow M
   cannot assume per-file release markers; evidence for its version comparison
   remains part of the unresolved template-import scenario.
@@ -652,6 +655,30 @@ be absent, may specify a new CSV capability, or may contradict the implementatio
 - Documentation-derived conclusions cite supporting passages and disclose unread
   material that could affect them; ordinary work produces no full reading
   inventory or unrelated coverage report.
+
+## Z. A review repeats a point
+
+**Given.** The project has no `docs/development/CODING_STANDARDS.md`. A review
+finds that a change measures a quantity in a unit the rest of the repository
+does not use, and an earlier review raised the same point on another change.
+
+**When.** The second review reports its findings.
+
+**Expect.**
+
+- The agent proposes recording the convention in
+  `docs/development/CODING_STANDARDS.md` and, once the user agrees, starts
+  that document under that exact name at project scope, with a status line and
+  Scope. It is accepted when the convention is stated; no other content is
+  owed.
+- The document repeats neither a standard the team keeps for all its
+  repositories, nor a rule the tooling checks, nor a product requirement. A
+  rule another accepted document owns appears as one line linking to the
+  owning passage, which is listed under Dependencies.
+- A finding raised for the first time is corrected in its change and starts no
+  document. No feature folder receives a coding standards document, and no
+  feature phase answers or dismisses the question.
+- A later initialization leaves the document as it is.
 
 ## Open decisions
 

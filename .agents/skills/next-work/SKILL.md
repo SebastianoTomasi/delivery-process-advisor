@@ -17,7 +17,7 @@ their reading, readiness, and conflict rules.
 
 Start from the user's current goal, active issues, pull requests, and work in
 progress. Use the configured tracker guidance. For a general request, consider
-every open `deferred` issue; for scoped work, those relevant to the scope or
+every open deferred issue; for scoped work, those relevant to the scope or
 shared prerequisites. Check candidates' current state: an open issue or an old
 plan may describe work already delivered or underway.
 

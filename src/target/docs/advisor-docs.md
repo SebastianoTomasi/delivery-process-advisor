@@ -138,7 +138,7 @@ Source discovery follows [the shared reading guidance](../advisor-agents.md#read
 
 ## What a document says about itself
 
-Deferred work lives in `deferred` issues, outside every authority and phase;
+Deferred work lives in tracker issues, outside every authority and phase;
 an issue's open or closed state is not an artifact status.
 
 An artifact places one line directly below its title, never in frontmatter:

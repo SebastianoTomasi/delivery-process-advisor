@@ -7,8 +7,10 @@ status: accepted
 [ADR-0045](0045-advisor-skills-use-unprefixed-names.md) later removed
 `advisor-migrate-deferred`, renamed the three remaining skills without the
 `advisor-` prefix, and replaced prefix-only ownership with a registry of
-unprefixed names plus legacy-prefix cleanup. Those parts below are historical;
-the remaining rules stand.
+unprefixed names plus legacy-prefix cleanup.
+[ADR-0050](0050-each-project-names-its-deferred-label.md) later let each
+project name its deferred label, `deferred` by default. Those parts below are
+historical; the remaining rules stand.
 
 The advisor no longer delivers `advisor-grill-with-docs`, `advisor-to-tickets`,
 or `advisor-defer`. Documentation sessions run through Matt Pocock's

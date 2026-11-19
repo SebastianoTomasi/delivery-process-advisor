@@ -115,10 +115,11 @@ may be relied on, `needs-review` marks an interrupted change. A catalog
 question that does not apply is dismissed by name, so silence is never an
 answer.
 
-**Three kinds of later.** Deferred work is a `deferred` issue in the configured
-tracker. A handoff moves a conversation to a fresh session through Matt
-Pocock's `handoff`. A changed decision updates its owning rule, then
-`propagate-change` follows the dependency links.
+**Three kinds of later.** Deferred work is an issue in the configured tracker,
+under the label the project names for it, `deferred` by default. A handoff
+moves a conversation to a fresh session through Matt Pocock's `handoff`. A
+changed decision updates its owning rule, then `propagate-change` follows the
+dependency links.
 
 Further reading: [product overview](docs/product/overview.md),
 [documentation model](docs/architecture/documentation-model.md),
